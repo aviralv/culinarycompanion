@@ -40,7 +40,7 @@ export default function Home() {
       let recipeIdeasArray: string[];
       if (typeof recipeOutput === 'string') {
         try {
-          recipeIdeasArray = JSON.parse(recipeOutput);
+          recipeIdeasArray = JSON.parse(recipeOutput.trim());
         } catch (parseError) {
           console.error('Error parsing recipe_output:', parseError);
           throw new Error('Failed to parse recipe ideas from the response.');
