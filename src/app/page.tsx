@@ -38,20 +38,18 @@ export default function Home() {
       const data = await response.json();
 
       if (data && data.recipe_output) {
-        if (typeof data.recipe_output === 'string') {
-          setRecipeIdeas([data.recipe_output]);
-        } else if (Array.isArray(data.recipe_output)) {
-          setRecipeIdeas(data.recipe_output);
+        const recipeOutput = data.recipe_output;
+        if (typeof recipeOutput === 'string') {
+          setRecipeIdeas([recipeOutput]);
         } else {
+          console.error('recipe_output is not a string:', recipeOutput);
+          setError('Unexpected response format: recipe_output is not a string.');
           setRecipeIdeas([]);
-          console.error('recipe_output is not an array:', data.recipe_output);
-          setError('Unexpected response format: recipe_output is not an array.');
         }
         setSelectedRecipe(null);
       } else {
         throw new Error('Unexpected response structure from the API.');
       }
-
     } catch (e: any) {
       setError(e.message || 'Failed to generate recipe ideas.');
       setRecipeIdeas([]);
@@ -104,7 +102,7 @@ export default function Home() {
             </Alert>
           )}
 
-          {recipeIdeas && (
+          {recipeIdeas.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <ul className="list-disc pl-5">
@@ -116,7 +114,7 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-          ) }
+          )}
 
           {selectedRecipe && (
             <div className="space-y-2">
@@ -135,3 +133,4 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: any;
 }
+
