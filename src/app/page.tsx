@@ -39,8 +39,12 @@ export default function Home() {
       // If recipeOutput is a string, parse it as JSON
       let recipeIdeasArray: string[];
       if (typeof recipeOutput === 'string') {
-        // Directly split the string by commas
-        recipeIdeasArray = recipeOutput.split(',').map((item: string) => item.trim());
+        try {
+          recipeIdeasArray = JSON.parse(recipeOutput);
+        } catch (parseError) {
+          console.error('Error parsing recipe_output:', parseError);
+          throw new Error('Failed to parse recipe ideas from the response.');
+        }
       } else if (Array.isArray(recipeOutput)) {
         // If recipeOutput is already an array, use it directly
         recipeIdeasArray = recipeOutput;
@@ -105,8 +109,8 @@ export default function Home() {
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <ul className="list-disc pl-5">
-                {recipeIdeas.map((idea) => (
-                  <li key={idea} className="cursor-pointer hover:text-accent" onClick={() => handleRecipeSelect(idea)}>
+                {recipeIdeas.map((idea, index) => (
+                  <li key={idea + index} className="cursor-pointer hover:text-accent" onClick={() => handleRecipeSelect(idea)}>
                     {idea}
                   </li>
                 ))}
