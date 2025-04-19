@@ -1,4 +1,3 @@
-
 'use client';
 
 import {useState} from 'react';
@@ -22,6 +21,18 @@ export default function Home() {
     setIsLoadingIdeas(true);
     setError(null);
     try {
+      const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ingredients}),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const result = await generateRecipeIdeas({ingredients});
       setRecipeIdeas(result.recipeIdeas);
       setSelectedRecipe(null); // Clear any previously selected recipe
@@ -119,3 +130,4 @@ interface RecipeDetailsOutput {
   ingredients: string[];
   instructions: string[];
 }
+
