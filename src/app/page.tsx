@@ -36,19 +36,13 @@ export default function Home() {
 
       const data = await response.json();
 
-      // Check if the recipe_output exists and is a string
-      if (data && typeof data.recipe_output === 'string') {
-        // Split the string by newline characters to get individual recipe ideas
-        const ideas = data.recipe_output.split('\n').filter(idea => idea.trim() !== '');
-        if (Array.isArray(ideas) && ideas.length > 0) {
-          setRecipeIdeas(ideas);
-        } else {
-          throw new Error('No valid recipe ideas found in the response.');
-        }
+      if (data && data.recipe_output) {
+        setRecipeIdeas(Array.isArray(data.recipe_output) ? data.recipe_output : [data.recipe_output]);
+        setSelectedRecipe(null);
       } else {
         throw new Error('Unexpected response structure from the API.');
       }
-      setSelectedRecipe(null); // Clear any previously selected recipe
+
     } catch (e: any) {
       setError(e.message || 'Failed to generate recipe ideas.');
       setRecipeIdeas([]);
@@ -64,12 +58,7 @@ export default function Home() {
     setError(null);
     try {
       const recipeDetails = await getRecipeDetails({recipeName});
-      const formattedRecipeResponse = await generateFormattedRecipe({
-        name: recipeDetails.name,
-        ingredients: recipeDetails.ingredients,
-        instructions: recipeDetails.instructions,
-      });
-      setSelectedRecipe({formattedRecipe: formattedRecipeResponse.formattedRecipe});
+      setSelectedRecipe({formattedRecipe: recipeDetails});
     } catch (e: any) {
       setError(e.message || 'Failed to load recipe.');
       setSelectedRecipe(null);
@@ -135,6 +124,7 @@ export default function Home() {
 }
 
 interface RecipeDetailsOutput {
-  formattedRecipe: string;
+  formattedRecipe: any;
 }
+
 

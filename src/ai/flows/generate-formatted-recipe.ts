@@ -70,5 +70,3 @@ const generateFormattedRecipeFlow = ai.defineFlow<
     return {formattedRecipe: output?.formattedRecipe ?? 'Failed to format recipe.'};
   }
 );
-
-    
