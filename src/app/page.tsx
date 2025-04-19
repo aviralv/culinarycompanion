@@ -38,14 +38,16 @@ export default function Home() {
       const data = await response.json();
 
       if (data && data.recipe_output) {
-        // Check if data.recipe_output is an array
         if (Array.isArray(data.recipe_output)) {
           setRecipeIdeas(data.recipe_output);
+        } else if (typeof data.recipe_output === 'string') {
+          // If it's a string, wrap it in an array
+          setRecipeIdeas([data.recipe_output]);
         } else {
-          // If it's not an array, initialize recipeIdeas as an empty array
+          // If it's not an array or string, initialize recipeIdeas as an empty array
           setRecipeIdeas([]);
-          console.error('recipe_output is not an array:', data.recipe_output);
-          setError('Unexpected response format: recipe_output is not an array.');
+          console.error('recipe_output is not an array or string:', data.recipe_output);
+          setError('Unexpected response format: recipe_output is not an array or string.');
         }
         setSelectedRecipe(null);
       } else {
@@ -143,5 +145,6 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: any;
 }
+
 
 
