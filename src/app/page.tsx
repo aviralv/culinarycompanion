@@ -33,6 +33,25 @@ export default function Home() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const data = await response.json();
+      const recipeOutput = data.recipe_output;
+
+      // If recipeOutput is a string, parse it as JSON
+      let recipeIdeasArray: string[];
+      if (typeof recipeOutput === 'string') {
+        try {
+          recipeIdeasArray = JSON.parse(recipeOutput);
+        } catch (parseError) {
+          console.error('Error parsing recipe_output:', parseError);
+          throw new Error('Failed to parse recipe ideas from the response.');
+        }
+      } else if (Array.isArray(recipeOutput)) {
+        // If recipeOutput is already an array, use it directly
+        recipeIdeasArray = recipeOutput;
+      } else {
+        throw new Error('Unexpected format for recipe ideas in the response.');
+      }
+
       const result = await generateRecipeIdeas({ingredients});
       setRecipeIdeas(result.recipeIdeas);
       setSelectedRecipe(null); // Clear any previously selected recipe
@@ -130,4 +149,5 @@ interface RecipeDetailsOutput {
   ingredients: string[];
   instructions: string[];
 }
+
 
