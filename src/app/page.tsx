@@ -39,12 +39,8 @@ export default function Home() {
       // If recipeOutput is a string, parse it as JSON
       let recipeIdeasArray: string[];
       if (typeof recipeOutput === 'string') {
-        try {
-          recipeIdeasArray = JSON.parse(recipeOutput);
-        } catch (parseError) {
-          console.error('Error parsing recipe_output:', parseError);
-          throw new Error('Failed to parse recipe ideas from the response.');
-        }
+        // Directly split the string by commas
+        recipeIdeasArray = recipeOutput.split(',').map((item: string) => item.trim());
       } else if (Array.isArray(recipeOutput)) {
         // If recipeOutput is already an array, use it directly
         recipeIdeasArray = recipeOutput;
@@ -148,6 +144,5 @@ interface RecipeDetailsOutput {
   ingredients: string[];
   instructions: string[];
 }
-
 
 
