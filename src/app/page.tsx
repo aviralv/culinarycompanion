@@ -38,16 +38,14 @@ export default function Home() {
       const data = await response.json();
 
       if (data && data.recipe_output) {
-        if (Array.isArray(data.recipe_output)) {
-          setRecipeIdeas(data.recipe_output);
-        } else if (typeof data.recipe_output === 'string') {
-          // If it's a string, wrap it in an array
+        if (typeof data.recipe_output === 'string') {
           setRecipeIdeas([data.recipe_output]);
+        } else if (Array.isArray(data.recipe_output)) {
+          setRecipeIdeas(data.recipe_output);
         } else {
-          // If it's not an array or string, initialize recipeIdeas as an empty array
           setRecipeIdeas([]);
-          console.error('recipe_output is not an array or string:', data.recipe_output);
-          setError('Unexpected response format: recipe_output is not an array or string.');
+          console.error('recipe_output is not an array:', data.recipe_output);
+          setError('Unexpected response format: recipe_output is not an array.');
         }
         setSelectedRecipe(null);
       } else {
@@ -106,7 +104,7 @@ export default function Home() {
             </Alert>
           )}
 
-          {recipeIdeas && Array.isArray(recipeIdeas) && recipeIdeas.length > 0 ? (
+          {recipeIdeas && (
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <ul className="list-disc pl-5">
@@ -118,15 +116,7 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-          ) : (
-            recipeIdeas && !Array.isArray(recipeIdeas) ? (
-                <Alert variant="warning">
-                  <Info className="h-4 w-4"/>
-                  <AlertTitle>Warning</AlertTitle>
-                  <AlertDescription>Received recipe_output, but it is not in the expected array format. Please check the API response.</AlertDescription>
-                </Alert>
-            ) : null
-          )}
+          ) }
 
           {selectedRecipe && (
             <div className="space-y-2">
@@ -145,6 +135,3 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: any;
 }
-
-
-
