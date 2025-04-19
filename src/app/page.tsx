@@ -10,6 +10,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
 import {generateFormattedRecipe} from "@/ai/flows/generate-formatted-recipe";
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 export default function Home() {
   const [ingredients, setIngredients] = useState('');
@@ -39,9 +40,11 @@ export default function Home() {
 
       if (data && data.recipe_output) {
         const recipeOutput = data.recipe_output;
+
         if (typeof recipeOutput === 'string') {
           setRecipeIdeas([recipeOutput]);
-        } else {
+        }
+        else {
           console.error('recipe_output is not a string:', recipeOutput);
           setError('Unexpected response format: recipe_output is not a string.');
           setRecipeIdeas([]);
@@ -50,6 +53,7 @@ export default function Home() {
       } else {
         throw new Error('Unexpected response structure from the API.');
       }
+
     } catch (e: any) {
       setError(e.message || 'Failed to generate recipe ideas.');
       setRecipeIdeas([]);
@@ -58,7 +62,6 @@ export default function Home() {
       setIsLoadingIdeas(false);
     }
   };
-
 
   const handleRecipeSelect = async (recipeName: string) => {
     setIsLoadingRecipe(true);
@@ -105,21 +108,21 @@ export default function Home() {
           {recipeIdeas.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
-              <ul className="list-disc pl-5">
+              <div>
                 {recipeIdeas.map((idea, index) => (
-                  <li key={index} className="cursor-pointer hover:text-accent"
+                  <p key={index} className="cursor-pointer hover:text-accent"
                       onClick={() => handleRecipeSelect(idea)}>
                     {idea}
-                  </li>
+                  </p>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
           {selectedRecipe && (
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe:</h3>
-              <ReactMarkdown>{selectedRecipe.formattedRecipe}</ReactMarkdown>
+              <ReactMarkdown rehypePlugins={[rehypeRaw]} children={selectedRecipe.formattedRecipe} />
             </div>
           )}
 
@@ -133,4 +136,3 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: any;
 }
-
