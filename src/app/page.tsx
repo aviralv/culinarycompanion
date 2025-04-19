@@ -8,6 +8,7 @@ import {getRecipeDetails} from '@/ai/flows/display-recipe-details';
 import {generateRecipeIdeas} from '@/ai/flows/generate-recipe-ideas';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
+import {generateFormattedRecipe} from "@/ai/flows/generate-formatted-recipe";
 
 export default function Home() {
   const [ingredients, setIngredients] = useState('');
@@ -21,59 +22,54 @@ export default function Home() {
     setIsLoadingIdeas(true);
     setError(null);
     try {
-        const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ingredients }),
-        });
+      const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ingredients}),
+      });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        const data = await response.json();
+      const data = await response.json();
 
-        // Extract the recipe_output from the response
-        const recipeOutput = data?.recipe_output;
+      // Extract the recipe_output from the response
+      const recipeOutput = data?.recipe_output;
 
-        if (recipeOutput) {
-            let recipeIdeasArray: string[] = [];
+      if (recipeOutput) {
+        let recipeIdeasArray: string[] = [];
 
-            // Check if recipeOutput is already a JSON array
-            if (Array.isArray(recipeOutput)) {
-                recipeIdeasArray = recipeOutput.map((item, index) => {
-                   return String(item);
-                }); // Ensure all elements are strings
-            } else if (typeof recipeOutput === 'string') {
-                // Attempt to parse the string as JSON
-                try {
-                    recipeIdeasArray = JSON.parse(recipeOutput);
-                } catch (parseError) {
-                  // If it's not a JSON array, treat it as a comma-separated string
-                  recipeIdeasArray = recipeOutput.split(',').map(item => item.trim());
-                }
-            } else {
-                throw new Error('Unexpected format for recipe_output in the API response.');
-            }
-
-            if (recipeIdeasArray.length > 0) {
-                setRecipeIdeas(recipeIdeasArray);
-            } else {
-                throw new Error('No recipe ideas found in the response.');
-            }
+        // Check if recipeOutput is already a JSON array
+        if (Array.isArray(recipeOutput)) {
+          recipeIdeasArray = recipeOutput.map((item) => {
+            return String(item);
+          }); // Ensure all elements are strings
+        } else if (typeof recipeOutput === 'string') {
+          // If it's not a JSON array, treat it as a comma-separated string
+          recipeIdeasArray = recipeOutput.split(',').map(item => item.trim());
         } else {
-            throw new Error('Recipe output not found in the API response.');
+          throw new Error('Unexpected format for recipe_output in the API response.');
         }
 
-        setSelectedRecipe(null); // Clear any previously selected recipe
+        if (recipeIdeasArray.length > 0) {
+          setRecipeIdeas(recipeIdeasArray);
+        } else {
+          throw new Error('No recipe ideas found in the response.');
+        }
+      } else {
+        throw new Error('Recipe output not found in the API response.');
+      }
+
+      setSelectedRecipe(null); // Clear any previously selected recipe
     } catch (e: any) {
-        setError(e.message || 'Failed to generate recipe ideas.');
-        setRecipeIdeas([]);
-        setSelectedRecipe(null);
+      setError(e.message || 'Failed to generate recipe ideas.');
+      setRecipeIdeas([]);
+      setSelectedRecipe(null);
     } finally {
-        setIsLoadingIdeas(false);
+      setIsLoadingIdeas(false);
     }
   };
 
@@ -82,8 +78,13 @@ export default function Home() {
     setIsLoadingRecipe(true);
     setError(null);
     try {
-      const recipe = await getRecipeDetails({recipeName});
-      setSelectedRecipe(recipe);
+      const recipeDetails = await getRecipeDetails({recipeName});
+      const formattedRecipeResponse = await generateFormattedRecipe({
+        name: recipeDetails.name,
+        ingredients: recipeDetails.ingredients,
+        instructions: recipeDetails.instructions,
+      });
+      setSelectedRecipe({formattedRecipe: formattedRecipeResponse.formattedRecipe});
     } catch (e: any) {
       setError(e.message || 'Failed to load recipe.');
       setSelectedRecipe(null);
@@ -125,7 +126,8 @@ export default function Home() {
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <ul className="list-disc pl-5">
                 {recipeIdeas.map((idea, index) => (
-                  <li key={index} className="cursor-pointer hover:text-accent" onClick={() => handleRecipeSelect(idea)}>
+                  <li key={index} className="cursor-pointer hover:text-accent"
+                      onClick={() => handleRecipeSelect(idea)}>
                     {idea}
                   </li>
                 ))}
@@ -135,19 +137,8 @@ export default function Home() {
 
           {selectedRecipe && (
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Recipe: {selectedRecipe.name}</h3>
-              <h4 className="text-md font-semibold">Ingredients:</h4>
-              <ul className="list-disc pl-5">
-                {selectedRecipe.ingredients.map((ingredient) => (
-                  <li key={ingredient}>{ingredient}</li>
-                ))}
-              </ul>
-              <h4 className="text-md font-semibold">Instructions:</h4>
-              <ol className="list-decimal pl-5">
-                {selectedRecipe.instructions.map((instruction, index) => (
-                  <li key={index}>{instruction}</li>
-                ))}
-              </ol>
+              <h3 className="text-lg font-semibold">Recipe:</h3>
+              <p className="text-md">{selectedRecipe.formattedRecipe}</p>
             </div>
           )}
 
@@ -159,9 +150,7 @@ export default function Home() {
 }
 
 interface RecipeDetailsOutput {
-  name: string;
-  ingredients: string[];
-  instructions: string[];
+  formattedRecipe: string;
 }
 
-
+    
