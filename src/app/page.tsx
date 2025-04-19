@@ -40,29 +40,20 @@ export default function Home() {
       const recipeOutput = data?.recipe_output;
 
       if (recipeOutput) {
-        let recipeIdeasArray: string[] = [];
-
-        // Check if recipeOutput is already a JSON array
-        if (Array.isArray(recipeOutput)) {
-          recipeIdeasArray = recipeOutput.map((item) => {
-            return String(item);
-          }); // Ensure all elements are strings
-        } else if (typeof recipeOutput === 'string') {
-          // If it's not a JSON array, treat it as a comma-separated string
-          recipeIdeasArray = recipeOutput.split(',').map(item => item.trim());
+        if (typeof recipeOutput === 'string') {
+          // Split by lines, and then filter out any empty strings to get a clean array of ideas
+          const ideas = recipeOutput.split('\n').map(idea => idea.trim()).filter(idea => idea !== '');
+          if (Array.isArray(ideas) && ideas.length > 0) {
+            setRecipeIdeas(ideas);
+          } else {
+            throw new Error('No recipe ideas found in the response.');
+          }
         } else {
-          throw new Error('Unexpected format for recipe_output in the API response.');
-        }
-
-        if (recipeIdeasArray.length > 0) {
-          setRecipeIdeas(recipeIdeasArray);
-        } else {
-          throw new Error('No recipe ideas found in the response.');
+          throw new Error('Recipe output is not a string.');
         }
       } else {
         throw new Error('Recipe output not found in the API response.');
       }
-
       setSelectedRecipe(null); // Clear any previously selected recipe
     } catch (e: any) {
       setError(e.message || 'Failed to generate recipe ideas.');
@@ -97,7 +88,7 @@ export default function Home() {
     <div className="container mx-auto p-4 max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle>Food Idea Generator</CardTitle>
+          <CardTitle>Culinary Companion</CardTitle>
           <CardDescription>Enter your ingredients to get recipe ideas.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -152,5 +143,3 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: string;
 }
-
-    
