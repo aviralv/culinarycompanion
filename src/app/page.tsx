@@ -5,10 +5,8 @@ import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {getRecipeDetails} from '@/ai/flows/display-recipe-details';
-import {generateRecipeIdeas} from '@/ai/flows/generate-recipe-ideas';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
-import {generateFormattedRecipe} from "@/ai/flows/generate-formatted-recipe";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 
@@ -24,7 +22,7 @@ export default function Home() {
     setIsLoadingIdeas(true);
     setError(null);
     try {
-      const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
+      const response = await fetch('https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,16 +37,7 @@ export default function Home() {
       const data = await response.json();
 
       if (data && data.recipe_output) {
-        const recipeOutput = data.recipe_output;
-
-        if (typeof recipeOutput === 'string') {
-          setRecipeIdeas([recipeOutput]);
-        }
-        else {
-          console.error('recipe_output is not a string:', recipeOutput);
-          setError('Unexpected response format: recipe_output is not a string.');
-          setRecipeIdeas([]);
-        }
+        setRecipeIdeas([data.recipe_output]);
         setSelectedRecipe(null);
       } else {
         throw new Error('Unexpected response structure from the API.');
@@ -110,10 +99,10 @@ export default function Home() {
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <div>
                 {recipeIdeas.map((idea, index) => (
-                  <p key={index} className="cursor-pointer hover:text-accent"
+                  <div key={index} className="cursor-pointer hover:text-accent"
                       onClick={() => handleRecipeSelect(idea)}>
-                    {idea}
-                  </p>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]} children={idea} />
+                  </div>
                 ))}
               </div>
             </div>
