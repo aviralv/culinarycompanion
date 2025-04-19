@@ -21,47 +21,62 @@ export default function Home() {
     setIsLoadingIdeas(true);
     setError(null);
     try {
-      const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ingredients}),
-      });
+        const response = await fetch('https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ingredients }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const recipeOutput = data.recipe_output;
-
-      // If recipeOutput is a string, parse it as JSON
-      let recipeIdeasArray: string[];
-      if (typeof recipeOutput === 'string') {
-        try {
-          recipeIdeasArray = JSON.parse(recipeOutput.trim());
-        } catch (parseError) {
-          console.error('Error parsing recipe_output:', parseError);
-          throw new Error('Failed to parse recipe ideas from the response.');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-      } else if (Array.isArray(recipeOutput)) {
-        // If recipeOutput is already an array, use it directly
-        recipeIdeasArray = recipeOutput;
-      } else {
-        throw new Error('Unexpected format for recipe ideas in the response.');
-      }
 
-      setRecipeIdeas(recipeIdeasArray);
-      setSelectedRecipe(null); // Clear any previously selected recipe
+        const data = await response.json();
+
+        // Extract the recipe_output from the response
+        const recipeOutput = data?.recipe_output;
+
+        if (recipeOutput) {
+            let recipeIdeasArray: string[] = [];
+
+            // Check if recipeOutput is already a JSON array
+            if (Array.isArray(recipeOutput)) {
+                recipeIdeasArray = recipeOutput.map((item, index) => {
+                   return String(item);
+                }); // Ensure all elements are strings
+            } else if (typeof recipeOutput === 'string') {
+                // Attempt to parse the string as JSON
+                try {
+                    recipeIdeasArray = JSON.parse(recipeOutput);
+                } catch (parseError) {
+                  // If it's not a JSON array, treat it as a comma-separated string
+                  recipeIdeasArray = recipeOutput.split(',').map(item => item.trim());
+                }
+            } else {
+                throw new Error('Unexpected format for recipe_output in the API response.');
+            }
+
+            if (recipeIdeasArray.length > 0) {
+                setRecipeIdeas(recipeIdeasArray);
+            } else {
+                throw new Error('No recipe ideas found in the response.');
+            }
+        } else {
+            throw new Error('Recipe output not found in the API response.');
+        }
+
+        setSelectedRecipe(null); // Clear any previously selected recipe
     } catch (e: any) {
-      setError(e.message || 'Failed to generate recipe ideas.');
-      setRecipeIdeas([]);
-      setSelectedRecipe(null);
+        setError(e.message || 'Failed to generate recipe ideas.');
+        setRecipeIdeas([]);
+        setSelectedRecipe(null);
     } finally {
-      setIsLoadingIdeas(false);
+        setIsLoadingIdeas(false);
     }
   };
+
 
   const handleRecipeSelect = async (recipeName: string) => {
     setIsLoadingRecipe(true);
@@ -110,7 +125,7 @@ export default function Home() {
               <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
               <ul className="list-disc pl-5">
                 {recipeIdeas.map((idea, index) => (
-                  <li key={idea + index} className="cursor-pointer hover:text-accent" onClick={() => handleRecipeSelect(idea)}>
+                  <li key={index} className="cursor-pointer hover:text-accent" onClick={() => handleRecipeSelect(idea)}>
                     {idea}
                   </li>
                 ))}
