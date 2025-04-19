@@ -9,6 +9,7 @@ import {generateRecipeIdeas} from '@/ai/flows/generate-recipe-ideas';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
 import {generateFormattedRecipe} from "@/ai/flows/generate-formatted-recipe";
+import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
   const [ingredients, setIngredients] = useState('');
@@ -37,7 +38,7 @@ export default function Home() {
       const data = await response.json();
 
       if (data && data.recipe_output) {
-        setRecipeIdeas(Array.isArray(data.recipe_output) ? data.recipe_output : [data.recipe_output]);
+        setRecipeIdeas(data.recipe_output);
         setSelectedRecipe(null);
       } else {
         throw new Error('Unexpected response structure from the API.');
@@ -112,7 +113,7 @@ export default function Home() {
           {selectedRecipe && (
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Recipe:</h3>
-              <p className="text-md">{selectedRecipe.formattedRecipe}</p>
+              <ReactMarkdown>{selectedRecipe.formattedRecipe}</ReactMarkdown>
             </div>
           )}
 
