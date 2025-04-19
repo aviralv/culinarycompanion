@@ -36,23 +36,17 @@ export default function Home() {
 
       const data = await response.json();
 
-      // Extract the recipe_output from the response
-      const recipeOutput = data?.recipe_output;
-
-      if (recipeOutput) {
-        if (typeof recipeOutput === 'string') {
-          // Split by lines, and then filter out any empty strings to get a clean array of ideas
-          const ideas = recipeOutput.split('\n').map(idea => idea.trim()).filter(idea => idea !== '');
-          if (Array.isArray(ideas) && ideas.length > 0) {
-            setRecipeIdeas(ideas);
-          } else {
-            throw new Error('No recipe ideas found in the response.');
-          }
+      // Check if the recipe_output exists and is a string
+      if (data && typeof data.recipe_output === 'string') {
+        // Split the string by newline characters to get individual recipe ideas
+        const ideas = data.recipe_output.split('\n').filter(idea => idea.trim() !== '');
+        if (Array.isArray(ideas) && ideas.length > 0) {
+          setRecipeIdeas(ideas);
         } else {
-          throw new Error('Recipe output is not a string.');
+          throw new Error('No valid recipe ideas found in the response.');
         }
       } else {
-        throw new Error('Recipe output not found in the API response.');
+        throw new Error('Unexpected response structure from the API.');
       }
       setSelectedRecipe(null); // Clear any previously selected recipe
     } catch (e: any) {
@@ -143,3 +137,4 @@ export default function Home() {
 interface RecipeDetailsOutput {
   formattedRecipe: string;
 }
+
