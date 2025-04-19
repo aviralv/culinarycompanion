@@ -52,8 +52,7 @@ export default function Home() {
         throw new Error('Unexpected format for recipe ideas in the response.');
       }
 
-      const result = await generateRecipeIdeas({ingredients});
-      setRecipeIdeas(result.recipeIdeas);
+      setRecipeIdeas(recipeIdeasArray);
       setSelectedRecipe(null); // Clear any previously selected recipe
     } catch (e: any) {
       setError(e.message || 'Failed to generate recipe ideas.');
@@ -149,5 +148,6 @@ interface RecipeDetailsOutput {
   ingredients: string[];
   instructions: string[];
 }
+
 
 
