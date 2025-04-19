@@ -1,90 +1,66 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
+import {useRouter} from 'next/navigation';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
-import {getRecipeDetails} from '@/ai/flows/display-recipe-details';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Info} from "lucide-react";
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
+import Image from 'next/image';
 
 export default function Home() {
   const [ingredients, setIngredients] = useState('');
-  const [recipeIdeas, setRecipeIdeas] = useState<string[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<RecipeDetailsOutput | null>(null);
-  const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
-  const [isLoadingRecipe, setIsLoadingRecipe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleGenerateIdeas = async () => {
-    setIsLoadingIdeas(true);
     setError(null);
-    try {
-      const response = await fetch('https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ingredients}),
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    if (!ingredients) {
+      setError('Please enter some ingredients.');
+      return;
+    }
 
-      const data = await response.json();
+    const url = `/results?ingredients=${encodeURIComponent(ingredients)}`;
+    router.push(url);
+  };
 
-      if (data && data.recipe_output) {
-        setRecipeIdeas([data.recipe_output]);
-        setSelectedRecipe(null);
-      } else {
-        throw new Error('Unexpected response structure from the API.');
-      }
-
-    } catch (e: any) {
-      setError(e.message || 'Failed to generate recipe ideas.');
-      setRecipeIdeas([]);
-      setSelectedRecipe(null);
-    } finally {
-      setIsLoadingIdeas(false);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleGenerateIdeas();
     }
   };
 
-  const handleRecipeSelect = async (recipeName: string) => {
-    setIsLoadingRecipe(true);
-    setError(null);
-    try {
-      const recipeDetails = await getRecipeDetails({recipeName});
-      setSelectedRecipe({formattedRecipe: recipeDetails});
-    } catch (e: any) {
-      setError(e.message || 'Failed to load recipe.');
-      setSelectedRecipe(null);
-    } finally {
-      setIsLoadingRecipe(false);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
-  };
+  }, []);
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
-      <Card>
-        <CardHeader>
-          <CardTitle>Culinary Companion</CardTitle>
-          <CardDescription>Enter your ingredients to get recipe ideas.</CardDescription>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <Card className="w-full max-w-md">
+        <CardHeader className="flex flex-col items-center">
+          <Image
+            src="/culinary-companion-logo.png" // Replace with your logo path
+            alt="Culinary Companion Logo"
+            width={100}
+            height={100}
+            className="mb-4"
+          />
+          <CardTitle className="text-2xl font-semibold">Culinary Companion</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex space-x-2">
-            <Input
-              type="text"
-              placeholder="Enter ingredients (e.g., chicken, rice, vegetables)"
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-            />
-            <Button onClick={handleGenerateIdeas} disabled={isLoadingIdeas}>
-              {isLoadingIdeas ? 'Generating...' : 'Generate Ideas'}
-            </Button>
-          </div>
+          <Input
+            type="text"
+            placeholder="Enter ingredients (e.g., chicken, rice, vegetables)"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            onKeyDown={handleKeyDown}
+            ref={inputRef}
+          />
 
           {error && (
             <Alert variant="destructive">
@@ -94,34 +70,11 @@ export default function Home() {
             </Alert>
           )}
 
-          {recipeIdeas.length > 0 && (
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Recipe Ideas:</h3>
-              <div>
-                {recipeIdeas.map((idea, index) => (
-                  <div key={index} className="cursor-pointer hover:text-accent"
-                      onClick={() => handleRecipeSelect(idea)}>
-                    <ReactMarkdown rehypePlugins={[rehypeRaw]} children={idea} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {selectedRecipe && (
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Recipe:</h3>
-              <ReactMarkdown rehypePlugins={[rehypeRaw]} children={selectedRecipe.formattedRecipe} />
-            </div>
-          )}
-
-          {isLoadingRecipe && <p>Loading recipe...</p>}
+          <Button onClick={handleGenerateIdeas} className="w-full">
+            Generate Ideas
+          </Button>
         </CardContent>
       </Card>
     </div>
   );
-}
-
-interface RecipeDetailsOutput {
-  formattedRecipe: any;
 }
