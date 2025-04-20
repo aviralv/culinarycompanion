@@ -20,13 +20,16 @@ st.markdown("""
         padding-top: 2rem;
         max-width: 700px;
     }
+    /* Override Streamlit's default button styles */
     .stButton > button {
         background-color: #1E2530;
         color: white;
         height: 46px;
-        white-space: nowrap !important;
-        padding: 0 20px !important;
-        min-width: fit-content !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: auto !important;
+        min-width: 120px !important;
     }
     .stTextInput > div > div > input {
         background-color: rgba(255, 255, 255, 0.05);
@@ -40,6 +43,12 @@ st.markdown("""
     }
     div[data-testid="stImage"] > img {
         display: block;
+        margin: 0 auto;
+    }
+    /* Fix form layout */
+    div[data-testid="stForm"] {
+        width: 100%;
+        max-width: 800px;
         margin: 0 auto;
     }
     </style>
@@ -97,7 +106,7 @@ def input_page():
     # Display centered logo
     col1, col2, col3 = st.columns([2, 1, 2])
     with col2:
-        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=130)
+        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=260)
     
     # Title and subtitle
     st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
@@ -106,18 +115,18 @@ def input_page():
     # Add some spacing
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Create form
+    # Create form with adjusted column ratio
     with st.form(key="ingredient_form"):
-        col1, col2 = st.columns([4, 1])
+        cols = st.columns([7, 2])  # Adjusted ratio to give more space to the button
         
-        with col1:
+        with cols[0]:
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="Enter ingredients (e.g., chicken, rice, vegetables)",
                 label_visibility="collapsed"
             )
         
-        with col2:
+        with cols[1]:
             submit = st.form_submit_button("Create Recipes")
         
         if submit:
