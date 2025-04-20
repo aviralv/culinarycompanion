@@ -18,25 +18,48 @@ st.markdown("""
         background-color: #1E1E1E;
     }
     .main {
-        max-width: 1200px;
-        padding: 2rem;
+        max-width: 800px !important;
+        padding: 1rem;
+        margin: 0 auto;
+    }
+    section[data-testid="stSidebar"] {
+        display: none;
     }
     .stButton button {
-        background-color: #FF4B4B;
-        color: white;
-        border-radius: 4px;
-        padding: 0.5rem 1rem;
-        border: none;
+        background-color: #1E2530 !important;
+        color: white !important;
+        border-radius: 6px !important;
+        border: 1px solid #2D3B4E !important;
+        padding: 0.5rem 1rem !important;
+        min-height: 46px !important;
     }
     .stTextInput input {
-        background-color: #2E2E2E;
-        color: white;
-        border: 1px solid #3E3E3E;
-        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 6px !important;
+        min-height: 46px !important;
+        line-height: 46px !important;
     }
     div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
+        padding: 2rem 0;
+    }
+    div[data-testid="stImage"] img {
+        border-radius: 12px;
+    }
+    .stMarkdown {
+        margin: 0 auto;
+        text-align: center;
+    }
+    div[data-testid="stForm"] {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    div[data-testid="column"] {
+        padding: 0 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -90,22 +113,20 @@ def generate_recipe_ideas(ingredients):
 def input_page():
     """Display the input page for ingredients"""
     # Add vertical spacing at the top
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<div style='padding: 3rem'></div>", unsafe_allow_html=True)
     
     # Center and display the icon
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=150)
+    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=120)
     
     # Add title with custom styling
-    st.markdown("<h1 style='text-align: center; color: white; margin-bottom: 2rem;'>Culinary Companion</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: white; font-size: 2.5rem; margin: 1.5rem 0;'>Culinary Companion</h1>", unsafe_allow_html=True)
     
     # Add subtitle with custom styling
-    st.markdown("<p style='text-align: center; color: #CCCCCC; margin-bottom: 2rem;'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #CCCCCC; margin-bottom: 2rem; font-size: 1.1rem;'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
     
     # Create form with horizontal layout for input and button
     with st.form(key="ingredient_form"):
-        cols = st.columns([6, 2])  # Adjust ratio for input and button
+        cols = st.columns([5, 2])  # Adjust ratio for input and button
         
         with cols[0]:
             ingredients = st.text_input(
