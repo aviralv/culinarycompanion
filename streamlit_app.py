@@ -149,26 +149,47 @@ def input_page():
 
 def format_recipe_content(recipe_text):
     """Format recipe text into ingredients and directions"""
-    # Split content by sections
-    sections = recipe_text.split('\n\n')
     ingredients = []
     directions = []
     current_section = None
     
-    for line in recipe_text.split('\n'):
+    # Split the text into lines and process each line
+    lines = recipe_text.split('\n')
+    
+    for line in lines:
         line = line.strip()
         if not line:
             continue
-        if 'ingredient' in line.lower():
+            
+        # Check for section headers
+        lower_line = line.lower()
+        if 'description:' in lower_line:
+            continue  # Skip description lines
+        elif any(word in lower_line for word in ['ingredient', 'you\'ll need', 'you need']):
             current_section = 'ingredients'
             continue
-        if any(word in line.lower() for word in ['direction', 'instruction', 'preparation', 'method']):
+        elif any(word in lower_line for word in ['instruction', 'direction', 'method', 'step']):
             current_section = 'directions'
             continue
-        if current_section == 'ingredients' and line.startswith('•'):
-            ingredients.append(line[1:].strip())
-        elif current_section == 'directions' and (line[0].isdigit() or line.startswith('•')):
-            directions.append(line.lstrip('0123456789.•').strip())
+            
+        # Process content based on current section
+        if current_section == 'ingredients':
+            # Clean up the ingredient line
+            clean_line = line.lstrip('•-*').strip()
+            if clean_line and not clean_line.lower().startswith(('ingredient', 'additional')):
+                ingredients.append(clean_line)
+        elif current_section == 'directions':
+            # Clean up the direction line
+            clean_line = re.sub(r'^\d+[\.\)]?\s*', '', line).strip()
+            if clean_line and not clean_line.lower().startswith(('instruction', 'direction')):
+                directions.append(clean_line)
+                
+    # If sections weren't explicitly marked, try to infer them
+    if not ingredients and not directions:
+        # Assume first part is ingredients, second part is directions
+        split_point = len(lines) // 2
+        ingredients = [line.strip() for line in lines[:split_point] if line.strip()]
+        directions = [line.strip() for line in lines[split_point:] if line.strip()]
     
     return ingredients, directions
 
@@ -179,7 +200,7 @@ def results_page():
         st.session_state.page = "input"
         st.rerun()
     
-    st.title("Culinary Companion - Recipe Ideas")
+    st.title("Ideas")
     st.subheader(f"Ideas using: {st.session_state.ingredients}")
     
     # Generate recipes with spinner
@@ -201,20 +222,22 @@ def results_page():
                     
                     # Extract recipe title (first line)
                     title = recipe.split('\n')[0].strip()
+                    if title.startswith(('1.', '2.', '3.')):  # Remove numbering if present
+                        title = title.split('.', 1)[1].strip()
                     st.markdown(f"### {title}")
                     
                     # Format and display ingredients and directions
                     ingredients, directions = format_recipe_content(recipe)
                     
-                    # Display ingredients
-                    st.markdown("**Ingredients:**")
-                    for ingredient in ingredients:
-                        st.markdown(f"• {ingredient}")
+                    if ingredients:
+                        st.markdown("#### Ingredients")
+                        for ingredient in ingredients:
+                            st.markdown(f"• {ingredient}")
                     
-                    # Display directions
-                    st.markdown("**Directions:**")
-                    for i, direction in enumerate(directions, 1):
-                        st.markdown(f"{i}. {direction}")
+                    if directions:
+                        st.markdown("#### Directions")
+                        for i, direction in enumerate(directions, 1):
+                            st.markdown(f"{i}. {direction}")
                     
                     st.markdown('</div>', unsafe_allow_html=True)
     else:
