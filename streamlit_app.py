@@ -18,10 +18,15 @@ def remove_html_tags(text):
 def format_recipe_ideas(recipe_output):
     """Format recipe output into a list of clean recipe ideas"""
     if isinstance(recipe_output, str):
+        # Clean any HTML tags first
+        clean_output = remove_html_tags(recipe_output)
+        
         # Split the string into a list of recipe ideas based on numbering
-        recipe_ideas = re.split(r'\n\d+\.\s*', recipe_output)
-        # Remove any empty strings from the list
-        return [remove_html_tags(idea.strip()) for idea in recipe_ideas if idea.strip()]
+        # Look for patterns like "1." or "1)" at the beginning of a line
+        recipe_ideas = re.split(r'\n\s*\d+[\.\)]\s*', clean_output)
+        
+        # Remove any empty strings from the list and clean up each idea
+        return [idea.strip() for idea in recipe_ideas if idea.strip()]
     return []
 
 def generate_recipe_ideas(ingredients):
@@ -94,7 +99,23 @@ def results_page():
     elif recipe_ideas:
         for i, idea in enumerate(recipe_ideas, 1):
             with st.container():
-                st.markdown(f"### {i}. {idea}")
+                # Check if the idea starts with a title-like format
+                if re.match(r'^The |^Classic |^Simple |^Basic |^Easy ', idea):
+                    # If it has a title format, use it as the header
+                    st.markdown(f"### {i}. {idea.split('\n')[0]}")
+                    
+                    # The rest becomes the description with proper formatting
+                    description_lines = idea.split('\n')[1:]
+                    if description_lines:
+                        description = '\n'.join(description_lines)
+                        # Replace **text** with actual bold formatting
+                        description = re.sub(r'\*\*(.*?)\*\*', r'**\1**', description)
+                        st.markdown(description)
+                else:
+                    # Just display as a regular markdown
+                    formatted_idea = re.sub(r'\*\*(.*?)\*\*', r'**\1**', idea)
+                    st.markdown(f"### {i}. {formatted_idea}")
+                
                 st.divider()
     else:
         st.warning("No recipe ideas were generated. Try different ingredients!")
