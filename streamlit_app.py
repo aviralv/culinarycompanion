@@ -67,7 +67,7 @@ def input_page():
                 # Store ingredients in session state and switch to results page
                 st.session_state.ingredients = ingredients
                 st.session_state.page = "results"
-                st.experimental_rerun()
+                st.rerun()
             elif submit_button and not ingredients:
                 st.error("Please enter some ingredients.")
 
@@ -78,7 +78,7 @@ def results_page():
     # Display back button
     if st.button("← Back to Ingredients"):
         st.session_state.page = "input"
-        st.experimental_rerun()
+        st.rerun()
     
     # Display a spinner while processing
     with st.spinner("Generating recipe ideas..."):
