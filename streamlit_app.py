@@ -9,11 +9,16 @@ def remove_html_tags(text):
     return re.sub(clean, '', text)
 
 def main():
+    st.set_page_config(
+        page_title="Culinary Companion",
+        page_icon="public/culinary-companion-logo.png",
+    )
+
     st.title("Culinary Companion")
+    st.image("public/culinary-companion-logo.png", width=300)
+    ingredients = st.text_input("Enter ingredients (e.g., chicken, rice, vegetables)", key="ingredients_input")
 
-    ingredients = st.text_input("Enter ingredients (e.g., chicken, rice, vegetables)")
-
-    if st.button("Generate Ideas"):
+    if st.button("Generate Ideas") or ingredients:
         if not ingredients:
             st.error("Please enter some ingredients.")
         else:
@@ -29,18 +34,13 @@ def main():
                     if 'recipe_output' in data:
                         recipe_output = data['recipe_output']
                         if isinstance(recipe_output, str):
-                            # Split the string into a list of recipe ideas based on numbering
                             recipe_ideas = re.split(r'\n\d+\.\s*', recipe_output)
-                            # Remove any empty strings from the list
                             recipe_ideas = [idea.strip() for idea in recipe_ideas if idea.strip()]
 
                             if recipe_ideas:
                                 st.subheader("Recipe Ideas:")
                                 for idea in recipe_ideas:
-                                    # Remove HTML tags
                                     clean_idea = remove_html_tags(idea)
-
-                                    # Use st.markdown to render the cleaned recipe idea
                                     st.markdown(clean_idea)
                             else:
                                 st.warning("No recipe ideas found in the response.")
