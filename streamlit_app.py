@@ -91,8 +91,8 @@ def input_page():
     # Add some spacing
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # Display centered logo
-    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png")
+    # Display centered logo with much smaller size
+    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=35)
     
     # Title and subtitle
     st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
