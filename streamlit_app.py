@@ -3,66 +3,36 @@ import requests
 import json
 import re
 
-# Configure the page to be responsive and dark themed
+# Configure the page
 st.set_page_config(
     page_title="Culinary Companion",
     layout="centered",
     initial_sidebar_state="collapsed",
-    page_icon="🍳"
 )
 
-# Custom CSS to improve the visual appearance
+# Custom CSS
 st.markdown("""
     <style>
     .stApp {
         background-color: #1E1E1E;
     }
-    .main {
-        max-width: 800px !important;
-        padding: 1rem;
-        margin: 0 auto;
+    .block-container {
+        padding-top: 2rem;
+        max-width: 700px;
     }
-    section[data-testid="stSidebar"] {
-        display: none;
+    .stButton > button {
+        background-color: #1E2530;
+        color: white;
+        height: 46px;
+        width: 100%;
     }
-    .stButton button {
-        background-color: #1E2530 !important;
-        color: white !important;
-        border-radius: 6px !important;
-        border: 1px solid #2D3B4E !important;
-        padding: 0.5rem 1rem !important;
-        min-height: 46px !important;
-    }
-    .stTextInput input {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 6px !important;
-        min-height: 46px !important;
-        line-height: 46px !important;
-    }
-    div[data-testid="stImage"] {
-        display: flex;
-        justify-content: center;
-        padding: 2rem 0;
-    }
-    div[data-testid="stImage"] img {
-        border-radius: 12px;
-    }
-    .stMarkdown {
-        margin: 0 auto;
-        text-align: center;
-    }
-    div[data-testid="stForm"] {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-    div[data-testid="column"] {
-        padding: 0 !important;
+    .stTextInput > div > div > input {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: white;
+        height: 46px;
     }
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 def remove_html_tags(text):
     """Remove html tags from a string"""
@@ -77,12 +47,10 @@ def format_recipe_ideas(recipe_output):
         
         # Split by numbered items but preserve the numbers
         recipe_ideas = []
-        # Use positive lookbehind to keep the numbers in the split result
         parts = re.split(r'(?=\n\s*\d+[\.\)]\s*)', clean_output)
         
         for part in parts:
             if part.strip():
-                # Remove any leading/trailing whitespace while preserving internal formatting
                 recipe_ideas.append(part.strip())
         
         return recipe_ideas
@@ -112,84 +80,73 @@ def generate_recipe_ideas(ingredients):
 
 def input_page():
     """Display the input page for ingredients"""
-    # Add vertical spacing at the top
-    st.markdown("<div style='padding: 3rem'></div>", unsafe_allow_html=True)
+    # Add some spacing
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # Center and display the icon
-    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=120)
+    # Display centered logo
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=120)
     
-    # Add title with custom styling
-    st.markdown("<h1 style='text-align: center; color: white; font-size: 2.5rem; margin: 1.5rem 0;'>Culinary Companion</h1>", unsafe_allow_html=True)
+    # Title and subtitle
+    st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #CCCCCC;'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
     
-    # Add subtitle with custom styling
-    st.markdown("<p style='text-align: center; color: #CCCCCC; margin-bottom: 2rem; font-size: 1.1rem;'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
+    # Add some spacing
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    # Create form with horizontal layout for input and button
+    # Create form
     with st.form(key="ingredient_form"):
-        cols = st.columns([5, 2])  # Adjust ratio for input and button
+        col1, col2 = st.columns([4, 1])
         
-        with cols[0]:
+        with col1:
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="Enter ingredients (e.g., chicken, rice, vegetables)",
-                key="ingredients_input",
                 label_visibility="collapsed"
             )
         
-        with cols[1]:
-            submit_button = st.form_submit_button(
-                label="Create Recipes",
-                use_container_width=True,
-            )
+        with col2:
+            submit = st.form_submit_button("Create Recipes")
         
-        if submit_button and ingredients:
-            st.session_state.ingredients = ingredients
-            st.session_state.page = "results"
-            st.rerun()
-        elif submit_button and not ingredients:
-            st.error("Please enter some ingredients.")
+        if submit:
+            if ingredients:
+                st.session_state.ingredients = ingredients
+                st.session_state.page = "results"
+                st.rerun()
+            else:
+                st.error("Please enter some ingredients.")
 
 def results_page():
     """Display the results page with recipe ideas"""
     st.title("Culinary Companion - Recipe Ideas")
     
-    # Display back button
     if st.button("← Back to Ingredients"):
         st.session_state.page = "input"
         st.rerun()
     
-    # Display a spinner while processing
     with st.spinner("Generating recipe ideas..."):
-        # Generate recipe ideas based on ingredients
         recipe_ideas, error = generate_recipe_ideas(st.session_state.ingredients)
     
-    # Display ingredients used
     st.subheader(f"Ideas using: {st.session_state.ingredients}")
     
-    # Display recipe ideas or error
     if error:
         st.error(error)
     elif recipe_ideas:
         for idea in recipe_ideas:
             with st.container():
-                # Remove any extra newlines while preserving formatting
                 cleaned_idea = re.sub(r'\n\s*\n', '\n', idea)
-                # Ensure proper spacing for bullet points
                 cleaned_idea = re.sub(r'\n\s*•', '\n\n•', cleaned_idea)
-                # Ensure proper spacing for numbered items
                 cleaned_idea = re.sub(r'(\d+[\.\)])\s*', r'\1 ', cleaned_idea)
-                
                 st.markdown(cleaned_idea)
                 st.divider()
     else:
         st.warning("No recipe ideas were generated. Try different ingredients!")
 
 def main():
-    # Initialize session state
     if "page" not in st.session_state:
         st.session_state.page = "input"
     
-    # Display appropriate page based on session state
     if st.session_state.page == "input":
         input_page()
     elif st.session_state.page == "results":
