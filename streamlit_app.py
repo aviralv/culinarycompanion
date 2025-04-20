@@ -51,6 +51,16 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
     }
+    /* Recipe card styling */
+    .recipe-card {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+        height: 100%;
+    }
+    .recipe-card h3 {
+        margin-bottom: 1rem;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -137,29 +147,76 @@ def input_page():
             else:
                 st.error("Please enter some ingredients.")
 
+def format_recipe_content(recipe_text):
+    """Format recipe text into ingredients and directions"""
+    # Split content by sections
+    sections = recipe_text.split('\n\n')
+    ingredients = []
+    directions = []
+    current_section = None
+    
+    for line in recipe_text.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
+        if 'ingredient' in line.lower():
+            current_section = 'ingredients'
+            continue
+        if any(word in line.lower() for word in ['direction', 'instruction', 'preparation', 'method']):
+            current_section = 'directions'
+            continue
+        if current_section == 'ingredients' and line.startswith('•'):
+            ingredients.append(line[1:].strip())
+        elif current_section == 'directions' and (line[0].isdigit() or line.startswith('•')):
+            directions.append(line.lstrip('0123456789.•').strip())
+    
+    return ingredients, directions
+
 def results_page():
     """Display the results page with recipe ideas"""
-    st.title("Culinary Companion - Recipe Ideas")
-    
+    # Back button at the top
     if st.button("← Back to Ingredients"):
         st.session_state.page = "input"
         st.rerun()
     
+    st.title("Culinary Companion - Recipe Ideas")
+    st.subheader(f"Ideas using: {st.session_state.ingredients}")
+    
+    # Generate recipes with spinner
     with st.spinner("Generating recipe ideas..."):
         recipe_ideas, error = generate_recipe_ideas(st.session_state.ingredients)
-    
-    st.subheader(f"Ideas using: {st.session_state.ingredients}")
     
     if error:
         st.error(error)
     elif recipe_ideas:
-        for idea in recipe_ideas:
-            with st.container():
-                cleaned_idea = re.sub(r'\n\s*\n', '\n', idea)
-                cleaned_idea = re.sub(r'\n\s*•', '\n\n•', cleaned_idea)
-                cleaned_idea = re.sub(r'(\d+[\.\)])\s*', r'\1 ', cleaned_idea)
-                st.markdown(cleaned_idea)
-                st.divider()
+        # Create three columns for recipes
+        cols = st.columns(3)
+        
+        # Display up to three recipes
+        for idx, recipe in enumerate(recipe_ideas[:3]):
+            with cols[idx]:
+                # Create a card-like container
+                with st.container():
+                    st.markdown('<div class="recipe-card">', unsafe_allow_html=True)
+                    
+                    # Extract recipe title (first line)
+                    title = recipe.split('\n')[0].strip()
+                    st.markdown(f"### {title}")
+                    
+                    # Format and display ingredients and directions
+                    ingredients, directions = format_recipe_content(recipe)
+                    
+                    # Display ingredients
+                    st.markdown("**Ingredients:**")
+                    for ingredient in ingredients:
+                        st.markdown(f"• {ingredient}")
+                    
+                    # Display directions
+                    st.markdown("**Directions:**")
+                    for i, direction in enumerate(directions, 1):
+                        st.markdown(f"{i}. {direction}")
+                    
+                    st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.warning("No recipe ideas were generated. Try different ingredients!")
 
