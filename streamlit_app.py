@@ -36,7 +36,7 @@ st.markdown("""
         justify-content: center;
     }
     [data-testid="stImage"] > img {
-        width: 80px !important;
+        width: 27px !important;
         margin: 0 auto;
     }
     </style>
