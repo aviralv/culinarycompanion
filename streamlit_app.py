@@ -3,57 +3,112 @@ import requests
 import json
 import re
 
+# Configure the page to be responsive
+st.set_page_config(
+    page_title="Culinary Companion",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 def remove_html_tags(text):
     """Remove html tags from a string"""
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
-def main():
-    st.set_page_config(
-        page_title="Culinary Companion",
-        page_icon="public/culinary-companion-logo.png",
-    )
+def format_recipe_ideas(recipe_output):
+    """Format recipe output into a list of clean recipe ideas"""
+    if isinstance(recipe_output, str):
+        # Split the string into a list of recipe ideas based on numbering
+        recipe_ideas = re.split(r'\n\d+\.\s*', recipe_output)
+        # Remove any empty strings from the list
+        return [remove_html_tags(idea.strip()) for idea in recipe_ideas if idea.strip()]
+    return []
 
-    st.title("Culinary Companion")
-    st.image("public/culinary-companion-logo.png", width=300)
-    ingredients = st.text_input("Enter ingredients (e.g., chicken, rice, vegetables)", key="ingredients_input")
+def generate_recipe_ideas(ingredients):
+    """Call API to generate recipe ideas"""
+    try:
+        url = "https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1"
+        payload = json.dumps({"ingredients": ingredients})
+        headers = {'Content-Type': 'application/json'}
 
-    if st.button("Generate Ideas") or ingredients:
-        if not ingredients:
-            st.error("Please enter some ingredients.")
+        response = requests.post(url, headers=headers, data=payload)
+
+        if response.status_code == 200:
+            data = response.json()
+            if 'recipe_output' in data:
+                return format_recipe_ideas(data['recipe_output']), None
+            else:
+                return None, "Unexpected response structure from the API."
         else:
-            try:
-                url = "https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1"
-                payload = json.dumps({"ingredients": ingredients})
-                headers = {'Content-Type': 'application/json'}
+            return None, f"HTTP error! status: {response.status_code}"
+    except requests.exceptions.RequestException as e:
+        return None, f"Request failed: {e}"
+    except json.JSONDecodeError as e:
+        return None, f"Failed to decode JSON response: {e}"
 
-                response = requests.post(url, headers=headers, data=payload)
+def input_page():
+    """Display the input page for ingredients"""
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        st.title("Culinary Companion")
+        st.write("Enter ingredients you have and get recipe ideas!")
+        
+        # Create form to handle Enter key press
+        with st.form(key="ingredient_form"):
+            ingredients = st.text_input(
+                "Enter ingredients (e.g., chicken, rice, vegetables)",
+                key="ingredients_input"
+            )
+            
+            submit_button = st.form_submit_button(label="Generate Ideas")
+            
+            if submit_button and ingredients:
+                # Store ingredients in session state and switch to results page
+                st.session_state.ingredients = ingredients
+                st.session_state.page = "results"
+                st.experimental_rerun()
+            elif submit_button and not ingredients:
+                st.error("Please enter some ingredients.")
 
-                if response.status_code == 200:
-                    data = response.json()
-                    if 'recipe_output' in data:
-                        recipe_output = data['recipe_output']
-                        if isinstance(recipe_output, str):
-                            recipe_ideas = re.split(r'\n\d+\.\s*', recipe_output)
-                            recipe_ideas = [idea.strip() for idea in recipe_ideas if idea.strip()]
+def results_page():
+    """Display the results page with recipe ideas"""
+    st.title("Culinary Companion - Recipe Ideas")
+    
+    # Display back button
+    if st.button("← Back to Ingredients"):
+        st.session_state.page = "input"
+        st.experimental_rerun()
+    
+    # Display a spinner while processing
+    with st.spinner("Generating recipe ideas..."):
+        # Generate recipe ideas based on ingredients
+        recipe_ideas, error = generate_recipe_ideas(st.session_state.ingredients)
+    
+    # Display ingredients used
+    st.subheader(f"Ideas using: {st.session_state.ingredients}")
+    
+    # Display recipe ideas or error
+    if error:
+        st.error(error)
+    elif recipe_ideas:
+        for i, idea in enumerate(recipe_ideas, 1):
+            with st.container():
+                st.markdown(f"### {i}. {idea}")
+                st.divider()
+    else:
+        st.warning("No recipe ideas were generated. Try different ingredients!")
 
-                            if recipe_ideas:
-                                st.subheader("Recipe Ideas:")
-                                for idea in recipe_ideas:
-                                    clean_idea = remove_html_tags(idea)
-                                    st.markdown(clean_idea)
-                            else:
-                                st.warning("No recipe ideas found in the response.")
-                        else:
-                            st.error("Unexpected response format: recipe_output is not a string.")
-                    else:
-                        st.error("Unexpected response structure from the API.")
-                else:
-                    st.error(f"HTTP error! status: {response.status_code}")
-            except requests.exceptions.RequestException as e:
-                st.error(f"Request failed: {e}")
-            except json.JSONDecodeError as e:
-                st.error(f"Failed to decode JSON response: {e}")
+def main():
+    # Initialize session state
+    if "page" not in st.session_state:
+        st.session_state.page = "input"
+    
+    # Display appropriate page based on session state
+    if st.session_state.page == "input":
+        input_page()
+    elif st.session_state.page == "results":
+        results_page()
 
 if __name__ == "__main__":
     main()

@@ -12,3 +12,5 @@ Since this environment doesn't directly support pushing to GitHub, you will need
 2.  **Initialize a Git repository:** In your local environment, create a new Git repository or use an existing one.
 3.  **Copy project files:** Extract the contents of the downloaded zip file into your local Git repository.
 4.  **Commit and push:** Commit your changes and push them to your GitHub repository.
+
+**Note:** This environment does not support direct pushing to GitHub. Please use the manual export process described above.
