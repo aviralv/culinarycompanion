@@ -24,7 +24,9 @@ st.markdown("""
         background-color: #1E2530;
         color: white;
         height: 46px;
-        white-space: nowrap;
+        white-space: nowrap !important;
+        padding: 0 20px !important;
+        min-width: fit-content !important;
     }
     .stTextInput > div > div > input {
         background-color: rgba(255, 255, 255, 0.05);
@@ -95,7 +97,7 @@ def input_page():
     # Display centered logo
     col1, col2, col3 = st.columns([2, 1, 2])
     with col2:
-        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=65)
+        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=130)
     
     # Title and subtitle
     st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
