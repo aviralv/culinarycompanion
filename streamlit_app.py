@@ -99,23 +99,18 @@ def results_page():
     elif recipe_ideas:
         for i, idea in enumerate(recipe_ideas, 1):
             with st.container():
-                # Check if the idea starts with a title-like format
-                if re.match(r'^The |^Classic |^Simple |^Basic |^Easy ', idea):
-                    # If it has a title format, use it as the header
-                    parts = idea.split(r'\n')
-                    st.markdown(f"### {i}. {parts[0]}")
-                    
-                    # The rest becomes the description with proper formatting
-                    description_lines = parts[1:]
-                    if description_lines:
-                        description = '\n'.join(description_lines)
-                        # Replace **text** with actual bold formatting
-                        description = re.sub(r'\*\*(.*?)\*\*', r'**\1**', description)
-                        st.markdown(description)
-                else:
-                    # Just display as a regular markdown
-                    formatted_idea = re.sub(r'\*\*(.*?)\*\*', r'**\1**', idea)
-                    st.markdown(f"### {i}. {formatted_idea}")
+                # Split the idea into lines
+                lines = idea.strip().split('\n')
+                
+                # The first line is always the title
+                title = lines[0].strip()
+                st.markdown(f"### {i}. {title}")
+                
+                # The rest is the description/content
+                if len(lines) > 1:
+                    # Join the remaining lines and display as markdown
+                    content = '\n'.join(lines[1:]).strip()
+                    st.markdown(content)
                 
                 st.divider()
     else:
