@@ -102,10 +102,11 @@ def results_page():
                 # Check if the idea starts with a title-like format
                 if re.match(r'^The |^Classic |^Simple |^Basic |^Easy ', idea):
                     # If it has a title format, use it as the header
-                    st.markdown(f"### {i}. {idea.split('\n')[0]}")
+                    parts = idea.split(r'\n')
+                    st.markdown(f"### {i}. {parts[0]}")
                     
                     # The rest becomes the description with proper formatting
-                    description_lines = idea.split('\n')[1:]
+                    description_lines = parts[1:]
                     if description_lines:
                         description = '\n'.join(description_lines)
                         # Replace **text** with actual bold formatting
