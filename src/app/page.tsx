@@ -44,7 +44,7 @@ export default function Home() {
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-col items-center">
           <Image
-            src="/culinary-companion-logo.png" // Replace with your logo path
+            src="/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" 
             alt="Culinary Companion Logo"
             width={100}
             height={100}
