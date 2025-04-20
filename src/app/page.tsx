@@ -46,8 +46,9 @@ export default function Home() {
           <Image
             src="/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" 
             alt="Culinary Companion Logo"
-            width={100}
-            height={100}
+            width={300}
+            height={300}
+            priority
             className="mb-4"
           />
           <CardTitle className="text-2xl font-semibold">Culinary Companion</CardTitle>
