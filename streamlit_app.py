@@ -24,12 +24,20 @@ st.markdown("""
         background-color: #1E2530;
         color: white;
         height: 46px;
-        width: 100%;
+        white-space: nowrap;
     }
     .stTextInput > div > div > input {
         background-color: rgba(255, 255, 255, 0.05);
         color: white;
         height: 46px;
+    }
+    [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+    }
+    [data-testid="stImage"] > img {
+        width: 120px !important;
+        margin: 0 auto;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -84,9 +92,7 @@ def input_page():
     st.markdown("<br><br>", unsafe_allow_html=True)
     
     # Display centered logo
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=120)
+    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png")
     
     # Title and subtitle
     st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
