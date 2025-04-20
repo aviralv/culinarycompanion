@@ -58,28 +58,36 @@ def generate_recipe_ideas(ingredients):
 
 def input_page():
     """Display the input page for ingredients"""
-    col1, col2, col3 = st.columns([1, 2, 1])
+    st.title("Culinary Companion")
     
+    # Center and display the icon
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.title("Culinary Companion")
-        st.write("Enter ingredients you have and get recipe ideas!")
+        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=200)
+    
+    st.write("Enter ingredients you have and get recipe ideas!")
+    
+    # Create form with horizontal layout for input and button
+    with st.form(key="ingredient_form"):
+        col1, col2 = st.columns([4, 1])
         
-        # Create form to handle Enter key press
-        with st.form(key="ingredient_form"):
+        with col1:
             ingredients = st.text_input(
                 "Enter ingredients (e.g., chicken, rice, vegetables)",
-                key="ingredients_input"
+                key="ingredients_input",
+                label_visibility="collapsed"
             )
-            
-            submit_button = st.form_submit_button(label="Generate Ideas")
-            
-            if submit_button and ingredients:
-                # Store ingredients in session state and switch to results page
-                st.session_state.ingredients = ingredients
-                st.session_state.page = "results"
-                st.rerun()
-            elif submit_button and not ingredients:
-                st.error("Please enter some ingredients.")
+        
+        with col2:
+            submit_button = st.form_submit_button(label="Create Recipes", use_container_width=True)
+        
+        if submit_button and ingredients:
+            # Store ingredients in session state and switch to results page
+            st.session_state.ingredients = ingredients
+            st.session_state.page = "results"
+            st.rerun()
+        elif submit_button and not ingredients:
+            st.error("Please enter some ingredients.")
 
 def results_page():
     """Display the results page with recipe ideas"""
