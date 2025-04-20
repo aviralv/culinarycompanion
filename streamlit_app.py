@@ -21,12 +21,17 @@ def format_recipe_ideas(recipe_output):
         # Clean any HTML tags first
         clean_output = remove_html_tags(recipe_output)
         
-        # Split the string into a list of recipe ideas based on numbering
-        # Look for patterns like "1." or "1)" at the beginning of a line
-        recipe_ideas = re.split(r'\n\s*\d+[\.\)]\s*', clean_output)
+        # Split by numbered items but preserve the numbers
+        recipe_ideas = []
+        # Use positive lookbehind to keep the numbers in the split result
+        parts = re.split(r'(?=\n\s*\d+[\.\)]\s*)', clean_output)
         
-        # Remove any empty strings from the list and clean up each idea
-        return [idea.strip() for idea in recipe_ideas if idea.strip()]
+        for part in parts:
+            if part.strip():
+                # Remove any leading/trailing whitespace while preserving internal formatting
+                recipe_ideas.append(part.strip())
+        
+        return recipe_ideas
     return []
 
 def generate_recipe_ideas(ingredients):
@@ -97,21 +102,16 @@ def results_page():
     if error:
         st.error(error)
     elif recipe_ideas:
-        for i, idea in enumerate(recipe_ideas, 1):
+        for idea in recipe_ideas:
             with st.container():
-                # Split the idea into lines
-                lines = idea.strip().split('\n')
+                # Remove any extra newlines while preserving formatting
+                cleaned_idea = re.sub(r'\n\s*\n', '\n', idea)
+                # Ensure proper spacing for bullet points
+                cleaned_idea = re.sub(r'\n\s*•', '\n\n•', cleaned_idea)
+                # Ensure proper spacing for numbered items
+                cleaned_idea = re.sub(r'(\d+[\.\)])\s*', r'\1 ', cleaned_idea)
                 
-                # The first line is always the title
-                title = lines[0].strip()
-                st.markdown(f"### {i}. {title}")
-                
-                # The rest is the description/content
-                if len(lines) > 1:
-                    # Join the remaining lines and display as markdown
-                    content = '\n'.join(lines[1:]).strip()
-                    st.markdown(content)
-                
+                st.markdown(cleaned_idea)
                 st.divider()
     else:
         st.warning("No recipe ideas were generated. Try different ingredients!")
