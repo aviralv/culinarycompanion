@@ -75,15 +75,12 @@ def format_recipe_ideas(recipe_output):
         # Clean any HTML tags first
         clean_output = remove_html_tags(recipe_output)
         
-        # Split by numbered items but preserve the numbers
-        recipe_ideas = []
-        parts = re.split(r'(?=\n\s*\d+[\.\)]\s*)', clean_output)
+        # Split by double newlines to separate sections
+        sections = [section.strip() for section in clean_output.split('\n\n') if section.strip()]
         
-        for part in parts:
-            if part.strip():
-                recipe_ideas.append(part.strip())
+        if sections:
+            return sections
         
-        return recipe_ideas
     return []
 
 def generate_recipe_ideas(ingredients):
@@ -94,19 +91,38 @@ def generate_recipe_ideas(ingredients):
         headers = {'Content-Type': 'application/json'}
 
         response = requests.post(url, headers=headers, data=payload)
-
-        if response.status_code == 200:
+        
+        # Check if response is successful
+        response.raise_for_status()
+        
+        # Try to decode JSON response
+        try:
             data = response.json()
-            if 'recipe_output' in data:
-                return format_recipe_ideas(data['recipe_output']), None
-            else:
-                return None, "Unexpected response structure from the API."
-        else:
-            return None, f"HTTP error! status: {response.status_code}"
+        except json.JSONDecodeError:
+            # If JSON decoding fails, try to use the text directly
+            text_response = response.text
+            if text_response:
+                # Split the text response into sections
+                sections = [section.strip() for section in text_response.split('\n\n') if section.strip()]
+                if sections:
+                    return sections, None
+            return None, "Invalid response format from API"
+            
+        # Handle JSON response
+        if isinstance(data, dict) and 'recipe_output' in data:
+            recipe_text = data['recipe_output']
+            if isinstance(recipe_text, str):
+                # Split the text into sections
+                sections = [section.strip() for section in recipe_text.split('\n\n') if section.strip()]
+                if sections:
+                    return sections, None
+            
+        return None, "Unexpected response structure from API"
+        
     except requests.exceptions.RequestException as e:
-        return None, f"Request failed: {e}"
-    except json.JSONDecodeError as e:
-        return None, f"Failed to decode JSON response: {e}"
+        return None, f"Request failed: {str(e)}"
+    except Exception as e:
+        return None, f"An error occurred: {str(e)}"
 
 def input_page():
     """Display the input page for ingredients"""
@@ -205,11 +221,11 @@ def results_page():
     
     # Generate recipes with spinner
     with st.spinner("Generating recipe ideas..."):
-        recipe_ideas, error = generate_recipe_ideas(st.session_state.ingredients)
+        recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
     
     if error:
         st.error(error)
-    elif recipe_ideas and len(recipe_ideas) > 0:
+    elif recipe_sections and len(recipe_sections) > 0:
         # Add custom CSS for layout
         st.markdown("""
             <style>
@@ -246,54 +262,66 @@ def results_page():
         """, unsafe_allow_html=True)
         
         # Display introduction (first element)
-        st.markdown(recipe_ideas[0])
-        st.markdown("---")
+        if len(recipe_sections) > 0:
+            st.markdown(recipe_sections[0])
+            st.markdown("---")
         
         # Create columns for recipes
-        cols = st.columns(3)
-        
-        # Process remaining recipes (up to 3)
-        for idx, recipe in enumerate(recipe_ideas[1:4]):
-            with cols[idx]:
-                sections = recipe.split('\n\n')
-                
-                # Start recipe container
-                st.markdown('<div class="recipe-container">', unsafe_allow_html=True)
-                
-                # Title (first non-empty line)
-                title = next((line.strip() for line in sections[0].split('\n') if line.strip()), "")
-                if title.startswith(('1.', '2.', '3.')):
-                    title = title.split('.', 1)[1].strip()
-                st.markdown(f'<div class="recipe-title">{title}</div>', unsafe_allow_html=True)
-                
-                # Process sections
-                for section in sections[1:]:  # Skip the title section
-                    if 'Description:' in section:
-                        desc = section.split('Description:', 1)[1].strip()
-                        st.markdown(f'<div class="recipe-section">{desc}</div>', unsafe_allow_html=True)
+        if len(recipe_sections) > 1:
+            cols = st.columns(3)
+            
+            # Process remaining recipes (up to 3)
+            for idx, recipe in enumerate(recipe_sections[1:4]):
+                with cols[idx]:
+                    # Start recipe container
+                    st.markdown('<div class="recipe-container">', unsafe_allow_html=True)
                     
-                    elif any(keyword in section.lower() for keyword in ['ingredient', 'you\'ll need']):
-                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                        st.markdown('<div class="recipe-section-title">Ingredients</div>', unsafe_allow_html=True)
-                        ingredients = [line.strip() for line in section.split('\n') 
-                                    if line.strip() and not any(keyword in line.lower() 
-                                    for keyword in ['ingredient', 'you\'ll need'])]
-                        for ingredient in ingredients:
-                            st.markdown(f"• {ingredient.lstrip('•-*')}")
-                        st.markdown('</div>', unsafe_allow_html=True)
+                    # Split recipe into sections
+                    recipe_parts = recipe.split('\n')
                     
-                    elif any(keyword in section.lower() for keyword in ['direction', 'instruction', 'preparation']):
-                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                        st.markdown('<div class="recipe-section-title">Directions</div>', unsafe_allow_html=True)
-                        directions = [line.strip() for line in section.split('\n') 
-                                   if line.strip() and not any(keyword in line.lower() 
-                                   for keyword in ['direction', 'instruction', 'preparation'])]
-                        for i, direction in enumerate(directions, 1):
-                            st.markdown(f"{i}. {direction.lstrip('1234567890. ')}")
-                        st.markdown('</div>', unsafe_allow_html=True)
-                
-                # End recipe container
-                st.markdown('</div>', unsafe_allow_html=True)
+                    # Title (first non-empty line)
+                    title = next((line.strip() for line in recipe_parts if line.strip()), "")
+                    if title.startswith(('1.', '2.', '3.')):
+                        title = title.split('.', 1)[1].strip()
+                    st.markdown(f'<div class="recipe-title">{title}</div>', unsafe_allow_html=True)
+                    
+                    # Join remaining lines back together
+                    content = '\n'.join(recipe_parts[1:])
+                    
+                    # Split into sections
+                    content_sections = content.split('\n\n')
+                    
+                    for section in content_sections:
+                        section = section.strip()
+                        if not section:
+                            continue
+                            
+                        if 'Description:' in section:
+                            desc = section.split('Description:', 1)[1].strip()
+                            st.markdown(f'<div class="recipe-section">{desc}</div>', unsafe_allow_html=True)
+                        
+                        elif any(keyword in section.lower() for keyword in ['ingredient', 'you\'ll need']):
+                            st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
+                            st.markdown('<div class="recipe-section-title">Ingredients</div>', unsafe_allow_html=True)
+                            lines = [line.strip() for line in section.split('\n')]
+                            for line in lines:
+                                if line and not any(keyword in line.lower() for keyword in ['ingredient', 'you\'ll need']):
+                                    st.markdown(f"• {line.lstrip('•-*')}")
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        
+                        elif any(keyword in section.lower() for keyword in ['direction', 'instruction', 'preparation']):
+                            st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
+                            st.markdown('<div class="recipe-section-title">Directions</div>', unsafe_allow_html=True)
+                            lines = [line.strip() for line in section.split('\n')]
+                            step_num = 1
+                            for line in lines:
+                                if line and not any(keyword in line.lower() for keyword in ['direction', 'instruction', 'preparation']):
+                                    st.markdown(f"{step_num}. {line.lstrip('1234567890. ')}")
+                                    step_num += 1
+                            st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    # End recipe container
+                    st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.warning("No recipe ideas were generated. Try different ingredients!")
 
