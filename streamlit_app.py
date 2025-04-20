@@ -31,12 +31,13 @@ st.markdown("""
         color: white;
         height: 46px;
     }
-    [data-testid="stImage"] {
+    div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
+        padding: 1rem 0;
     }
-    [data-testid="stImage"] > img {
-        width: 27px !important;
+    div[data-testid="stImage"] > img {
+        display: block;
         margin: 0 auto;
     }
     </style>
@@ -89,10 +90,12 @@ def generate_recipe_ideas(ingredients):
 def input_page():
     """Display the input page for ingredients"""
     # Add some spacing
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    # Display centered logo with much smaller size
-    st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=35)
+    # Display centered logo
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col2:
+        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=65)
     
     # Title and subtitle
     st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
