@@ -209,35 +209,98 @@ def results_page():
     
     if error:
         st.error(error)
-    elif recipe_ideas:
-        # Create three columns for recipes
+    elif recipe_ideas and len(recipe_ideas) > 0:
+        # Display the introduction paragraph (first item)
+        st.markdown(recipe_ideas[0])
+        st.markdown("---")  # Add a separator
+        
+        # Create three columns with equal width for recipes
+        st.markdown("""
+            <style>
+            [data-testid="stHorizontalBlock"] > div {
+                width: 33.33% !important;
+                flex: 1 1 calc(33.33% - 1rem) !important;
+                min-width: calc(33.33% - 1rem) !important;
+            }
+            .recipe-card {
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 8px;
+                padding: 1.5rem;
+                height: 100%;
+                margin: 0.5rem;
+            }
+            .recipe-card h3 {
+                margin-bottom: 1rem;
+                color: white;
+            }
+            .recipe-description {
+                font-style: italic;
+                margin-bottom: 1rem;
+                color: #CCCCCC;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        # Create three columns
         cols = st.columns(3)
         
-        # Display up to three recipes
-        for idx, recipe in enumerate(recipe_ideas[:3]):
+        # Display recipes (skip the first item which was the introduction)
+        for idx, recipe in enumerate(recipe_ideas[1:4]):  # Take up to 3 recipes
             with cols[idx]:
                 # Create a card-like container
                 with st.container():
                     st.markdown('<div class="recipe-card">', unsafe_allow_html=True)
                     
-                    # Extract recipe title (first line)
-                    title = recipe.split('\n')[0].strip()
-                    if title.startswith(('1.', '2.', '3.')):  # Remove numbering if present
+                    # Split recipe into sections
+                    sections = recipe.split('\n\n')
+                    
+                    # Title is the first non-empty line
+                    title = next((line.strip() for line in sections[0].split('\n') if line.strip()), "")
+                    if title.startswith(('1.', '2.', '3.')):
                         title = title.split('.', 1)[1].strip()
                     st.markdown(f"### {title}")
                     
-                    # Format and display ingredients and directions
-                    ingredients, directions = format_recipe_content(recipe)
+                    # Find and display description
+                    description = ""
+                    for section in sections:
+                        if 'Description:' in section:
+                            description = section.split('Description:', 1)[1].strip()
+                            st.markdown(f'<div class="recipe-description">{description}</div>', unsafe_allow_html=True)
+                            break
                     
+                    # Process ingredients and directions
+                    current_section = None
+                    ingredients = []
+                    directions = []
+                    
+                    for section in sections:
+                        lower_section = section.lower()
+                        if any(word in lower_section for word in ['ingredient', 'you\'ll need', 'you need']):
+                            current_section = 'ingredients'
+                            # Extract ingredients list
+                            for line in section.split('\n'):
+                                if line.strip() and not any(word in line.lower() for word in ['ingredient', 'you\'ll need', 'you need']):
+                                    ingredients.append(line.strip())
+                        elif any(word in lower_section for word in ['instruction', 'direction', 'step', 'method']):
+                            current_section = 'directions'
+                            # Extract directions list
+                            for line in section.split('\n'):
+                                if line.strip() and not any(word in line.lower() for word in ['instruction', 'direction', 'step', 'method']):
+                                    directions.append(line.strip())
+                    
+                    # Display ingredients
                     if ingredients:
                         st.markdown("#### Ingredients")
                         for ingredient in ingredients:
-                            st.markdown(f"• {ingredient}")
+                            clean_ingredient = ingredient.lstrip('•-*').strip()
+                            st.markdown(f"• {clean_ingredient}")
                     
+                    # Display directions
                     if directions:
                         st.markdown("#### Directions")
                         for i, direction in enumerate(directions, 1):
-                            st.markdown(f"{i}. {direction}")
+                            clean_direction = re.sub(r'^\d+[\.\)]?\s*', '', direction).strip()
+                            st.markdown(f"{i}. {clean_direction}")
                     
                     st.markdown('</div>', unsafe_allow_html=True)
     else:
