@@ -124,6 +124,10 @@ st.markdown("""
             border-radius: 0;
             background-color: transparent;
         }
+        /* Hide form submission hint */
+        .stMarkdown div[data-testid="stMarkdownContainer"] p:has(small) {
+            display: none;
+        }
     </style>
 """, unsafe_allow_html=True)
 
