@@ -57,10 +57,9 @@ st.markdown("""
     <style>
     /* Base theme-aware styles */
     :root {
-        --text-color: var(--text-color);
-        --background-color: var(--background-color);
-        --secondary-background-color: var(--secondary-background-color);
-        --primary-color: var(--primary-color);
+        --background-color: #ffffff;
+        --secondary-background-color: #f0f2f6;
+        --text-color: #31333F;
     }
 
     /* Main container */
@@ -107,10 +106,82 @@ st.markdown("""
     }
 
     /* Form layout */
-    div[data-testid="stForm"] {
-        width: 100%;
+    [data-testid="stForm"] {
         max-width: 800px;
         margin: 0 auto;
+    }
+
+    /* Remove default form padding */
+    [data-testid="stForm"] > div:first-child {
+        padding: 0;
+    }
+
+    /* Input container styling */
+    .input-container {
+        background-color: var(--secondary-background-color);
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Input field styling */
+    .stTextInput > div > div > input {
+        background-color: white;
+        border: 1px solid rgba(49, 51, 63, 0.1);
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        height: 2.4rem;
+        font-size: 1rem;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border-color: rgb(49, 51, 63);
+        box-shadow: 0 0 0 1px rgb(49, 51, 63);
+    }
+
+    /* Button styling */
+    .stButton > button {
+        height: 2.4rem;
+        padding: 0.5rem 1rem;
+        background-color: rgb(49, 51, 63);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        margin-top: 0;
+    }
+
+    .stButton > button:hover {
+        background-color: rgb(69, 71, 83);
+    }
+
+    /* Help text styling */
+    .stTextInput .help-text {
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: rgba(49, 51, 63, 0.7);
+    }
+
+    /* Column spacing */
+    [data-testid="column"] {
+        padding: 0 0.5rem;
+    }
+
+    /* Ensure columns are aligned */
+    [data-testid="column"] > div {
+        height: 100%;
+    }
+
+    /* Center form elements */
+    [data-testid="stForm"] [data-testid="column"] {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Remove extra whitespace */
+    [data-testid="stForm"] [data-testid="column"] > div {
+        width: 100%;
     }
 
     /* Recipe card styling */
@@ -216,14 +287,6 @@ st.markdown("""
         }
     }
     
-    /* Improve form spacing */
-    [data-testid="stForm"] {
-        background-color: var(--secondary-background-color);
-        padding: 2rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-    }
-    
     /* Improve help text visibility */
     .stTextInput .help-text {
         color: var(--text-color) !important;
@@ -256,61 +319,6 @@ st.markdown("""
         height: 100%;
         display: flex;
         align-items: center;
-    }
-
-    /* Input container styling */
-    .input-container {
-        background-color: var(--secondary-background-color);
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-    
-    /* Input field styling */
-    .stTextInput > div > div > input {
-        background-color: white;
-        border: 1px solid rgba(var(--text-color-rgb), 0.1);
-        padding: 0.5rem 1rem;
-        height: 2.5rem;
-        border-radius: 4px;
-    }
-    
-    /* Button styling */
-    .stButton > button {
-        height: 2.5rem;
-        padding: 0.5rem 1rem;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        transition: all 0.2s ease;
-    }
-    
-    .stButton > button:hover {
-        filter: brightness(110%);
-    }
-    
-    /* Help text styling */
-    .stTextInput .help-text {
-        margin-top: 0.3rem;
-        font-size: 0.8em;
-        opacity: 0.7;
-    }
-    
-    /* Form layout */
-    [data-testid="stForm"] {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    /* Column spacing */
-    [data-testid="column"] {
-        padding: 0 0.5rem;
-    }
-    
-    /* Remove default form padding */
-    [data-testid="stForm"] > div:first-child {
-        padding: 0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -421,7 +429,7 @@ def input_page():
         unsafe_allow_html=True
     )
     st.markdown(
-        "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1em;'>"
+        "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1.5em;'>"
         "Transform your available ingredients into delicious recipes!<br>"
         "Enter what you have in your kitchen, and I'll suggest creative dishes you can make."
         "</p>", 
@@ -434,7 +442,7 @@ def input_page():
             "<div class='input-container'>",
             unsafe_allow_html=True
         )
-        cols = st.columns([7, 2])  # Adjusted ratio to give more space to the button
+        cols = st.columns([4, 1])  # Adjusted ratio for better button size
         
         with cols[0]:
             ingredients = st.text_input(
