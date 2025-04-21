@@ -338,12 +338,24 @@ st.markdown("""
         max-width: 1000px !important;
     }
 
+    /* Remove default Streamlit form styling */
+    .stForm {
+        border: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+    }
+
+    .stForm > div {
+        padding: 0 !important;
+        background-color: transparent !important;
+    }
+
     /* Main container styling */
     .main-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 2rem 1rem;
+        padding: 1rem;
         max-width: 800px;
         margin: 0 auto;
     }
@@ -370,32 +382,35 @@ st.markdown("""
         font-size: 1.2rem;
         text-align: center;
         color: #666;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
         line-height: 1.5;
         max-width: 600px;
     }
 
     /* Form styling */
     .search-container {
-        background: #f8f9fa;
-        border-radius: 20px;
-        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        padding: 1rem;
         width: 100%;
         max-width: 800px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-top: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     /* Input field styling */
+    .stTextInput > div {
+        padding: 0 !important;
+    }
+
     .stTextInput > div > div > input {
         font-size: 1.2rem !important;
-        padding: 1.5rem !important;
+        padding: 0.8rem 1.2rem !important;
         border-radius: 12px !important;
         border: 2px solid #e0e0e0 !important;
         background-color: white !important;
-        height: auto !important;
-        min-height: 60px !important;
+        height: 56px !important;
         transition: all 0.3s ease !important;
+        margin: 0 !important;
     }
 
     .stTextInput > div > div > input:focus {
@@ -409,20 +424,25 @@ st.markdown("""
     }
 
     /* Button styling */
+    .stButton {
+        margin: 0 !important;
+    }
+
     .stButton > button {
         width: 100% !important;
-        min-height: 60px !important;
+        height: 56px !important;
         background-color: #386641 !important;
         color: white !important;
         font-size: 1.2rem !important;
         font-weight: 600 !important;
-        padding: 1rem 2rem !important;
+        padding: 0.8rem 1.5rem !important;
         border: none !important;
         border-radius: 12px !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
         text-transform: none !important;
         margin: 0 !important;
+        line-height: 1.2 !important;
     }
 
     .stButton > button:hover {
@@ -446,6 +466,12 @@ st.markdown("""
         visibility: hidden;
     }
 
+    /* Remove any extra padding from Streamlit containers */
+    .element-container, .stMarkdown {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .title {
@@ -458,16 +484,16 @@ st.markdown("""
         }
         
         .search-container {
-            padding: 1.5rem;
+            padding: 0.75rem;
         }
         
         .stTextInput > div > div > input {
             font-size: 1.1rem !important;
-            min-height: 54px !important;
+            height: 50px !important;
         }
         
         .stButton > button {
-            min-height: 54px !important;
+            height: 50px !important;
             font-size: 1.1rem !important;
         }
     }
