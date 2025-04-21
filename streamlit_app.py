@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import json
 import re
+import os
 
 # Configure the page
 st.set_page_config(
@@ -9,6 +10,17 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
+
+# Verify environment variables
+def verify_env_variables():
+    api_key = os.getenv('GOOGLE_GENAI_API_KEY')
+    if not api_key:
+        st.error("⚠️ GOOGLE_GENAI_API_KEY is not set. Please configure it in your environment variables.")
+        return False
+    elif api_key == "your_api_key_here":
+        st.error("⚠️ Please replace the default API key with your actual Gemini API key.")
+        return False
+    return True
 
 # Custom CSS
 st.markdown("""
@@ -86,8 +98,16 @@ def format_recipe_ideas(recipe_output):
 def generate_recipe_ideas(ingredients):
     """Call API to generate recipe ideas"""
     try:
+        # Verify API key is available
+        api_key = os.getenv('GOOGLE_GENAI_API_KEY')
+        if not api_key:
+            return None, "API key not configured. Please check your environment variables."
+            
         url = "https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1"
-        payload = json.dumps({"ingredients": ingredients})
+        payload = json.dumps({
+            "ingredients": ingredients,
+            "api_key": api_key  # Add API key to payload
+        })
         headers = {'Content-Type': 'application/json'}
 
         response = requests.post(url, headers=headers, data=payload)
@@ -328,6 +348,10 @@ def results_page():
 def main():
     if "page" not in st.session_state:
         st.session_state.page = "input"
+    
+    # Verify environment variables first
+    if not verify_env_variables():
+        st.stop()
     
     if st.session_state.page == "input":
         input_page()
