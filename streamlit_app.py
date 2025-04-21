@@ -265,9 +265,6 @@ def loading_page():
 
 def results_page():
     """Display the results page with recipe ideas"""
-    # Generate recipes
-    recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
-    
     # Back button at the top
     if st.button("← Back to Ingredients"):
         st.session_state.page = "input"
@@ -275,6 +272,10 @@ def results_page():
     
     st.title("Ideas")
     st.subheader(f"Ideas using: {st.session_state.ingredients}")
+    
+    # Show loading state first
+    with st.spinner("Creating your culinary adventure..."):
+        recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
     
     if error:
         st.error(error)
@@ -356,19 +357,6 @@ def main():
     if st.session_state.page == "input":
         input_page()
     elif st.session_state.page == "results":
-        # Show loading page first
-        placeholder = st.empty()
-        with placeholder.container():
-            loading_page()
-        
-        # Generate recipes in the background
-        with st.spinner():
-            recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
-        
-        # Clear the loading page
-        placeholder.empty()
-        
-        # Show results
         results_page()
 
 if __name__ == "__main__":
