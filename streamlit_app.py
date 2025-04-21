@@ -4,11 +4,22 @@ import json
 import re
 import os
 
-# Configure the page
+# Configure the page with improved metadata
 st.set_page_config(
-    page_title="Culinary Companion",
+    page_title="Culinary Companion - Recipe Generator",
+    page_icon="🍳",
     layout="centered",
     initial_sidebar_state="collapsed",
+    menu_items={
+        'Get Help': 'https://github.com/aviralv/culinarycompanion',
+        'Report a bug': 'https://github.com/aviralv/culinarycompanion/issues',
+        'About': '''
+        # Culinary Companion
+        Your AI-powered kitchen assistant that turns available ingredients into delicious recipes.
+        
+        Simply enter the ingredients you have, and let our witty chef create personalized recipe ideas for you!
+        '''
+    }
 )
 
 # Verify environment variables
@@ -164,6 +175,41 @@ st.markdown("""
         font-size: 1em;
         margin: 0.3em 0;
     }
+
+    /* Add padding between columns */
+    [data-testid="column"] {
+        padding: 0 1rem;
+    }
+    
+    /* Remove 'Press Enter to apply' text */
+    .stTextInput div div div div {
+        display: none !important;
+    }
+    
+    /* Add border between columns on larger screens */
+    @media (min-width: 768px) {
+        [data-testid="column"]:first-child {
+            border-right: 1px solid rgba(var(--text-color-rgb), 0.1);
+            padding-right: 2rem;
+        }
+        [data-testid="column"]:last-child {
+            padding-left: 2rem;
+        }
+    }
+    
+    /* Improve form spacing */
+    [data-testid="stForm"] {
+        background-color: var(--secondary-background-color);
+        padding: 2rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    
+    /* Improve help text visibility */
+    .stTextInput .help-text {
+        color: var(--text-color) !important;
+        opacity: 0.7;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -262,12 +308,15 @@ def input_page():
     with col2:
         st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=260)
     
-    # Title and subtitle
+    # Title and subtitle with improved help text
     st.markdown("<h1 style='text-align: center; color: var(--text-color);'>Culinary Companion</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: var(--text-color);'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
-    
-    # Add some spacing
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1em;'>"
+        "Transform your available ingredients into delicious recipes! "
+        "Enter what you have in your kitchen, and I'll suggest creative dishes you can make."
+        "</p>", 
+        unsafe_allow_html=True
+    )
     
     # Create form with adjusted column ratio
     with st.form(key="ingredient_form"):
@@ -276,8 +325,9 @@ def input_page():
         with cols[0]:
             ingredients = st.text_input(
                 "Ingredients",
-                placeholder="Enter ingredients (e.g., chicken, rice, vegetables)",
-                label_visibility="collapsed"
+                placeholder="e.g., chicken, rice, onions, garlic",
+                label_visibility="collapsed",
+                help="List your ingredients separated by commas"
             )
         
         with cols[1]:
