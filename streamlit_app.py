@@ -25,28 +25,47 @@ def verify_env_variables():
 # Custom CSS
 st.markdown("""
     <style>
-    .stApp {
-        background-color: #1E1E1E;
+    /* Base theme-aware styles */
+    :root {
+        --text-color: var(--text-color);
+        --background-color: var(--background-color);
+        --secondary-background-color: var(--secondary-background-color);
+        --primary-color: var(--primary-color);
     }
+
+    /* Main container */
     .block-container {
         padding-top: 2rem;
         max-width: 700px;
     }
-    /* Override Streamlit's default button styles */
+
+    /* Button styling */
     .stButton > button {
-        background-color: #1E2530;
-        color: white;
+        background-color: var(--primary-color);
+        color: var(--text-color);
+        border: none;
+        border-radius: 4px;
         height: 46px;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         width: auto !important;
         min-width: 120px !important;
+        transition: all 0.2s ease;
     }
+    .stButton > button:hover {
+        filter: brightness(110%);
+    }
+
+    /* Input field styling */
     .stTextInput > div > div > input {
-        color: inherit;
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
+        border-color: var(--primary-color);
         height: 46px;
     }
+
+    /* Image container */
     div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
@@ -56,43 +75,68 @@ st.markdown("""
         display: block;
         margin: 0 auto;
     }
-    /* Fix form layout */
+
+    /* Form layout */
     div[data-testid="stForm"] {
         width: 100%;
         max-width: 800px;
         margin: 0 auto;
     }
+
     /* Recipe card styling */
     .recipe-container {
-        background-color: var(--background-color);
-        border: 1px solid rgba(128, 128, 128, 0.2);
+        background-color: var(--secondary-background-color);
+        border: 1px solid rgba(var(--primary-color-rgb), 0.2);
         border-radius: 8px;
         padding: 20px;
         margin: 10px 0;
         height: 100%;
+        transition: all 0.2s ease;
     }
+    .recipe-container:hover {
+        box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.1);
+    }
+
+    /* Recipe text elements */
     .recipe-title {
         font-size: 24px;
         font-weight: bold;
         margin-bottom: 15px;
-        color: inherit;
+        color: var(--text-color);
     }
     .recipe-section {
         margin: 15px 0;
-        color: inherit;
+        color: var(--text-color);
     }
     .recipe-section-title {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 10px;
-        color: inherit;
+        color: var(--text-color);
     }
-    /* Ensure text is visible in both modes */
+
+    /* General text elements */
     .stMarkdown {
-        color: inherit;
+        color: var(--text-color);
     }
     p, h1, h2, h3, h4, h5, h6, li {
-        color: inherit !important;
+        color: var(--text-color) !important;
+    }
+
+    /* Separator styling */
+    hr {
+        border-color: rgba(var(--text-color-rgb), 0.1);
+    }
+
+    /* Error and warning messages */
+    .stAlert {
+        background-color: var(--secondary-background-color);
+        color: var(--text-color);
+    }
+
+    /* Spinner/loader */
+    .stSpinner > div {
+        border-color: var(--primary-color) !important;
     }
     </style>
 """, unsafe_allow_html=True)
