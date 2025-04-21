@@ -65,7 +65,8 @@ st.markdown("""
     /* Main container */
     .block-container {
         padding-top: 2rem;
-        max-width: 700px;
+        max-width: 800px;
+        margin: 0 auto;
     }
 
     /* Button styling */
@@ -92,10 +93,11 @@ st.markdown("""
         border: 1px solid rgba(49, 51, 63, 0.2);
         border-radius: 8px;
         padding: 0.75rem 1rem;
-        height: 3rem;
+        height: 3.2rem;
         font-size: 1.1rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         transition: all 0.2s ease;
+        width: 100%;
     }
 
     .stTextInput > div > div > input:focus {
@@ -111,17 +113,18 @@ st.markdown("""
     /* Form container styling */
     .input-container {
         background-color: var(--secondary-background-color);
-        padding: 1.5rem;
-        border-radius: 12px;
+        padding: 2rem;
+        border-radius: 16px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         margin: 1rem 0;
+        border: 1px solid rgba(49, 51, 63, 0.1);
     }
 
     /* Create Recipe button styling */
     .stButton > button {
-        height: 3rem;
+        height: 3.2rem;
         padding: 0.75rem 1.5rem;
-        background-color: var(--primary-color);
+        background-color: #386641;
         color: white;
         border: none;
         border-radius: 8px;
@@ -129,16 +132,22 @@ st.markdown("""
         font-weight: 600;
         transition: all 0.2s ease;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .stButton > button:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background-color: #447751;
     }
 
     .stButton > button:active {
         transform: translateY(0);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #2d5234;
     }
 
     /* Image container */
@@ -155,7 +164,7 @@ st.markdown("""
     /* Form layout */
     [data-testid="stForm"] {
         max-width: 800px;
-        margin: 0 auto;
+        margin: 2rem auto;
     }
 
     /* Remove default form padding */
@@ -166,69 +175,106 @@ st.markdown("""
     /* Input container styling */
     .input-container {
         background-color: var(--secondary-background-color);
-        padding: 1rem;
-        border-radius: 6px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin: 1rem 0;
+        border: 1px solid rgba(49, 51, 63, 0.1);
     }
 
     /* Input field styling */
     .stTextInput > div > div > input {
         background-color: white;
-        border: 1px solid rgba(49, 51, 63, 0.1);
-        border-radius: 4px;
-        padding: 0.5rem 1rem;
-        height: 2.4rem;
-        font-size: 1rem;
+        border: 1px solid rgba(49, 51, 63, 0.2);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        height: 3.2rem;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        width: 100%;
     }
 
     .stTextInput > div > div > input:focus {
-        border-color: rgb(49, 51, 63);
-        box-shadow: 0 0 0 1px rgb(49, 51, 63);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+    }
+
+    .stTextInput > div > div > input::placeholder {
+        color: rgba(49, 51, 63, 0.6);
+        font-style: italic;
     }
 
     /* Button styling */
     .stButton > button {
-        height: 2.4rem;
-        padding: 0.5rem 1rem;
-        background-color: rgb(49, 51, 63);
+        height: 3.2rem;
+        padding: 0.75rem 1.5rem;
+        background-color: #386641;
         color: white;
         border: none;
-        border-radius: 4px;
-        font-size: 1rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
         transition: all 0.2s ease;
-        margin-top: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .stButton > button:hover {
-        background-color: rgb(69, 71, 83);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background-color: #447751;
+    }
+
+    .stButton > button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #2d5234;
     }
 
     /* Help text styling */
     .stTextInput .help-text {
-        margin-top: 0.25rem;
-        font-size: 0.875rem;
+        margin-top: 0.4rem;
+        font-size: 0.9rem;
         color: rgba(49, 51, 63, 0.7);
     }
 
-    /* Column spacing */
+    /* Column layout */
     [data-testid="column"] {
-        padding: 0 0.5rem;
-    }
-
-    /* Ensure columns are aligned */
-    [data-testid="column"] > div {
-        height: 100%;
-    }
-
-    /* Center form elements */
-    [data-testid="stForm"] [data-testid="column"] {
+        padding: 0 0.75rem;
         display: flex;
         align-items: center;
     }
 
-    /* Remove extra whitespace */
-    [data-testid="stForm"] [data-testid="column"] > div {
+    /* Ensure columns are aligned */
+    [data-testid="column"] > div {
         width: 100%;
+    }
+
+    /* Remove 'Press Enter to apply' text */
+    .stTextInput div div div div {
+        display: none !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .input-container {
+            padding: 1.5rem;
+        }
+        
+        .stTextInput > div > div > input {
+            height: 3rem;
+            font-size: 1rem;
+        }
+        
+        .stButton > button {
+            height: 3rem;
+            font-size: 1rem;
+            min-width: 120px;
+        }
     }
 
     /* Recipe card styling */
