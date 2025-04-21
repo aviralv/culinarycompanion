@@ -6,8 +6,7 @@ import {
   Button, 
   Box,
   Card,
-  CardContent,
-  InputAdornment
+  CardContent
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
