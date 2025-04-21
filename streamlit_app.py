@@ -133,19 +133,20 @@ st.markdown("""
 
 def verify_api_key():
     """Verify that the API key is set and valid"""
-    api_key = os.getenv('GOOGLE_GENAI_API_KEY')
-    if not api_key:
-        st.error("⚠️ GOOGLE_GENAI_API_KEY is not set. Please configure it in your environment variables.")
+    try:
+        api_key = st.secrets["GOOGLE_GENAI_API_KEY"]
+        if api_key == "your_api_key_here":
+            st.error("⚠️ Please replace the default API key with your actual Gemini API key.")
+            return False
+        return True
+    except KeyError:
+        st.error("⚠️ GOOGLE_GENAI_API_KEY is not set in Streamlit secrets. Please configure it in your Streamlit Cloud settings.")
         return False
-    elif api_key == "your_api_key_here":
-        st.error("⚠️ Please replace the default API key with your actual Gemini API key.")
-        return False
-    return True
 
 def generate_recipes(ingredients):
     """Generate recipe ideas using the API"""
     try:
-        api_key = os.getenv('GOOGLE_GENAI_API_KEY')
+        api_key = st.secrets["GOOGLE_GENAI_API_KEY"]
         url = "https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1"
         payload = json.dumps({
             "ingredients": ingredients,
