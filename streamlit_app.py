@@ -21,11 +21,11 @@ st.set_page_config(
 st.markdown("""
     <style>
         .main {
-            padding: 2rem 1rem;
+            padding: 4rem 1rem 2rem 1rem;
             background-color: #FAFAFA;
         }
         .block-container {
-            padding-top: 1rem !important;
+            padding-top: 2rem !important;
             padding-bottom: 0rem !important;
             max-width: 48rem !important;
         }
@@ -169,7 +169,7 @@ def generate_recipes(ingredients):
 def input_page():
     """Display the input page"""
     # Icon at top
-    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🔍</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; margin-top: 2rem;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
 
     # Title & subtitle
     st.markdown("<h1>Culinary Companion</h1>", unsafe_allow_html=True)
