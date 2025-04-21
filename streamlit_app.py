@@ -182,6 +182,8 @@ def generate_recipes(ingredients):
 
 def input_page():
     """Display the input page"""
+    st.write(f"Current page state: {st.session_state.page}")  # Debug log
+    
     # Icon at top
     st.markdown('<div style="text-align: center; margin-top: 2rem;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
 
@@ -204,24 +206,33 @@ def input_page():
             submit = st.form_submit_button("🍽️ Create Recipes")
         
         if submit:
+            st.write("Form submitted")  # Debug log
             if ingredients.strip():
+                st.write(f"Ingredients submitted: {ingredients}")  # Debug log
                 st.session_state.ingredients = ingredients
                 st.session_state.page = Page.LOADING
+                st.write("State updated to LOADING")  # Debug log
                 st.rerun()
             else:
                 st.warning("Please enter some ingredients first.")
 
 def loading_page():
     """Display the loading page"""
+    st.write(f"Current page state: {st.session_state.page}")  # Debug log
+    st.write(f"Ingredients in state: {st.session_state.get('ingredients', 'Not found')}")  # Debug log
+    
     # Icon at top
     st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🔍</span></div>', unsafe_allow_html=True)
     
     with st.spinner("Creating your culinary masterpiece..."):
+        st.write("Starting recipe generation...")  # Debug log
         result, error = generate_recipes(st.session_state.ingredients)
         if error:
+            st.write(f"Error occurred: {error}")  # Debug log
             st.error(error)
             st.session_state.page = Page.INPUT
         else:
+            st.write("Recipe generation successful")  # Debug log
             st.session_state.recipes = result
             st.session_state.page = Page.RESULTS
         st.rerun()
@@ -264,6 +275,9 @@ def main():
     # Initialize session state
     if 'page' not in st.session_state:
         st.session_state.page = Page.INPUT
+        st.write("Initialized page state to INPUT")  # Debug log
+    
+    st.write(f"Current page in main: {st.session_state.page}")  # Debug log
     
     # Verify API key
     if not verify_api_key():
