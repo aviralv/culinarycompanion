@@ -1,42 +1,55 @@
 # Culinary Companion
 
-A Streamlit web application that helps you generate recipe ideas based on ingredients you have on hand. The app uses n8n as a backend service to process and generate recipe suggestions.
+An AI-powered recipe generator that helps you create delicious meals with the ingredients you have.
 
-## Features
+## Setup
 
-- Simple and intuitive interface
-- Real-time recipe generation
-- Clean and responsive design
-- Error handling and user feedback
-
-## Local Development
-
-1. Install Streamlit:
+1. Clone the repository
 ```bash
-pip install streamlit
+git clone https://github.com/aviralv/culinarycompanion.git
+cd culinarycompanion
 ```
 
-2. Run the app locally:
+2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+3. Set up environment variables
+- Copy `.env.example` to `.env`
+```bash
+cp .env.example .env
+```
+- Edit `.env` and add your Google Gemini API key
+  - Get your API key from: https://makersuite.google.com/app/apikey
+  - Replace `your_api_key_here` with your actual API key
+
+4. Run the application
 ```bash
 streamlit run streamlit_app.py
 ```
 
-## Deployment
+## Features
 
-This app is designed to be deployed on Streamlit Cloud. To deploy:
-
-1. Push your code to a GitHub repository
-2. Go to [Streamlit Cloud](https://streamlit.io/cloud)
-3. Connect your GitHub repository
-4. Deploy the app
+- Generate recipe ideas based on available ingredients
+- Get detailed instructions and ingredients list
+- Beautiful, easy-to-read recipe cards
+- Responsive design for all devices
 
 ## Environment Variables
 
-The app requires the following environment variables:
-- `N8N_WEBHOOK_URL`: The URL of your n8n webhook endpoint
+The following environment variables are required:
 
-Make sure to set these variables in your Streamlit Cloud deployment settings.
+- `GOOGLE_GENAI_API_KEY`: Your Google Gemini API key for recipe generation
 
-## Backend
+## Contributing
 
-The backend is powered by n8n, which processes the ingredients and generates recipe suggestions. The webhook URL is configured in the app to communicate with your n8n instance.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Security Note
+
+Never commit your `.env` file or expose your API keys. The `.env` file is listed in `.gitignore` to prevent accidental commits.
