@@ -4,23 +4,7 @@ import json
 import re
 import os
 
-# Add Open Graph and Twitter Card metadata for better link sharing
-st.markdown("""
-    <head>
-        <title>Culinary Companion - Turn Ingredients into Delicious Recipes</title>
-        <meta property="og:title" content="Culinary Companion - Recipe Generator" />
-        <meta property="og:description" content="Transform your available ingredients into delicious recipes with our AI-powered kitchen assistant!" />
-        <meta property="og:image" content="https://culinarycompanion.streamlit.app/public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" />
-        <meta property="og:url" content="https://culinarycompanion.streamlit.app" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Culinary Companion - Recipe Generator" />
-        <meta name="twitter:description" content="Transform your available ingredients into delicious recipes with our AI-powered kitchen assistant!" />
-        <meta name="twitter:image" content="https://culinarycompanion.streamlit.app/public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" />
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🍳</text></svg>" type="image/svg+xml">
-    </head>
-""", unsafe_allow_html=True)
-
-# Configure the page with improved metadata
+# Configure the page with improved metadata - MUST BE FIRST STREAMLIT COMMAND
 st.set_page_config(
     page_title="Culinary Companion - Turn Ingredients into Delicious Recipes",
     page_icon="🍳",
@@ -40,6 +24,22 @@ st.set_page_config(
         '''
     }
 )
+
+# Add Open Graph and Twitter Card metadata for better link sharing
+st.markdown("""
+    <head>
+        <title>Culinary Companion - Turn Ingredients into Delicious Recipes</title>
+        <meta property="og:title" content="Culinary Companion - Recipe Generator" />
+        <meta property="og:description" content="Transform your available ingredients into delicious recipes with our AI-powered kitchen assistant!" />
+        <meta property="og:image" content="https://culinarycompanion.streamlit.app/public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" />
+        <meta property="og:url" content="https://culinarycompanion.streamlit.app" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Culinary Companion - Recipe Generator" />
+        <meta name="twitter:description" content="Transform your available ingredients into delicious recipes with our AI-powered kitchen assistant!" />
+        <meta name="twitter:image" content="https://culinarycompanion.streamlit.app/public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png" />
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🍳</text></svg>" type="image/svg+xml">
+    </head>
+""", unsafe_allow_html=True)
 
 # Verify environment variables
 def verify_env_variables():
@@ -322,16 +322,13 @@ def input_page():
     # Add some spacing
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Display centered logo and cooking pan icon
-    col1, col2, col3 = st.columns([2, 1, 2])
-    with col2:
-        st.markdown(
-            "<div style='text-align: center;'>"
-            "<h1 style='font-size: 4rem; margin-bottom: 0.5rem;'>🍳</h1>"
-            "</div>",
-            unsafe_allow_html=True
-        )
-        st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=260)
+    # Display centered cooking pan icon as logo
+    st.markdown(
+        "<div style='text-align: center;'>"
+        "<div style='font-size: 8rem; margin-bottom: 1rem; line-height: 1;'>🍳</div>"
+        "</div>",
+        unsafe_allow_html=True
+    )
     
     # Title and subtitle with improved help text
     st.markdown(
