@@ -14,166 +14,77 @@ class Page(Enum):
 st.set_page_config(
     page_title="Culinary Companion",
     page_icon="🍳",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
-# Updated CSS
+# Custom CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
-    /* Design tokens */
-    :root {
-        --color-background: #F9FAFB;
-        --color-white: #FFFFFF;
-        --color-text-primary: #111827;
-        --color-text-secondary: #6B7280;
-        --color-accent: #6366F1;
-        --color-accent-hover: #4F46E5;
-        --color-border: #E5E7EB;
-        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    .main {
+        background-color: #F9FAFB;
+        padding: 3rem;
     }
 
-    /* Reset and base styles */
-    .stApp {
-        background-color: var(--color-background) !important;
-        font-family: var(--font-family) !important;
+    .input-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .centered {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
     /* Hide Streamlit branding */
     #MainMenu, footer, header {display: none;}
-    
-    /* Fix layout issues */
-    .main .block-container {
-        max-width: 48rem !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-    }
-
-    /* Center all content */
-    .stApp > header {
-        background-color: transparent !important;
-    }
-
-    .stApp > div:first-child {
-        padding: 2rem 1rem !important;
-    }
-
-    /* Main container */
-    .main-container {
-        background: var(--color-white);
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin: 0 auto;
-        width: 100%;
-        max-width: 48rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* App header */
-    .app-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Icon container */
-    .icon-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .app-icon {
-        font-size: 8rem;
-        line-height: 1;
-        text-align: center;
-    }
 
     /* Typography */
     h1 {
-        color: var(--color-text-primary);
+        color: #111827;
         font-size: 2.25rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        width: 100%;
+        margin: 1rem 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     .subtitle {
-        color: var(--color-text-secondary);
+        color: #6B7280;
         font-size: 1.125rem;
-        text-align: center;
         margin-bottom: 2rem;
-        max-width: 32rem;
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-    }
-
-    /* Input field */
-    .stTextInput > div > div > input {
-        width: 100% !important;
-        padding: 0.75rem 1rem !important;
-        border: 1px solid var(--color-border) !important;
-        border-radius: 0.5rem !important;
-        font-size: 1rem !important;
-        background: var(--color-white) !important;
-    }
-
-    /* Button */
-    .stButton > button {
-        width: 100% !important;
-        background-color: var(--color-accent) !important;
-        color: white !important;
-        font-weight: 600 !important;
-        padding: 0.75rem 1.5rem !important;
-        border: none !important;
-        border-radius: 0.5rem !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        margin-top: 1rem !important;
-    }
-
-    .stButton > button:hover {
-        background-color: var(--color-accent-hover) !important;
-        transform: translateY(-1px) !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     /* Recipe cards */
     .recipe-card {
-        background: var(--color-white);
+        background: white;
         border-radius: 0.75rem;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        border: 1px solid var(--color-border);
+        border: 1px solid #E5E7EB;
     }
 
     .recipe-title {
-        color: var(--color-text-primary);
+        color: #111827;
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 1rem;
     }
 
     .recipe-description {
-        color: var(--color-text-secondary);
+        color: #6B7280;
         margin-bottom: 1.5rem;
         line-height: 1.6;
     }
 
     .recipe-section-title {
-        color: var(--color-text-primary);
+        color: #111827;
         font-size: 1.125rem;
         font-weight: 600;
         margin-top: 1.5rem;
@@ -188,6 +99,24 @@ st.markdown("""
     .recipe-list li {
         margin-bottom: 0.5rem;
         line-height: 1.6;
+    }
+
+    /* Button styling */
+    .stButton > button {
+        width: 100% !important;
+        background-color: #6366F1 !important;
+        color: white !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 600 !important;
+        border-radius: 0.5rem !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .stButton > button:hover {
+        background-color: #4F46E5 !important;
+        transform: translateY(-1px) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -233,81 +162,85 @@ def generate_recipes(ingredients):
 
 def input_page():
     """Display the input page"""
+    # Logo/Icon
+    st.markdown('<div class="centered"><h1 style="font-size:96px;">🍳</h1></div>', unsafe_allow_html=True)
+
+    # Title & subtitle
+    st.markdown("<h1 style='text-align: center;'>Culinary Companion</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle' style='text-align: center;'>Turn your ingredients into creative meals. Just type what you've got at home!</p>", unsafe_allow_html=True)
+
+    # Input Section
     with st.container():
-        # App header with improved icon centering
-        st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="icon-container"><div class="app-icon">🍳</div></div>', unsafe_allow_html=True)
-        st.markdown('<h1>Culinary Companion</h1>', unsafe_allow_html=True)
-        st.markdown('<p class="subtitle">Turn your ingredients into creative meals. Just type what you\'ve got at home!</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="input-container">', unsafe_allow_html=True)
+        st.markdown("#### 🔍 Ingredients:")
         
-        # Search form
         with st.form(key="recipe_form", clear_on_submit=False):
             ingredients = st.text_input(
-                "Ingredients",
+                "Enter ingredients separated by commas",
                 placeholder="e.g., chicken, rice, onions, garlic",
                 label_visibility="collapsed"
             )
             
-            submit = st.form_submit_button("Create Recipes")
+            submit = st.form_submit_button("🍽️ Create Recipes", use_container_width=True)
             
             if submit:
-                if ingredients:
+                if ingredients.strip():
                     st.session_state.ingredients = ingredients
                     st.session_state.page = Page.LOADING
                     st.rerun()
                 else:
-                    st.error("Please enter some ingredients.")
+                    st.warning("Please enter some ingredients first.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 def loading_page():
     """Display the loading page"""
-    with st.container():
-        st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="icon-container"><div class="app-icon">🍳</div></div>', unsafe_allow_html=True)
-        with st.spinner("Creating your culinary masterpiece..."):
-            result, error = generate_recipes(st.session_state.ingredients)
-            if error:
-                st.error(error)
-                st.session_state.page = Page.INPUT
-            else:
-                st.session_state.recipes = result
-                st.session_state.page = Page.RESULTS
-            st.rerun()
+    # Logo/Icon
+    st.markdown('<div class="centered"><h1 style="font-size:96px;">🍳</h1></div>', unsafe_allow_html=True)
+    
+    with st.spinner("Creating your culinary masterpiece..."):
+        result, error = generate_recipes(st.session_state.ingredients)
+        if error:
+            st.error(error)
+            st.session_state.page = Page.INPUT
+        else:
+            st.session_state.recipes = result
+            st.session_state.page = Page.RESULTS
+        st.rerun()
 
 def results_page():
     """Display the results page"""
-    with st.container():
-        # Back button
-        if st.button("← Back to Ingredients", key="back_button"):
-            st.session_state.page = Page.INPUT
-            st.rerun()
+    # Back button
+    if st.button("← Back to Ingredients", key="back_button"):
+        st.session_state.page = Page.INPUT
+        st.rerun()
+    
+    # Display greeting
+    st.markdown(f'<p class="subtitle" style="text-align: center;">{st.session_state.recipes["greeting"]}</p>', unsafe_allow_html=True)
+    
+    # Display recipes
+    for recipe in st.session_state.recipes['recipes']:
+        st.markdown('<div class="recipe-card">', unsafe_allow_html=True)
         
-        # Display greeting
-        st.markdown(f'<p class="subtitle">{st.session_state.recipes["greeting"]}</p>', unsafe_allow_html=True)
+        # Recipe title and description
+        st.markdown(f'<h2 class="recipe-title">{recipe["name"]}</h2>', unsafe_allow_html=True)
+        st.markdown(f'<p class="recipe-description">{recipe["description"]}</p>', unsafe_allow_html=True)
         
-        # Display recipes
-        for recipe in st.session_state.recipes['recipes']:
-            st.markdown('<div class="recipe-card">', unsafe_allow_html=True)
-            
-            # Recipe title and description
-            st.markdown(f'<h2 class="recipe-title">{recipe["name"]}</h2>', unsafe_allow_html=True)
-            st.markdown(f'<p class="recipe-description">{recipe["description"]}</p>', unsafe_allow_html=True)
-            
-            # Additional ingredients
-            if recipe['additional_ingredients']:
-                st.markdown('<h3 class="recipe-section-title">Additional Ingredients Needed:</h3>', unsafe_allow_html=True)
-                ingredients_list = ''.join([f'<li>{ingredient}</li>' for ingredient in recipe['additional_ingredients']])
-                st.markdown(f'<ul class="recipe-list">{ingredients_list}</ul>', unsafe_allow_html=True)
-            
-            # Instructions
-            st.markdown('<h3 class="recipe-section-title">Instructions:</h3>', unsafe_allow_html=True)
-            instructions_list = ''.join([f'<li>{instruction}</li>' for instruction in recipe['instructions']])
-            st.markdown(f'<ol class="recipe-list">{instructions_list}</ol>', unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+        # Additional ingredients
+        if recipe['additional_ingredients']:
+            st.markdown('<h3 class="recipe-section-title">Additional Ingredients Needed:</h3>', unsafe_allow_html=True)
+            ingredients_list = ''.join([f'<li>{ingredient}</li>' for ingredient in recipe['additional_ingredients']])
+            st.markdown(f'<ul class="recipe-list">{ingredients_list}</ul>', unsafe_allow_html=True)
         
-        # Display sign-off
-        st.markdown(f'<p class="subtitle"><em>{st.session_state.recipes["sign_off"]}</em></p>', unsafe_allow_html=True)
+        # Instructions
+        st.markdown('<h3 class="recipe-section-title">Instructions:</h3>', unsafe_allow_html=True)
+        instructions_list = ''.join([f'<li>{instruction}</li>' for instruction in recipe['instructions']])
+        st.markdown(f'<ol class="recipe-list">{instructions_list}</ol>', unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Display sign-off
+    st.markdown(f'<p class="subtitle" style="text-align: center;"><em>{st.session_state.recipes["sign_off"]}</em></p>', unsafe_allow_html=True)
 
 def main():
     # Initialize session state
