@@ -138,6 +138,32 @@ st.markdown("""
     .stSpinner > div {
         border-color: var(--primary-color) !important;
     }
+
+    /* Fix list spacing */
+    .stMarkdown ul {
+        margin-top: -0.5em;
+        margin-bottom: 0.5em;
+    }
+    
+    .stMarkdown li {
+        margin: 0.2em 0;
+    }
+    
+    /* Adjust header margins */
+    .stMarkdown h4, .stMarkdown h5 {
+        margin-bottom: 0.5em;
+    }
+    
+    /* Recipe container spacing */
+    .element-container {
+        margin-bottom: 0.5em;
+    }
+    
+    /* Make regular text slightly smaller than headers */
+    .stMarkdown p {
+        font-size: 1em;
+        margin: 0.3em 0;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -162,17 +188,26 @@ def format_recipe_ideas(recipe_output):
 
 def display_recipe(recipe):
     """Display a single recipe in a card format"""
-    st.markdown(f"### {recipe['name']}")
-    st.markdown(recipe['description'])
-    
-    if recipe['additional_ingredients']:
-        st.markdown("#### Additional Ingredients Needed:")
-        for ingredient in recipe['additional_ingredients']:
-            st.markdown(f"- {ingredient}")
-    
-    st.markdown("#### Instructions:")
-    for i, instruction in enumerate(recipe['instructions'], 1):
-        st.markdown(f"{i}. {instruction}")
+    with st.container():
+        st.markdown(f"#### {recipe['name']}")
+        st.write(recipe['description'])
+        
+        if recipe['additional_ingredients']:
+            st.markdown("##### Additional Ingredients Needed:")
+            # Create a more compact list with custom HTML/CSS
+            ingredients_html = "<div style='margin-top: -1em;'>"
+            for ingredient in recipe['additional_ingredients']:
+                ingredients_html += f"<div style='margin: 0.2em 0;'>• {ingredient}</div>"
+            ingredients_html += "</div>"
+            st.markdown(ingredients_html, unsafe_allow_html=True)
+        
+        st.markdown("##### Instructions:")
+        # Create a more compact list for instructions
+        instructions_html = "<div style='margin-top: -1em;'>"
+        for i, instruction in enumerate(recipe['instructions'], 1):
+            instructions_html += f"<div style='margin: 0.2em 0;'>{i}. {instruction}</div>"
+        instructions_html += "</div>"
+        st.markdown(instructions_html, unsafe_allow_html=True)
 
 def generate_recipe_ideas(ingredients):
     """Call API to generate recipe ideas"""
@@ -278,8 +313,8 @@ def results_page():
         st.session_state.page = "input"
         st.rerun()
     
-    st.title("Ideas")
-    st.subheader(f"Ideas using: {st.session_state.ingredients}")
+    st.title("Recipe Ideas")
+    st.write(f"Using: {st.session_state.ingredients}")
     
     # Show loading state first
     with st.spinner("Creating your culinary adventure..."):
@@ -293,8 +328,11 @@ def results_page():
         st.error("No recipes were generated. Please try again.")
         return
     
-    # Display greeting
-    st.markdown(f"### {result['greeting']}")
+    # Display greeting as regular text, not a header
+    st.write(result['greeting'])
+    
+    # Add some spacing
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # Create two columns for recipes
     col1, col2 = st.columns(2)
@@ -307,12 +345,15 @@ def results_page():
     with col2:
         display_recipe(result['recipes'][1])
     
-    # Display sign-off
-    st.markdown(f"*{result['sign_off']}*")
+    # Display sign-off with some spacing
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"<em>{result['sign_off']}</em>", unsafe_allow_html=True)
 
 def main():
+    # Initialize session state variables at the very beginning
     if "page" not in st.session_state:
         st.session_state.page = "input"
+        st.session_state.ingredients = ""
     
     # Verify environment variables first
     if not verify_env_variables():
