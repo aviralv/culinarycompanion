@@ -84,21 +84,20 @@ st.markdown("""
         background-color: var(--background-light);
     }
 
-    .main > div:first-child {
-        padding: var(--space-md) !important;
-    }
-
-    .block-container {
-        padding: 0 !important;
-        max-width: 1000px !important;
-    }
-
-    /* Hide Streamlit branding */
-    #MainMenu, footer, header {
+    /* Only hide specific Streamlit elements */
+    .reportview-container .main footer {
         visibility: hidden;
     }
 
-    /* Main container */
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    header {
+        visibility: hidden;
+    }
+
+    /* Main container - removing direct styling of .main and .block-container */
     .main-container {
         display: flex;
         flex-direction: column;
@@ -107,7 +106,7 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
         padding: var(--space-xl) var(--space-md);
-        min-height: 100vh;
+        min-height: 80vh;  /* Reduced from 100vh to avoid scrolling issues */
     }
 
     /* Logo */
@@ -147,9 +146,14 @@ st.markdown("""
     }
 
     /* Form */
-    .search-form {
+    .stForm {
         width: 100%;
         max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .search-form {
+        width: 100%;
         background: var(--background-light);
         border-radius: var(--radius-lg);
         padding: var(--space-lg);
@@ -158,23 +162,22 @@ st.markdown("""
         margin: 0 auto;
     }
 
-    .search-form:hover {
-        box-shadow: var(--shadow-md);
-    }
-
     /* Form layout */
     .form-row {
         display: flex;
         gap: var(--space-md);
         width: 100%;
+        align-items: flex-start;
     }
 
     .input-column {
         flex: 1;
+        min-width: 0; /* Allow flex item to shrink below content size */
     }
 
     .button-column {
         width: 160px;
+        flex-shrink: 0; /* Prevent button from shrinking */
     }
 
     /* Input field */
@@ -183,12 +186,11 @@ st.markdown("""
     }
 
     .stTextInput > div {
-        width: 100%;
-        padding: 0 !important;
+        width: 100% !important;
     }
 
     .stTextInput > div > div {
-        width: 100%;
+        width: 100% !important;
     }
 
     .stTextInput > div > div > input {
@@ -203,15 +205,9 @@ st.markdown("""
         background-color: var(--background-light) !important;
     }
 
-    .stTextInput > div > div > input:focus {
-        border-color: var(--primary-color) !important;
-        box-shadow: 0 0 0 4px rgba(56, 102, 65, 0.1) !important;
-    }
-
     /* Button */
     .stButton {
-        width: 100%;
-        margin: 0 !important;
+        width: 100% !important;
     }
 
     .stButton > button {
@@ -407,14 +403,9 @@ def generate_recipes(ingredients):
 
 def input_page():
     """Display the input page"""
-    st.markdown('<div class="main-container">', unsafe_allow_html=True)
-    
     # Logo
     st.markdown(
-        '<div class="logo">'
-        '<img src="https://raw.githubusercontent.com/aviralv/culinarycompanion/master/assets/logo.png" '
-        'alt="Recipe Generator Logo" onerror="this.onerror=null; this.innerHTML=\'🍳\'">'
-        '</div>',
+        '<div class="logo">🍳</div>',
         unsafe_allow_html=True
     )
     
@@ -429,24 +420,24 @@ def input_page():
     )
     
     # Search form
-    with st.form(key="recipe_form"):
+    with st.form(key="recipe_form", clear_on_submit=False):
         st.markdown('<div class="search-form">', unsafe_allow_html=True)
         st.markdown('<div class="form-row">', unsafe_allow_html=True)
         
-        cols = st.columns([7, 3])
-        with cols[0]:
-            st.markdown('<div class="input-column">', unsafe_allow_html=True)
+        # Create columns for input and button
+        left_col, right_col = st.columns([7, 3])
+        
+        # Input field
+        with left_col:
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="e.g., chicken, rice, onions, garlic",
                 label_visibility="collapsed"
             )
-            st.markdown('</div>', unsafe_allow_html=True)
         
-        with cols[1]:
-            st.markdown('<div class="button-column">', unsafe_allow_html=True)
+        # Submit button
+        with right_col:
             submit = st.form_submit_button("Create Recipes")
-            st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -458,8 +449,6 @@ def input_page():
                 st.rerun()
             else:
                 st.error("Please enter some ingredients.")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 def loading_page():
     """Display the loading page"""
