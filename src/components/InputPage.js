@@ -10,7 +10,7 @@ import {
   InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import CookingPanIcon from './CookingPanIcon';
 
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
   return (
@@ -22,7 +22,7 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
       justifyContent: 'center'
     }}>
       <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <RestaurantMenuIcon sx={{ fontSize: 60, color: '#10B981', mb: 2 }} />
+        <CookingPanIcon size={80} />
         <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
           Recipe Generator
         </Typography>
