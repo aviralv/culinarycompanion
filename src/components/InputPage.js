@@ -4,9 +4,13 @@ import {
   Typography, 
   TextField, 
   Button, 
-  Box
+  Box,
+  Card,
+  CardContent,
+  InputAdornment
 } from '@mui/material';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
+import SearchIcon from '@mui/icons-material/Search';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
   return (
@@ -17,51 +21,82 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
       flexDirection: 'column',
       justifyContent: 'center'
     }}>
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <RestaurantIcon sx={{ fontSize: 60, color: '#10B981', mb: 2 }} />
-        <Typography variant="h3" component="h1" gutterBottom>
-          Culinary Companion
+      <Box sx={{ textAlign: 'center', mb: 6 }}>
+        <RestaurantMenuIcon sx={{ fontSize: 60, color: '#10B981', mb: 2 }} />
+        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
+          Recipe Generator
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4, fontSize: '1.2rem' }}>
           Turn your ingredients into creative meals. Just type what you've got at home!
         </Typography>
       </Box>
 
-      <Box sx={{ 
-        display: 'flex', 
-        gap: 2, 
-        mb: 4,
-        maxWidth: '600px',
+      <Card sx={{ 
+        maxWidth: '800px',
         mx: 'auto',
-        width: '100%'
+        width: '100%',
+        borderRadius: 3,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+        bgcolor: '#fff'
       }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="e.g., chicken, rice, onions, garlic"
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-          disabled={disabled}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter' && ingredients.trim()) {
-              onSubmit();
-            }
-          }}
-        />
-        <Button
-          variant="contained"
-          onClick={onSubmit}
-          disabled={disabled || !ingredients.trim()}
-          sx={{
-            bgcolor: '#10B981',
-            '&:hover': {
-              bgcolor: '#059669'
-            }
-          }}
-        >
-          🍽️ Create
-        </Button>
-      </Box>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom sx={{ 
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            color: '#1f2937',
+            mb: 3
+          }}>
+            <SearchIcon /> Ingredients:
+          </Typography>
+          
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 2,
+            alignItems: 'flex-start'
+          }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="e.g., chicken, rice, onions, garlic"
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              disabled={disabled}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && ingredients.trim()) {
+                  onSubmit();
+                }
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  backgroundColor: '#f9fafb'
+                }
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={onSubmit}
+              disabled={disabled || !ingredients.trim()}
+              sx={{
+                bgcolor: '#3b82f6',
+                '&:hover': {
+                  bgcolor: '#2563eb'
+                },
+                borderRadius: 2,
+                px: 4,
+                py: 1.5,
+                textTransform: 'none',
+                fontSize: '1rem',
+                fontWeight: 500,
+                whiteSpace: 'nowrap'
+              }}
+            >
+              Create Recipes
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 }
