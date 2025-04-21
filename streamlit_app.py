@@ -10,114 +10,97 @@ class Page(Enum):
     LOADING = "loading"
     RESULTS = "results"
 
-# Page configuration
+# App Config
 st.set_page_config(
     page_title="Culinary Companion",
     page_icon="🍳",
-    layout="centered"
+    layout="centered",
 )
 
-# Custom CSS
+# Custom CSS for visual polish
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    
-    .main {
-        background-color: #F9FAFB;
-        padding: 3rem;
-    }
+        .main {
+            padding-top: 3rem;
+            background-color: #FAFAFA;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6B7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .input-box {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .stTextInput>div>div>input {
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.75rem;
+        }
+        .stButton>button {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #10B981 !important;
+            color: white;
+            border: none;
+        }
+        .stButton>button:hover {
+            background-color: #059669 !important;
+        }
 
-    .input-container {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-    }
+        /* Recipe cards */
+        .recipe-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .recipe-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        .recipe-description {
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .recipe-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #111827;
+        }
+        .recipe-list {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #374151;
+        }
+        .recipe-list li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
 
-    .centered {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    /* Hide Streamlit branding */
-    #MainMenu, footer, header {display: none;}
-
-    /* Typography */
-    h1 {
-        color: #111827;
-        font-size: 2.25rem;
-        font-weight: 700;
-        margin: 1rem 0;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .subtitle {
-        color: #6B7280;
-        font-size: 1.125rem;
-        margin-bottom: 2rem;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    /* Recipe cards */
-    .recipe-card {
-        background: white;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid #E5E7EB;
-    }
-
-    .recipe-title {
-        color: #111827;
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-
-    .recipe-description {
-        color: #6B7280;
-        margin-bottom: 1.5rem;
-        line-height: 1.6;
-    }
-
-    .recipe-section-title {
-        color: #111827;
-        font-size: 1.125rem;
-        font-weight: 600;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .recipe-list {
-        margin-left: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .recipe-list li {
-        margin-bottom: 0.5rem;
-        line-height: 1.6;
-    }
-
-    /* Button styling */
-    .stButton > button {
-        width: 100% !important;
-        background-color: #6366F1 !important;
-        color: white !important;
-        padding: 0.75rem 1.5rem !important;
-        font-weight: 600 !important;
-        border-radius: 0.5rem !important;
-        border: none !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .stButton > button:hover {
-        background-color: #4F46E5 !important;
-        transform: translateY(-1px) !important;
-    }
+        /* Hide Streamlit branding */
+        #MainMenu, footer, header {display: none;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -162,26 +145,24 @@ def generate_recipes(ingredients):
 
 def input_page():
     """Display the input page"""
-    # Logo/Icon
-    st.markdown('<div class="centered"><h1 style="font-size:96px;">🍳</h1></div>', unsafe_allow_html=True)
+    # Icon at top
+    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
 
     # Title & subtitle
-    st.markdown("<h1 style='text-align: center;'>Culinary Companion</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle' style='text-align: center;'>Turn your ingredients into creative meals. Just type what you've got at home!</p>", unsafe_allow_html=True)
+    st.markdown("<h1>Culinary Companion</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>Turn your ingredients into creative meals. Just type what you've got at home!</p>", unsafe_allow_html=True)
 
     # Input Section
     with st.container():
-        st.markdown('<div class="input-container">', unsafe_allow_html=True)
-        st.markdown("#### 🔍 Ingredients:")
-        
+        st.markdown('<div class="input-box">', unsafe_allow_html=True)
         with st.form(key="recipe_form", clear_on_submit=False):
             ingredients = st.text_input(
-                "Enter ingredients separated by commas",
+                "Ingredients",
                 placeholder="e.g., chicken, rice, onions, garlic",
                 label_visibility="collapsed"
             )
             
-            submit = st.form_submit_button("🍽️ Create Recipes", use_container_width=True)
+            submit = st.form_submit_button("🍽️ Create Recipes")
             
             if submit:
                 if ingredients.strip():
@@ -195,8 +176,8 @@ def input_page():
 
 def loading_page():
     """Display the loading page"""
-    # Logo/Icon
-    st.markdown('<div class="centered"><h1 style="font-size:96px;">🍳</h1></div>', unsafe_allow_html=True)
+    # Icon at top
+    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
     
     with st.spinner("Creating your culinary masterpiece..."):
         result, error = generate_recipes(st.session_state.ingredients)
@@ -216,7 +197,7 @@ def results_page():
         st.rerun()
     
     # Display greeting
-    st.markdown(f'<p class="subtitle" style="text-align: center;">{st.session_state.recipes["greeting"]}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="subtitle">{st.session_state.recipes["greeting"]}</p>', unsafe_allow_html=True)
     
     # Display recipes
     for recipe in st.session_state.recipes['recipes']:
@@ -240,7 +221,7 @@ def results_page():
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Display sign-off
-    st.markdown(f'<p class="subtitle" style="text-align: center;"><em>{st.session_state.recipes["sign_off"]}</em></p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="subtitle"><em>{st.session_state.recipes["sign_off"]}</em></p>', unsafe_allow_html=True)
 
 def main():
     # Initialize session state
