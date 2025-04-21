@@ -154,7 +154,14 @@ def generate_recipes(ingredients):
         })
         headers = {'Content-Type': 'application/json'}
         
+        st.write("Sending request to API...")  # Debug log
+        st.write(f"Ingredients: {ingredients}")  # Debug log
+        
         response = requests.post(url, headers=headers, data=payload)
+        
+        st.write(f"Response status code: {response.status_code}")  # Debug log
+        st.write(f"Response content: {response.text[:500]}")  # Debug log - first 500 chars
+        
         response.raise_for_status()
         
         data = response.json()
@@ -167,8 +174,10 @@ def generate_recipes(ingredients):
         return None, "Unexpected response structure"
         
     except requests.exceptions.RequestException as e:
+        st.write(f"Request error: {str(e)}")  # Debug log
         return None, f"Request failed: {str(e)}"
     except Exception as e:
+        st.write(f"General error: {str(e)}")  # Debug log
         return None, f"An error occurred: {str(e)}"
 
 def input_page():
