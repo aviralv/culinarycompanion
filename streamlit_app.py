@@ -60,6 +60,9 @@ st.markdown("""
         --background-color: #ffffff;
         --secondary-background-color: #f0f2f6;
         --text-color: #31333F;
+        --primary-color: #386641;
+        --primary-color-hover: #447751;
+        --primary-color-active: #2d5234;
     }
 
     /* Main container */
@@ -69,110 +72,17 @@ st.markdown("""
         margin: 0 auto;
     }
 
-    /* Button styling */
-    .stButton > button {
-        background-color: var(--primary-color);
-        color: var(--text-color);
-        border: none;
-        border-radius: 4px;
-        height: 46px;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: auto !important;
-        min-width: 120px !important;
-        transition: all 0.2s ease;
-    }
-    .stButton > button:hover {
-        filter: brightness(110%);
-    }
-
-    /* Input field styling */
-    .stTextInput > div > div > input {
-        background-color: white;
-        border: 1px solid rgba(49, 51, 63, 0.2);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        height: 3.2rem;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-        width: 100%;
-    }
-
-    .stTextInput > div > div > input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
-    }
-
-    .stTextInput > div > div > input::placeholder {
-        color: rgba(49, 51, 63, 0.6);
-        font-style: italic;
-    }
-
-    /* Form container styling */
-    .input-container {
-        background-color: var(--secondary-background-color);
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin: 1rem 0;
-        border: 1px solid rgba(49, 51, 63, 0.1);
-    }
-
-    /* Create Recipe button styling */
-    .stButton > button {
-        height: 3.2rem;
-        padding: 0.75rem 1.5rem;
-        background-color: #386641;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        min-width: 140px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        background-color: #447751;
-    }
-
-    .stButton > button:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        background-color: #2d5234;
-    }
-
-    /* Image container */
-    div[data-testid="stImage"] {
-        display: flex;
-        justify-content: center;
-        padding: 1rem 0;
-    }
-    div[data-testid="stImage"] > img {
-        display: block;
-        margin: 0 auto;
-    }
-
     /* Form layout */
     [data-testid="stForm"] {
         max-width: 800px;
         margin: 2rem auto;
     }
 
-    /* Remove default form padding */
     [data-testid="stForm"] > div:first-child {
         padding: 0;
     }
 
-    /* Input container styling */
+    /* Input container */
     .input-container {
         background-color: var(--secondary-background-color);
         padding: 2rem;
@@ -182,76 +92,68 @@ st.markdown("""
         border: 1px solid rgba(49, 51, 63, 0.1);
     }
 
-    /* Input field styling */
+    /* Input field */
     .stTextInput > div > div > input {
-        background-color: white;
-        border: 1px solid rgba(49, 51, 63, 0.2);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        height: 3.2rem;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-        width: 100%;
+        background-color: white !important;
+        border: 1px solid rgba(49, 51, 63, 0.2) !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
+        height: 3.2rem !important;
+        font-size: 1.1rem !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+        transition: all 0.2s ease !important;
+        width: 100% !important;
     }
 
     .stTextInput > div > div > input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 2px rgba(56, 102, 65, 0.1) !important;
     }
 
     .stTextInput > div > div > input::placeholder {
-        color: rgba(49, 51, 63, 0.6);
-        font-style: italic;
+        color: rgba(49, 51, 63, 0.6) !important;
+        font-style: italic !important;
     }
 
-    /* Button styling */
+    /* Button */
     .stButton > button {
-        height: 3.2rem;
-        padding: 0.75rem 1.5rem;
-        background-color: #386641;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        min-width: 140px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        height: 3.2rem !important;
+        padding: 0.75rem 1.5rem !important;
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        min-width: 140px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        background-color: #447751;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+        background-color: var(--primary-color-hover) !important;
     }
 
     .stButton > button:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        background-color: #2d5234;
-    }
-
-    /* Help text styling */
-    .stTextInput .help-text {
-        margin-top: 0.4rem;
-        font-size: 0.9rem;
-        color: rgba(49, 51, 63, 0.7);
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        background-color: var(--primary-color-active) !important;
     }
 
     /* Column layout */
     [data-testid="column"] {
-        padding: 0 0.75rem;
-        display: flex;
-        align-items: center;
+        padding: 0 0.75rem !important;
+        display: flex !important;
+        align-items: center !important;
     }
 
-    /* Ensure columns are aligned */
     [data-testid="column"] > div {
-        width: 100%;
+        width: 100% !important;
     }
 
     /* Remove 'Press Enter to apply' text */
@@ -259,21 +161,28 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Responsive adjustments */
+    /* Help text */
+    .stTextInput .help-text {
+        margin-top: 0.4rem !important;
+        font-size: 0.9rem !important;
+        color: rgba(49, 51, 63, 0.7) !important;
+    }
+
+    /* Responsive design */
     @media (max-width: 768px) {
         .input-container {
-            padding: 1.5rem;
+            padding: 1.5rem !important;
         }
         
         .stTextInput > div > div > input {
-            height: 3rem;
-            font-size: 1rem;
+            height: 3rem !important;
+            font-size: 1rem !important;
         }
         
         .stButton > button {
-            height: 3rem;
-            font-size: 1rem;
-            min-width: 120px;
+            height: 3rem !important;
+            font-size: 1rem !important;
+            min-width: 120px !important;
         }
     }
 
@@ -413,6 +322,155 @@ st.markdown("""
         display: flex;
         align-items: center;
     }
+
+    /* Reset and base styles */
+    div.stApp {
+        background-color: #ffffff;
+    }
+
+    .main > div:first-child {
+        padding-top: 2rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .block-container {
+        padding: 0 !important;
+        max-width: 1000px !important;
+    }
+
+    /* Main container styling */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Logo styling */
+    .logo-container {
+        font-size: 120px;
+        line-height: 1;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    /* Title and subtitle styling */
+    .title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        color: #1E1E1E;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #666;
+        margin-bottom: 2.5rem;
+        line-height: 1.5;
+        max-width: 600px;
+    }
+
+    /* Form styling */
+    .search-container {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 800px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin-top: 1rem;
+    }
+
+    /* Input field styling */
+    .stTextInput > div > div > input {
+        font-size: 1.2rem !important;
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+        border: 2px solid #e0e0e0 !important;
+        background-color: white !important;
+        height: auto !important;
+        min-height: 60px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border-color: #386641 !important;
+        box-shadow: 0 0 0 4px rgba(56, 102, 65, 0.1) !important;
+    }
+
+    .stTextInput > div > div > input::placeholder {
+        color: #999 !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* Button styling */
+    .stButton > button {
+        width: 100% !important;
+        min-height: 60px !important;
+        background-color: #386641 !important;
+        color: white !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        padding: 1rem 2rem !important;
+        border: none !important;
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        text-transform: none !important;
+        margin: 0 !important;
+    }
+
+    .stButton > button:hover {
+        background-color: #447751 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(56, 102, 65, 0.2) !important;
+    }
+
+    .stButton > button:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 6px rgba(56, 102, 65, 0.1) !important;
+    }
+
+    /* Form layout adjustments */
+    [data-testid="column"] {
+        padding: 0.5rem !important;
+    }
+
+    /* Hide Streamlit branding */
+    #MainMenu, footer, header {
+        visibility: hidden;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .title {
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            padding: 0 1rem;
+        }
+        
+        .search-container {
+            padding: 1.5rem;
+        }
+        
+        .stTextInput > div > div > input {
+            font-size: 1.1rem !important;
+            min-height: 54px !important;
+        }
+        
+        .stButton > button {
+            min-height: 54px !important;
+            font-size: 1.1rem !important;
+        }
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -503,46 +561,50 @@ def generate_recipe_ideas(ingredients):
 
 def input_page():
     """Display the input page for ingredients"""
-    # Add some spacing
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Hide Streamlit's default elements
+    hide_streamlit_style = """
+        <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+        </style>
+    """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
     
-    # Display centered cooking pan icon as logo
+    # Main container
+    st.markdown('<div class="main-container">', unsafe_allow_html=True)
+    
+    # Logo
     st.markdown(
-        "<div style='text-align: center;'>"
-        "<div style='font-size: 8rem; margin-bottom: 1rem; line-height: 1;'>🍳</div>"
-        "</div>",
+        '<div class="logo-container">🍳</div>',
         unsafe_allow_html=True
     )
     
-    # Title and subtitle with improved help text
+    # Title and subtitle
     st.markdown(
-        "<h1 style='text-align: center; color: var(--text-color);'>"
-        "Culinary Companion"
-        "</h1>", 
+        '<h1 class="title">Culinary Companion</h1>',
         unsafe_allow_html=True
     )
     st.markdown(
-        "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1.5em;'>"
-        "Transform your available ingredients into delicious recipes!<br>"
-        "Enter what you have in your kitchen, and I'll suggest creative dishes you can make."
-        "</p>", 
+        '<p class="subtitle">'
+        'Transform your available ingredients into delicious recipes! '
+        'Enter what you have in your kitchen, and I\'ll suggest creative dishes you can make.'
+        '</p>',
         unsafe_allow_html=True
     )
     
-    # Create form with adjusted column ratio
+    # Search form
     with st.form(key="ingredient_form", clear_on_submit=True):
-        st.markdown(
-            "<div class='input-container'>",
-            unsafe_allow_html=True
-        )
-        cols = st.columns([4, 1])  # Adjusted ratio for better button size
+        st.markdown('<div class="search-container">', unsafe_allow_html=True)
+        
+        # Create columns with custom ratio
+        cols = st.columns([7, 3])
         
         with cols[0]:
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="e.g., chicken, rice, onions, garlic",
-                label_visibility="collapsed",
-                help="List your ingredients separated by commas"
+                label_visibility="collapsed"
             )
         
         with cols[1]:
@@ -551,7 +613,7 @@ def input_page():
                 use_container_width=True
             )
         
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if submit:
             if ingredients:
@@ -560,6 +622,8 @@ def input_page():
                 st.rerun()
             else:
                 st.error("Please enter some ingredients.")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def loading_page():
     """Display loading state while generating recipes"""
