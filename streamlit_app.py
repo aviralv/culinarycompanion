@@ -21,14 +21,20 @@ st.set_page_config(
 st.markdown("""
     <style>
         .main {
-            padding-top: 3rem;
+            padding: 2rem 1rem;
             background-color: #FAFAFA;
+        }
+        .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 0rem !important;
+            max-width: 48rem !important;
         }
         h1 {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 0.5rem;
+            color: #111827;
         }
         .subtitle {
             font-size: 1.1rem;
@@ -36,21 +42,14 @@ st.markdown("""
             text-align: center;
             margin-bottom: 2rem;
         }
-        .input-box {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            max-width: 600px;
-            margin: 0 auto;
-        }
         .stTextInput>div>div>input {
             padding: 0.75rem;
             font-size: 1rem;
             border-radius: 0.75rem;
+            border: 1px solid #E5E7EB;
+            background-color: #F9FAFB;
         }
         .stButton>button {
-            width: 100%;
             padding: 0.75rem;
             border-radius: 0.75rem;
             font-size: 1rem;
@@ -62,7 +61,7 @@ st.markdown("""
         .stButton>button:hover {
             background-color: #059669 !important;
         }
-
+        
         /* Recipe cards */
         .recipe-card {
             background: white;
@@ -99,8 +98,32 @@ st.markdown("""
             line-height: 1.6;
         }
 
+        /* Custom form layout */
+        .custom-form {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .custom-form .input-container {
+            flex: 1;
+        }
+        .custom-form .button-container {
+            width: auto;
+        }
+        
         /* Hide Streamlit branding */
         #MainMenu, footer, header {display: none;}
+
+        /* Remove box shadow from containers */
+        .stApp {
+            background-color: #FAFAFA !important;
+        }
+        div[data-testid="stForm"] {
+            border: none;
+            padding: 0;
+            border-radius: 0;
+            background-color: transparent;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -146,38 +169,38 @@ def generate_recipes(ingredients):
 def input_page():
     """Display the input page"""
     # Icon at top
-    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🔍</span></div>', unsafe_allow_html=True)
 
     # Title & subtitle
     st.markdown("<h1>Culinary Companion</h1>", unsafe_allow_html=True)
     st.markdown("<p class='subtitle'>Turn your ingredients into creative meals. Just type what you've got at home!</p>", unsafe_allow_html=True)
 
-    # Input Section
-    with st.container():
-        st.markdown('<div class="input-box">', unsafe_allow_html=True)
-        with st.form(key="recipe_form", clear_on_submit=False):
+    # Input Section with horizontal layout
+    with st.form(key="recipe_form", clear_on_submit=False):
+        col1, col2 = st.columns([0.7, 0.3])
+        
+        with col1:
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="e.g., chicken, rice, onions, garlic",
                 label_visibility="collapsed"
             )
-            
-            submit = st.form_submit_button("🍽️ Create Recipes")
-            
-            if submit:
-                if ingredients.strip():
-                    st.session_state.ingredients = ingredients
-                    st.session_state.page = Page.LOADING
-                    st.rerun()
-                else:
-                    st.warning("Please enter some ingredients first.")
         
-        st.markdown('</div>', unsafe_allow_html=True)
+        with col2:
+            submit = st.form_submit_button("🍽️ Create Recipes")
+        
+        if submit:
+            if ingredients.strip():
+                st.session_state.ingredients = ingredients
+                st.session_state.page = Page.LOADING
+                st.rerun()
+            else:
+                st.warning("Please enter some ingredients first.")
 
 def loading_page():
     """Display the loading page"""
     # Icon at top
-    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🍳</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🔍</span></div>', unsafe_allow_html=True)
     
     with st.spinner("Creating your culinary masterpiece..."):
         result, error = generate_recipes(st.session_state.ingredients)
