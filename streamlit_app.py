@@ -229,6 +229,34 @@ st.markdown("""
         color: var(--text-color) !important;
         opacity: 0.7;
     }
+
+    /* Vertically center the input field and help text */
+    .stTextInput {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    /* Adjust help text position */
+    .stTextInput .help-text {
+        margin-top: 0.2rem;
+        margin-bottom: 0;
+    }
+    
+    /* Center the form elements vertically */
+    [data-testid="stForm"] > div:first-child {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Ensure consistent height for columns */
+    [data-testid="column"] {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -339,7 +367,7 @@ def input_page():
     )
     st.markdown(
         "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1em;'>"
-        "Transform your available ingredients into delicious recipes! "
+        "Transform your available ingredients into delicious recipes!<br><br>"
         "Enter what you have in your kitchen, and I'll suggest creative dishes you can make."
         "</p>", 
         unsafe_allow_html=True
@@ -358,7 +386,12 @@ def input_page():
             )
         
         with cols[1]:
+            st.markdown(
+                "<div style='height: 100%; display: flex; align-items: center;'>",
+                unsafe_allow_html=True
+            )
             submit = st.form_submit_button("Create Recipes")
+            st.markdown("</div>", unsafe_allow_html=True)
         
         if submit:
             if ingredients:
