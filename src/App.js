@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import axios from 'axios';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import InputPage from './components/InputPage';
 import ResultsPage from './components/ResultsPage';
 import LoadingTransition from './components/LoadingTransition';
+import getTheme from './theme';
 
 function App() {
   const [ingredients, setIngredients] = useState('');
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState(null);
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState('light');
+
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   const generateRecipes = async () => {
     if (!ingredients.trim()) {
@@ -47,22 +52,30 @@ function App() {
     setError(null);
   };
 
-  if (loading) {
-    return <LoadingTransition />;
-  }
-
-  if (recipes) {
-    return <ResultsPage recipes={recipes} onBack={handleReset} />;
-  }
-
   return (
-    <InputPage
-      ingredients={ingredients}
-      setIngredients={setIngredients}
-      onSubmit={generateRecipes}
-      disabled={loading}
-      error={error}
-    />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {loading ? (
+        <LoadingTransition />
+      ) : recipes ? (
+        <ResultsPage 
+          recipes={recipes} 
+          onBack={handleReset}
+          onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')}
+          mode={mode}
+        />
+      ) : (
+        <InputPage
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+          onSubmit={generateRecipes}
+          disabled={loading}
+          error={error}
+          onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')}
+          mode={mode}
+        />
+      )}
+    </ThemeProvider>
   );
 }
 

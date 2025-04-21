@@ -7,12 +7,17 @@ import {
   Box,
   Card,
   CardContent,
-  InputAdornment
+  InputAdornment,
+  useTheme,
+  alpha
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
 
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+
   return (
     <Container maxWidth="md" sx={{ 
       py: 8,
@@ -22,19 +27,22 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
       justifyContent: 'flex-start'
     }}>
       <Box sx={{ textAlign: 'center', mb: 8 }}>
-        <CookingPanIcon size={80} color="#4CAF50" />
+        <CookingPanIcon 
+          size={80} 
+          color={theme.palette.primary.main}
+        />
         <Typography variant="h3" component="h1" gutterBottom sx={{ 
           fontWeight: 500,
-          color: '#1A1A1A',
+          color: theme.palette.text.primary,
           fontSize: '2.5rem',
           mt: 3
         }}>
-          Recipe Generator
+          Culinary Companion
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ 
+        <Typography variant="subtitle1" sx={{ 
           mb: 4,
           fontSize: '1.125rem',
-          color: '#666666'
+          color: theme.palette.text.secondary
         }}>
           Turn your ingredients into creative meals. Just type what you've got at home!
         </Typography>
@@ -45,8 +53,9 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
         mx: 'auto',
         width: '100%',
         borderRadius: '16px',
-        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
-        bgcolor: '#fff'
+        boxShadow: theme.shadows[3],
+        bgcolor: theme.palette.background.paper,
+        border: isLight ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.1)}`
       }}>
         <CardContent sx={{ p: { xs: 3, md: 4 } }}>
           <Box sx={{ 
@@ -70,9 +79,9 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                 startAdornment: (
                   <InputAdornment position="start" sx={{ mr: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <SearchIcon sx={{ color: '#666666' }} />
+                      <SearchIcon sx={{ color: theme.palette.text.secondary }} />
                       <Typography sx={{ 
-                        color: '#1f2937',
+                        color: theme.palette.text.primary,
                         fontWeight: 500,
                         fontSize: '1rem'
                       }}>
@@ -85,7 +94,7 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
-                  backgroundColor: '#f9fafb',
+                  backgroundColor: theme.palette.action.hover,
                   '& fieldset': {
                     borderColor: 'transparent'
                   },
@@ -93,11 +102,15 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                     borderColor: 'transparent'
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#4CAF50'
+                    borderColor: theme.palette.primary.main
                   }
                 },
                 '& .MuiInputBase-input': {
-                  pl: 1
+                  pl: 1,
+                  '&::placeholder': {
+                    color: theme.palette.text.secondary,
+                    opacity: 0.7
+                  }
                 }
               }}
             />
@@ -106,9 +119,9 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
               onClick={onSubmit}
               disabled={disabled || !ingredients.trim()}
               sx={{
-                bgcolor: '#4CAF50',
+                bgcolor: theme.palette.primary.main,
                 '&:hover': {
-                  bgcolor: '#43A047'
+                  bgcolor: theme.palette.primary.dark
                 },
                 borderRadius: '8px',
                 px: 3,
@@ -120,8 +133,8 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                 minWidth: '140px',
                 boxShadow: 'none',
                 '&:disabled': {
-                  bgcolor: '#E0E0E0',
-                  color: '#9E9E9E'
+                  bgcolor: theme.palette.action.disabledBackground,
+                  color: theme.palette.action.disabled
                 }
               }}
             >
