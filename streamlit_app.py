@@ -257,6 +257,61 @@ st.markdown("""
         display: flex;
         align-items: center;
     }
+
+    /* Input container styling */
+    .input-container {
+        background-color: var(--secondary-background-color);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    
+    /* Input field styling */
+    .stTextInput > div > div > input {
+        background-color: white;
+        border: 1px solid rgba(var(--text-color-rgb), 0.1);
+        padding: 0.5rem 1rem;
+        height: 2.5rem;
+        border-radius: 4px;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        height: 2.5rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+    
+    .stButton > button:hover {
+        filter: brightness(110%);
+    }
+    
+    /* Help text styling */
+    .stTextInput .help-text {
+        margin-top: 0.3rem;
+        font-size: 0.8em;
+        opacity: 0.7;
+    }
+    
+    /* Form layout */
+    [data-testid="stForm"] {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    /* Column spacing */
+    [data-testid="column"] {
+        padding: 0 0.5rem;
+    }
+    
+    /* Remove default form padding */
+    [data-testid="stForm"] > div:first-child {
+        padding: 0;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -367,14 +422,18 @@ def input_page():
     )
     st.markdown(
         "<p style='text-align: center; color: var(--text-color); font-size: 1.1em; margin-bottom: 1em;'>"
-        "Transform your available ingredients into delicious recipes!<br><br>"
+        "Transform your available ingredients into delicious recipes!<br>"
         "Enter what you have in your kitchen, and I'll suggest creative dishes you can make."
         "</p>", 
         unsafe_allow_html=True
     )
     
     # Create form with adjusted column ratio
-    with st.form(key="ingredient_form"):
+    with st.form(key="ingredient_form", clear_on_submit=True):
+        st.markdown(
+            "<div class='input-container'>",
+            unsafe_allow_html=True
+        )
         cols = st.columns([7, 2])  # Adjusted ratio to give more space to the button
         
         with cols[0]:
@@ -386,12 +445,12 @@ def input_page():
             )
         
         with cols[1]:
-            st.markdown(
-                "<div style='height: 100%; display: flex; align-items: center;'>",
-                unsafe_allow_html=True
+            submit = st.form_submit_button(
+                "Create Recipes",
+                use_container_width=True
             )
-            submit = st.form_submit_button("Create Recipes")
-            st.markdown("</div>", unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
         
         if submit:
             if ingredients:
