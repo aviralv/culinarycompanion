@@ -220,8 +220,8 @@ def input_page():
         st.image("public/68c53fe2-775b-4d15-9b6f-8cc4b7959627.png", width=260)
     
     # Title and subtitle
-    st.markdown("<h1 style='text-align: center; color: white;'>Culinary Companion</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #CCCCCC;'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: var(--text-color);'>Culinary Companion</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: var(--text-color);'>Enter ingredients you have and get recipe ideas!</p>", unsafe_allow_html=True)
     
     # Add some spacing
     st.markdown("<br>", unsafe_allow_html=True)
@@ -248,54 +248,8 @@ def input_page():
             else:
                 st.error("Please enter some ingredients.")
 
-def format_recipe_content(recipe_text):
-    """Format recipe text into ingredients and directions"""
-    ingredients = []
-    directions = []
-    current_section = None
-    
-    # Split the text into lines and process each line
-    lines = recipe_text.split('\n')
-    
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-            
-        # Check for section headers
-        lower_line = line.lower()
-        if 'description:' in lower_line:
-            continue  # Skip description lines
-        elif any(word in lower_line for word in ['ingredient', 'you\'ll need', 'you need']):
-            current_section = 'ingredients'
-            continue
-        elif any(word in lower_line for word in ['instruction', 'direction', 'method', 'step']):
-            current_section = 'directions'
-            continue
-            
-        # Process content based on current section
-        if current_section == 'ingredients':
-            # Clean up the ingredient line
-            clean_line = line.lstrip('•-*').strip()
-            if clean_line and not clean_line.lower().startswith(('ingredient', 'additional')):
-                ingredients.append(clean_line)
-        elif current_section == 'directions':
-            # Clean up the direction line
-            clean_line = re.sub(r'^\d+[\.\)]?\s*', '', line).strip()
-            if clean_line and not clean_line.lower().startswith(('instruction', 'direction')):
-                directions.append(clean_line)
-                
-    # If sections weren't explicitly marked, try to infer them
-    if not ingredients and not directions:
-        # Assume first part is ingredients, second part is directions
-        split_point = len(lines) // 2
-        ingredients = [line.strip() for line in lines[:split_point] if line.strip()]
-        directions = [line.strip() for line in lines[split_point:] if line.strip()]
-    
-    return ingredients, directions
-
-def results_page():
-    """Display the results page with recipe ideas"""
+def loading_page():
+    """Display loading state while generating recipes"""
     # Back button at the top
     if st.button("← Back to Ingredients"):
         st.session_state.page = "input"
@@ -304,111 +258,92 @@ def results_page():
     st.title("Ideas")
     st.subheader(f"Ideas using: {st.session_state.ingredients}")
     
-    # Generate recipes with spinner
-    with st.spinner("Generating recipe ideas..."):
-        recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
+    # Center the spinner and add a message
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col2:
+        st.spinner("Creating your culinary adventure...")
+
+def results_page():
+    """Display the results page with recipe ideas"""
+    # Generate recipes
+    recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
+    
+    # Back button at the top
+    if st.button("← Back to Ingredients"):
+        st.session_state.page = "input"
+        st.rerun()
+    
+    st.title("Ideas")
+    st.subheader(f"Ideas using: {st.session_state.ingredients}")
     
     if error:
         st.error(error)
-    elif recipe_sections and len(recipe_sections) > 0:
-        # Add custom CSS for layout
-        st.markdown("""
-            <style>
-            .stHorizontalBlock {
-                gap: 1rem;
-            }
-            .element-container {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .recipe-container {
-                background-color: rgba(255, 255, 255, 0.05);
-                border-radius: 8px;
-                padding: 20px;
-                margin: 10px 0;
-                height: 100%;
-            }
-            .recipe-title {
-                font-size: 24px;
-                font-weight: bold;
-                margin-bottom: 15px;
-                color: white;
-            }
-            .recipe-section {
-                margin: 15px 0;
-            }
-            .recipe-section-title {
-                font-size: 20px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                color: white;
-            }
-            </style>
-        """, unsafe_allow_html=True)
+        return
         
-        # Display introduction (first element)
-        if len(recipe_sections) > 0:
-            st.markdown(recipe_sections[0])
-            st.markdown("---")
-        
-        # Create columns for recipes
-        if len(recipe_sections) > 1:
-            cols = st.columns(3)
-            
-            # Process remaining recipes (up to 3)
-            for idx, recipe in enumerate(recipe_sections[1:4]):
-                with cols[idx]:
-                    # Start recipe container
-                    st.markdown('<div class="recipe-container">', unsafe_allow_html=True)
-                    
-                    # Split recipe into sections
-                    recipe_parts = recipe.split('\n')
-                    
-                    # Title (first non-empty line)
-                    title = next((line.strip() for line in recipe_parts if line.strip()), "")
-                    if title.startswith(('1.', '2.', '3.')):
-                        title = title.split('.', 1)[1].strip()
-                    st.markdown(f'<div class="recipe-title">{title}</div>', unsafe_allow_html=True)
-                    
-                    # Join remaining lines back together
-                    content = '\n'.join(recipe_parts[1:])
-                    
-                    # Split into sections
-                    content_sections = content.split('\n\n')
-                    
-                    for section in content_sections:
-                        section = section.strip()
-                        if not section:
-                            continue
-                            
-                        if 'Description:' in section:
-                            desc = section.split('Description:', 1)[1].strip()
-                            st.markdown(f'<div class="recipe-section">{desc}</div>', unsafe_allow_html=True)
-                        
-                        elif any(keyword in section.lower() for keyword in ['ingredient', 'you\'ll need']):
-                            st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                            st.markdown('<div class="recipe-section-title">Ingredients</div>', unsafe_allow_html=True)
-                            lines = [line.strip() for line in section.split('\n')]
-                            for line in lines:
-                                if line and not any(keyword in line.lower() for keyword in ['ingredient', 'you\'ll need']):
-                                    st.markdown(f"• {line.lstrip('•-*')}")
-                            st.markdown('</div>', unsafe_allow_html=True)
-                        
-                        elif any(keyword in section.lower() for keyword in ['direction', 'instruction', 'preparation']):
-                            st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                            st.markdown('<div class="recipe-section-title">Directions</div>', unsafe_allow_html=True)
-                            lines = [line.strip() for line in section.split('\n')]
-                            step_num = 1
-                            for line in lines:
-                                if line and not any(keyword in line.lower() for keyword in ['direction', 'instruction', 'preparation']):
-                                    st.markdown(f"{step_num}. {line.lstrip('1234567890. ')}")
-                                    step_num += 1
-                            st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    # End recipe container
-                    st.markdown('</div>', unsafe_allow_html=True)
-    else:
+    if not recipe_sections or len(recipe_sections) == 0:
         st.warning("No recipe ideas were generated. Try different ingredients!")
+        return
+        
+    # Display introduction (first element)
+    st.markdown(recipe_sections[0])
+    st.markdown("---")
+    
+    # Create columns for recipes
+    if len(recipe_sections) > 1:
+        cols = st.columns(3)
+        
+        # Process remaining recipes (up to 3)
+        for idx, recipe in enumerate(recipe_sections[1:4]):
+            with cols[idx]:
+                # Start recipe container
+                st.markdown('<div class="recipe-container">', unsafe_allow_html=True)
+                
+                # Split recipe into sections
+                recipe_parts = recipe.split('\n')
+                
+                # Title (first non-empty line)
+                title = next((line.strip() for line in recipe_parts if line.strip()), "")
+                if title.startswith(('1.', '2.', '3.')):
+                    title = title.split('.', 1)[1].strip()
+                st.markdown(f'<div class="recipe-title">{title}</div>', unsafe_allow_html=True)
+                
+                # Join remaining lines back together
+                content = '\n'.join(recipe_parts[1:])
+                
+                # Split into sections
+                content_sections = content.split('\n\n')
+                
+                for section in content_sections:
+                    section = section.strip()
+                    if not section:
+                        continue
+                        
+                    if 'Description:' in section:
+                        desc = section.split('Description:', 1)[1].strip()
+                        st.markdown(f'<div class="recipe-section">{desc}</div>', unsafe_allow_html=True)
+                    
+                    elif any(keyword in section.lower() for keyword in ['ingredient', 'you\'ll need']):
+                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
+                        st.markdown('<div class="recipe-section-title">Ingredients</div>', unsafe_allow_html=True)
+                        lines = [line.strip() for line in section.split('\n')]
+                        for line in lines:
+                            if line and not any(keyword in line.lower() for keyword in ['ingredient', 'you\'ll need']):
+                                st.markdown(f"• {line.lstrip('•-*')}")
+                        st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    elif any(keyword in section.lower() for keyword in ['direction', 'instruction', 'preparation']):
+                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
+                        st.markdown('<div class="recipe-section-title">Directions</div>', unsafe_allow_html=True)
+                        lines = [line.strip() for line in section.split('\n')]
+                        step_num = 1
+                        for line in lines:
+                            if line and not any(keyword in line.lower() for keyword in ['direction', 'instruction', 'preparation']):
+                                st.markdown(f"{step_num}. {line.lstrip('1234567890. ')}")
+                                step_num += 1
+                        st.markdown('</div>', unsafe_allow_html=True)
+                
+                # End recipe container
+                st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
     if "page" not in st.session_state:
@@ -421,6 +356,19 @@ def main():
     if st.session_state.page == "input":
         input_page()
     elif st.session_state.page == "results":
+        # Show loading page first
+        placeholder = st.empty()
+        with placeholder.container():
+            loading_page()
+        
+        # Generate recipes in the background
+        with st.spinner():
+            recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
+        
+        # Clear the loading page
+        placeholder.empty()
+        
+        # Show results
         results_page()
 
 if __name__ == "__main__":
