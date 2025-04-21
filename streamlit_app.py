@@ -192,29 +192,22 @@ def input_page():
     st.markdown("<p class='subtitle'>Turn your ingredients into creative meals. Just type what you've got at home!</p>", unsafe_allow_html=True)
 
     # Input Section with horizontal layout
-    with st.form(key="recipe_form", clear_on_submit=False):
-        col1, col2 = st.columns([0.7, 0.3])
-        
-        with col1:
-            ingredients = st.text_input(
-                "Ingredients",
-                placeholder="e.g., chicken, rice, onions, garlic",
-                label_visibility="collapsed"
-            )
-        
-        with col2:
-            submit = st.form_submit_button("🍽️ Create Recipes")
-        
-        if submit:
-            st.write("Form submitted")  # Debug log
-            if ingredients.strip():
-                st.write(f"Ingredients submitted: {ingredients}")  # Debug log
-                st.session_state.ingredients = ingredients
-                st.session_state.page = Page.LOADING
-                st.write("State updated to LOADING")  # Debug log
-                st.rerun()
-            else:
-                st.warning("Please enter some ingredients first.")
+    ingredients = st.text_input(
+        "Ingredients",
+        placeholder="e.g., chicken, rice, onions, garlic",
+        label_visibility="collapsed"
+    )
+    
+    if st.button("🍽️ Create Recipes"):
+        st.write("Button clicked")  # Debug log
+        if ingredients.strip():
+            st.write(f"Ingredients submitted: {ingredients}")  # Debug log
+            st.session_state.ingredients = ingredients
+            st.session_state.page = Page.LOADING
+            st.write("State updated to LOADING")  # Debug log
+            st.experimental_rerun()
+        else:
+            st.warning("Please enter some ingredients first.")
 
 def loading_page():
     """Display the loading page"""
@@ -224,18 +217,18 @@ def loading_page():
     # Icon at top
     st.markdown('<div style="text-align: center;"><span style="font-size: 4rem;">🔍</span></div>', unsafe_allow_html=True)
     
-    with st.spinner("Creating your culinary masterpiece..."):
-        st.write("Starting recipe generation...")  # Debug log
-        result, error = generate_recipes(st.session_state.ingredients)
-        if error:
-            st.write(f"Error occurred: {error}")  # Debug log
-            st.error(error)
-            st.session_state.page = Page.INPUT
-        else:
-            st.write("Recipe generation successful")  # Debug log
-            st.session_state.recipes = result
-            st.session_state.page = Page.RESULTS
-        st.rerun()
+    st.write("Starting recipe generation...")  # Debug log
+    result, error = generate_recipes(st.session_state.ingredients)
+    
+    if error:
+        st.write(f"Error occurred: {error}")  # Debug log
+        st.error(error)
+        st.session_state.page = Page.INPUT
+    else:
+        st.write("Recipe generation successful")  # Debug log
+        st.session_state.recipes = result
+        st.session_state.page = Page.RESULTS
+    st.experimental_rerun()
 
 def results_page():
     """Display the results page"""
