@@ -160,6 +160,20 @@ def format_recipe_ideas(recipe_output):
         
     return []
 
+def display_recipe(recipe):
+    """Display a single recipe in a card format"""
+    st.markdown(f"### {recipe['name']}")
+    st.markdown(recipe['description'])
+    
+    if recipe['additional_ingredients']:
+        st.markdown("#### Additional Ingredients Needed:")
+        for ingredient in recipe['additional_ingredients']:
+            st.markdown(f"- {ingredient}")
+    
+    st.markdown("#### Instructions:")
+    for i, instruction in enumerate(recipe['instructions'], 1):
+        st.markdown(f"{i}. {instruction}")
+
 def generate_recipe_ideas(ingredients):
     """Call API to generate recipe ideas"""
     try:
@@ -171,7 +185,7 @@ def generate_recipe_ideas(ingredients):
         url = "https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1"
         payload = json.dumps({
             "ingredients": ingredients,
-            "api_key": api_key  # Add API key to payload
+            "api_key": api_key
         })
         headers = {'Content-Type': 'application/json'}
 
@@ -180,30 +194,24 @@ def generate_recipe_ideas(ingredients):
         # Check if response is successful
         response.raise_for_status()
         
-        # Try to decode JSON response
+        # Parse JSON response
         try:
             data = response.json()
+            if isinstance(data, dict) and 'recipe_output' in data:
+                recipe_data = data['recipe_output']
+                if isinstance(recipe_data, str):
+                    # Try to parse the string as JSON
+                    try:
+                        return json.loads(recipe_data), None
+                    except json.JSONDecodeError:
+                        return None, "Invalid JSON format in response"
+                elif isinstance(recipe_data, dict):
+                    return recipe_data, None
+            return None, "Unexpected response structure from API"
+            
         except json.JSONDecodeError:
-            # If JSON decoding fails, try to use the text directly
-            text_response = response.text
-            if text_response:
-                # Split the text response into sections
-                sections = [section.strip() for section in text_response.split('\n\n') if section.strip()]
-                if sections:
-                    return sections, None
-            return None, "Invalid response format from API"
+            return None, "Invalid JSON response from API"
             
-        # Handle JSON response
-        if isinstance(data, dict) and 'recipe_output' in data:
-            recipe_text = data['recipe_output']
-            if isinstance(recipe_text, str):
-                # Split the text into sections
-                sections = [section.strip() for section in recipe_text.split('\n\n') if section.strip()]
-                if sections:
-                    return sections, None
-            
-        return None, "Unexpected response structure from API"
-        
     except requests.exceptions.RequestException as e:
         return None, f"Request failed: {str(e)}"
     except Exception as e:
@@ -275,76 +283,32 @@ def results_page():
     
     # Show loading state first
     with st.spinner("Creating your culinary adventure..."):
-        recipe_sections, error = generate_recipe_ideas(st.session_state.ingredients)
+        result, error = generate_recipe_ideas(st.session_state.ingredients)
     
     if error:
         st.error(error)
         return
         
-    if not recipe_sections or len(recipe_sections) == 0:
-        st.warning("No recipe ideas were generated. Try different ingredients!")
+    if not result:
+        st.error("No recipes were generated. Please try again.")
         return
-        
-    # Display introduction (first element)
-    st.markdown(recipe_sections[0])
-    st.markdown("---")
     
-    # Create columns for recipes
-    if len(recipe_sections) > 1:
-        cols = st.columns(3)
-        
-        # Process remaining recipes (up to 3)
-        for idx, recipe in enumerate(recipe_sections[1:4]):
-            with cols[idx]:
-                # Start recipe container
-                st.markdown('<div class="recipe-container">', unsafe_allow_html=True)
-                
-                # Split recipe into sections
-                recipe_parts = recipe.split('\n')
-                
-                # Title (first non-empty line)
-                title = next((line.strip() for line in recipe_parts if line.strip()), "")
-                if title.startswith(('1.', '2.', '3.')):
-                    title = title.split('.', 1)[1].strip()
-                st.markdown(f'<div class="recipe-title">{title}</div>', unsafe_allow_html=True)
-                
-                # Join remaining lines back together
-                content = '\n'.join(recipe_parts[1:])
-                
-                # Split into sections
-                content_sections = content.split('\n\n')
-                
-                for section in content_sections:
-                    section = section.strip()
-                    if not section:
-                        continue
-                        
-                    if 'Description:' in section:
-                        desc = section.split('Description:', 1)[1].strip()
-                        st.markdown(f'<div class="recipe-section">{desc}</div>', unsafe_allow_html=True)
-                    
-                    elif any(keyword in section.lower() for keyword in ['ingredient', 'you\'ll need']):
-                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                        st.markdown('<div class="recipe-section-title">Ingredients</div>', unsafe_allow_html=True)
-                        lines = [line.strip() for line in section.split('\n')]
-                        for line in lines:
-                            if line and not any(keyword in line.lower() for keyword in ['ingredient', 'you\'ll need']):
-                                st.markdown(f"• {line.lstrip('•-*')}")
-                        st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    elif any(keyword in section.lower() for keyword in ['direction', 'instruction', 'preparation']):
-                        st.markdown('<div class="recipe-section">', unsafe_allow_html=True)
-                        st.markdown('<div class="recipe-section-title">Directions</div>', unsafe_allow_html=True)
-                        lines = [line.strip() for line in section.split('\n')]
-                        step_num = 1
-                        for line in lines:
-                            if line and not any(keyword in line.lower() for keyword in ['direction', 'instruction', 'preparation']):
-                                st.markdown(f"{step_num}. {line.lstrip('1234567890. ')}")
-                                step_num += 1
-                        st.markdown('</div>', unsafe_allow_html=True)
-                
-                # End recipe container
-                st.markdown('</div>', unsafe_allow_html=True)
+    # Display greeting
+    st.markdown(f"### {result['greeting']}")
+    
+    # Create two columns for recipes
+    col1, col2 = st.columns(2)
+    
+    # Display first recipe in first column
+    with col1:
+        display_recipe(result['recipes'][0])
+    
+    # Display second recipe in second column
+    with col2:
+        display_recipe(result['recipes'][1])
+    
+    # Display sign-off
+    st.markdown(f"*{result['sign_off']}*")
 
 def main():
     if "page" not in st.session_state:
