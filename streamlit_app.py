@@ -13,7 +13,7 @@ class Page(Enum):
 # Page configuration
 st.set_page_config(
     page_title="Culinary Companion",
-    page_icon="👨‍🍳",
+    page_icon="🍳",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -64,12 +64,16 @@ st.markdown("""
     .app-header {
         text-align: center;
         margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .app-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
+        font-size: 8rem;
+        margin-bottom: 1.5rem;
         display: inline-block;
+        line-height: 1;
     }
 
     /* Typography */
@@ -206,7 +210,7 @@ def input_page():
     with st.container():
         # App header
         st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="app-icon">👨‍🍳</div>', unsafe_allow_html=True)
+        st.markdown('<div class="app-icon">🍳</div>', unsafe_allow_html=True)
         st.markdown('<h1>Culinary Companion</h1>', unsafe_allow_html=True)
         st.markdown('<p class="subtitle">Turn your ingredients into creative meals. Just type what you\'ve got at home!</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -233,7 +237,7 @@ def loading_page():
     """Display the loading page"""
     with st.container():
         st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="app-icon">👨‍🍳</div>', unsafe_allow_html=True)
+        st.markdown('<div class="app-icon">🍳</div>', unsafe_allow_html=True)
         with st.spinner("Creating your culinary masterpiece..."):
             result, error = generate_recipes(st.session_state.ingredients)
             if error:
