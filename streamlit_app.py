@@ -88,10 +88,57 @@ st.markdown("""
 
     /* Input field styling */
     .stTextInput > div > div > input {
-        background-color: var(--secondary-background-color);
-        color: var(--text-color);
+        background-color: white;
+        border: 1px solid rgba(49, 51, 63, 0.2);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        height: 3rem;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .stTextInput > div > div > input:focus {
         border-color: var(--primary-color);
-        height: 46px;
+        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+    }
+
+    .stTextInput > div > div > input::placeholder {
+        color: rgba(49, 51, 63, 0.6);
+        font-style: italic;
+    }
+
+    /* Form container styling */
+    .input-container {
+        background-color: var(--secondary-background-color);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin: 1rem 0;
+    }
+
+    /* Create Recipe button styling */
+    .stButton > button {
+        height: 3rem;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .stButton > button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     /* Image container */
