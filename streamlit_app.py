@@ -103,17 +103,26 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
         max-width: 800px;
-        margin: var(--space-2xl) auto;
-        padding: 0 var(--space-md);
+        margin: 0 auto;
+        padding: var(--space-xl) var(--space-md);
+        min-height: 100vh;
     }
 
     /* Logo */
     .logo {
-        font-size: 120px;
-        line-height: 1;
-        text-align: center;
-        margin-bottom: var(--space-xl);
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto var(--space-xl);
+    }
+
+    .logo img {
+        width: 100%;
+        height: auto;
     }
 
     /* Typography */
@@ -124,15 +133,17 @@ st.markdown("""
         color: var(--text-color);
         margin-bottom: var(--space-md);
         line-height: 1.2;
+        width: 100%;
     }
 
     .subtitle {
         font-size: var(--font-size-lg);
         text-align: center;
         color: var(--text-secondary);
-        margin-bottom: var(--space-xl);
+        margin-bottom: var(--space-2xl);
         line-height: 1.5;
         max-width: 600px;
+        width: 100%;
     }
 
     /* Form */
@@ -141,21 +152,47 @@ st.markdown("""
         max-width: 800px;
         background: var(--background-light);
         border-radius: var(--radius-lg);
-        padding: var(--space-md);
+        padding: var(--space-lg);
         box-shadow: var(--shadow-sm);
         transition: var(--transition-normal);
+        margin: 0 auto;
     }
 
     .search-form:hover {
         box-shadow: var(--shadow-md);
     }
 
+    /* Form layout */
+    .form-row {
+        display: flex;
+        gap: var(--space-md);
+        width: 100%;
+    }
+
+    .input-column {
+        flex: 1;
+    }
+
+    .button-column {
+        width: 160px;
+    }
+
     /* Input field */
+    .stTextInput {
+        width: 100%;
+    }
+
     .stTextInput > div {
+        width: 100%;
         padding: 0 !important;
     }
 
+    .stTextInput > div > div {
+        width: 100%;
+    }
+
     .stTextInput > div > div > input {
+        width: 100% !important;
         font-size: var(--font-size-lg) !important;
         padding: var(--space-md) var(--space-lg) !important;
         border-radius: var(--radius-md) !important;
@@ -163,6 +200,7 @@ st.markdown("""
         height: 56px !important;
         transition: var(--transition-normal) !important;
         margin: 0 !important;
+        background-color: var(--background-light) !important;
     }
 
     .stTextInput > div > div > input:focus {
@@ -172,6 +210,7 @@ st.markdown("""
 
     /* Button */
     .stButton {
+        width: 100%;
         margin: 0 !important;
     }
 
@@ -182,12 +221,15 @@ st.markdown("""
         color: white !important;
         font-size: var(--font-size-lg) !important;
         font-weight: var(--font-weight-semibold) !important;
-        padding: var(--space-md) var(--space-lg) !important;
+        padding: var(--space-md) !important;
         border: none !important;
         border-radius: var(--radius-md) !important;
         transition: var(--transition-normal) !important;
         margin: 0 !important;
         line-height: 1.2 !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
     }
 
     .stButton > button:hover {
@@ -368,7 +410,13 @@ def input_page():
     st.markdown('<div class="main-container">', unsafe_allow_html=True)
     
     # Logo
-    st.markdown('<div class="logo">🍳</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="logo">'
+        '<img src="https://raw.githubusercontent.com/aviralv/culinarycompanion/master/assets/logo.png" '
+        'alt="Recipe Generator Logo" onerror="this.onerror=null; this.innerHTML=\'🍳\'">'
+        '</div>',
+        unsafe_allow_html=True
+    )
     
     # Title and subtitle
     st.markdown(
@@ -383,18 +431,24 @@ def input_page():
     # Search form
     with st.form(key="recipe_form"):
         st.markdown('<div class="search-form">', unsafe_allow_html=True)
+        st.markdown('<div class="form-row">', unsafe_allow_html=True)
         
         cols = st.columns([7, 3])
         with cols[0]:
+            st.markdown('<div class="input-column">', unsafe_allow_html=True)
             ingredients = st.text_input(
                 "Ingredients",
                 placeholder="e.g., chicken, rice, onions, garlic",
                 label_visibility="collapsed"
             )
+            st.markdown('</div>', unsafe_allow_html=True)
         
         with cols[1]:
+            st.markdown('<div class="button-column">', unsafe_allow_html=True)
             submit = st.form_submit_button("Create Recipes")
+            st.markdown('</div>', unsafe_allow_html=True)
         
+        st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         if submit:
