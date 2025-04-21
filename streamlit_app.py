@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Updated CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -46,9 +46,18 @@ st.markdown("""
     
     /* Fix layout issues */
     .main .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
         max-width: 48rem !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+    }
+
+    /* Center all content */
+    .stApp > header {
+        background-color: transparent !important;
+    }
+
+    .stApp > div:first-child {
+        padding: 2rem 1rem !important;
     }
 
     /* Main container */
@@ -57,23 +66,38 @@ st.markdown("""
         border-radius: 1rem;
         padding: 2rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2rem;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 48rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     /* App header */
     .app-header {
         text-align: center;
         margin-bottom: 2rem;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+    }
+
+    /* Icon container */
+    .icon-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1.5rem;
     }
 
     .app-icon {
         font-size: 8rem;
-        margin-bottom: 1.5rem;
-        display: inline-block;
         line-height: 1;
+        text-align: center;
     }
 
     /* Typography */
@@ -83,6 +107,7 @@ st.markdown("""
         font-weight: 700;
         margin-bottom: 0.5rem;
         text-align: center;
+        width: 100%;
     }
 
     .subtitle {
@@ -93,6 +118,7 @@ st.markdown("""
         max-width: 32rem;
         margin-left: auto;
         margin-right: auto;
+        width: 100%;
     }
 
     /* Input field */
@@ -208,9 +234,9 @@ def generate_recipes(ingredients):
 def input_page():
     """Display the input page"""
     with st.container():
-        # App header
+        # App header with improved icon centering
         st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="app-icon">🍳</div>', unsafe_allow_html=True)
+        st.markdown('<div class="icon-container"><div class="app-icon">🍳</div></div>', unsafe_allow_html=True)
         st.markdown('<h1>Culinary Companion</h1>', unsafe_allow_html=True)
         st.markdown('<p class="subtitle">Turn your ingredients into creative meals. Just type what you\'ve got at home!</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -237,7 +263,7 @@ def loading_page():
     """Display the loading page"""
     with st.container():
         st.markdown('<div class="app-header">', unsafe_allow_html=True)
-        st.markdown('<div class="app-icon">🍳</div>', unsafe_allow_html=True)
+        st.markdown('<div class="icon-container"><div class="app-icon">🍳</div></div>', unsafe_allow_html=True)
         with st.spinner("Creating your culinary masterpiece..."):
             result, error = generate_recipes(st.session_state.ingredients)
             if error:
