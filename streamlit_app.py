@@ -44,8 +44,7 @@ st.markdown("""
         min-width: 120px !important;
     }
     .stTextInput > div > div > input {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: white;
+        color: inherit;
         height: 46px;
     }
     div[data-testid="stImage"] {
@@ -64,14 +63,36 @@ st.markdown("""
         margin: 0 auto;
     }
     /* Recipe card styling */
-    .recipe-card {
-        background-color: rgba(255, 255, 255, 0.05);
+    .recipe-container {
+        background-color: var(--background-color);
+        border: 1px solid rgba(128, 128, 128, 0.2);
         border-radius: 8px;
-        padding: 1rem;
+        padding: 20px;
+        margin: 10px 0;
         height: 100%;
     }
-    .recipe-card h3 {
-        margin-bottom: 1rem;
+    .recipe-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: inherit;
+    }
+    .recipe-section {
+        margin: 15px 0;
+        color: inherit;
+    }
+    .recipe-section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: inherit;
+    }
+    /* Ensure text is visible in both modes */
+    .stMarkdown {
+        color: inherit;
+    }
+    p, h1, h2, h3, h4, h5, h6, li {
+        color: inherit !important;
     }
     </style>
 """, unsafe_allow_html=True)
