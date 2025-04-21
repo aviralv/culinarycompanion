@@ -6,7 +6,8 @@ import {
   Button, 
   Box,
   Card,
-  CardContent
+  CardContent,
+  InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
@@ -14,18 +15,27 @@ import CookingPanIcon from './CookingPanIcon';
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
   return (
     <Container maxWidth="md" sx={{ 
-      py: 4,
+      py: 8,
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center'
+      justifyContent: 'flex-start'
     }}>
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <CookingPanIcon size={80} />
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
+      <Box sx={{ textAlign: 'center', mb: 8 }}>
+        <CookingPanIcon size={80} color="#4CAF50" />
+        <Typography variant="h3" component="h1" gutterBottom sx={{ 
+          fontWeight: 500,
+          color: '#1A1A1A',
+          fontSize: '2.5rem',
+          mt: 3
+        }}>
           Recipe Generator
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4, fontSize: '1.2rem' }}>
+        <Typography variant="subtitle1" color="text.secondary" sx={{ 
+          mb: 4,
+          fontSize: '1.125rem',
+          color: '#666666'
+        }}>
           Turn your ingredients into creative meals. Just type what you've got at home!
         </Typography>
       </Box>
@@ -34,25 +44,15 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
         maxWidth: '800px',
         mx: 'auto',
         width: '100%',
-        borderRadius: 3,
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+        borderRadius: '16px',
+        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.05)',
         bgcolor: '#fff'
       }}>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h6" gutterBottom sx={{ 
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            color: '#1f2937',
-            mb: 3
-          }}>
-            <SearchIcon /> Ingredients:
-          </Typography>
-          
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
           <Box sx={{ 
             display: 'flex', 
             gap: 2,
-            alignItems: 'flex-start'
+            alignItems: 'center'
           }}>
             <TextField
               fullWidth
@@ -66,10 +66,38 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                   onSubmit();
                 }
               }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ mr: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <SearchIcon sx={{ color: '#666666' }} />
+                      <Typography sx={{ 
+                        color: '#1f2937',
+                        fontWeight: 500,
+                        fontSize: '1rem'
+                      }}>
+                        Ingredients:
+                      </Typography>
+                    </Box>
+                  </InputAdornment>
+                )
+              }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  backgroundColor: '#f9fafb'
+                  borderRadius: '8px',
+                  backgroundColor: '#f9fafb',
+                  '& fieldset': {
+                    borderColor: 'transparent'
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'transparent'
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#4CAF50'
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  pl: 1
                 }
               }}
             />
@@ -78,17 +106,23 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
               onClick={onSubmit}
               disabled={disabled || !ingredients.trim()}
               sx={{
-                bgcolor: '#3b82f6',
+                bgcolor: '#4CAF50',
                 '&:hover': {
-                  bgcolor: '#2563eb'
+                  bgcolor: '#43A047'
                 },
-                borderRadius: 2,
-                px: 4,
+                borderRadius: '8px',
+                px: 3,
                 py: 1.5,
                 textTransform: 'none',
                 fontSize: '1rem',
                 fontWeight: 500,
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                minWidth: '140px',
+                boxShadow: 'none',
+                '&:disabled': {
+                  bgcolor: '#E0E0E0',
+                  color: '#9E9E9E'
+                }
               }}
             >
               Create Recipes
