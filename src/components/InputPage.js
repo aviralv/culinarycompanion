@@ -123,6 +123,7 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                 onClick={onSubmit}
                 disabled={disabled || !ingredients.trim()}
                 size="large"
+                sx={{ whiteSpace: 'nowrap' }}
               >
                 Discover Meals
               </Button>
