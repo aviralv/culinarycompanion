@@ -55,7 +55,9 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
             fontSize: '1.125rem',
             color: theme.palette.text.secondary
           }}>
-            Turn your ingredients into creative meals. Just type what you've got at home!
+            Find the perfect recipe using ingredients you have on hand.
+            <br />
+            Pantry puzzles solved: Turn what you have into what you want
           </Typography>
         </Box>
 
