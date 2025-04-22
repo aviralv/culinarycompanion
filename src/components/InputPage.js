@@ -24,7 +24,8 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'flex-start'
+      justifyContent: 'flex-start',
+      px: { xs: 2, sm: 3, md: 4 }
     }}>
       <motion.div
         initial="initial"
@@ -66,7 +67,10 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
             <Box sx={{ 
               display: 'flex', 
               gap: 2,
-              alignItems: 'center'
+              alignItems: 'center',
+              maxWidth: '800px',
+              margin: '0 auto',
+              width: '100%'
             }}>
               <TextField
                 fullWidth
