@@ -1,7 +1,22 @@
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Box, Chip, IconButton } from '@mui/material';
-import { AccessTime, Restaurant, Favorite, FavoriteBorder } from '@mui/icons-material';
+import { 
+  Card, 
+  CardContent, 
+  Typography, 
+  Box, 
+  Chip, 
+  IconButton,
+  Tooltip,
+  Collapse
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { 
+  Favorite, 
+  FavoriteBorder,
+  LocalFireDepartment,
+  RestaurantMenu,
+  ExpandMore as ExpandMoreIcon
+} from '@mui/icons-material';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -14,23 +29,11 @@ const StyledCard = styled(Card)(({ theme }) => ({
   }
 }));
 
-const StyledCardMedia = styled(CardMedia)({
-  height: 200,
-  position: 'relative'
-});
-
 const RecipeInfo = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(3),
+  gap: theme.spacing(2),
   marginTop: theme.spacing(2)
-}));
-
-const InfoItem = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-  color: theme.palette.text.secondary
 }));
 
 const TagsContainer = styled(Box)(({ theme }) => ({
@@ -40,24 +43,38 @@ const TagsContainer = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2)
 }));
 
-const FavoriteButton = styled(IconButton)(({ theme }) => ({
-  position: 'absolute',
-  top: theme.spacing(2),
-  right: theme.spacing(2),
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 1)'
+const SpiceLevelChip = styled(Chip)(({ level, theme }) => ({
+  backgroundColor: level === 'Hot' ? '#ff4d4d' : 
+                  level === 'Medium' ? '#ffa726' : 
+                  '#4caf50',
+  color: '#ffffff',
+  '& .MuiChip-icon': {
+    color: '#ffffff'
   }
 }));
 
-const RecipeCard = ({ recipe, onFavoriteToggle, onClick }) => {
+const ExpandMore = styled(IconButton)(({ theme, expanded }) => ({
+  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+const RecipeCard = ({ 
+  recipe, 
+  onFavoriteToggle, 
+  onClick,
+  expanded = false,
+  onExpandClick 
+}) => {
   const { 
-    title, 
-    image, 
-    cookTime, 
-    servings, 
-    tags = [], 
-    isFavorite = false 
+    name,
+    description,
+    spiceLevel,
+    indianInfluence,
+    nutritionNotes,
+    servingSuggestions = [],
+    isFavorite = false
   } = recipe;
 
   const handleFavoriteClick = (e) => {
@@ -65,63 +82,89 @@ const RecipeCard = ({ recipe, onFavoriteToggle, onClick }) => {
     onFavoriteToggle(recipe);
   };
 
+  const handleExpandClick = (e) => {
+    e.stopPropagation();
+    onExpandClick(recipe);
+  };
+
   return (
     <StyledCard onClick={() => onClick(recipe)}>
-      <StyledCardMedia
-        image={image || 'https://via.placeholder.com/400x200?text=No+Image'}
-        title={title}
-      >
-        <FavoriteButton
-          onClick={handleFavoriteClick}
-          aria-label="add to favorites"
-        >
-          {isFavorite ? (
-            <Favorite color="primary" />
-          ) : (
-            <FavoriteBorder />
-          )}
-        </FavoriteButton>
-      </StyledCardMedia>
       <CardContent>
-        <Typography variant="h6" component="h2" gutterBottom noWrap>
-          {title}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Typography variant="h6" component="h2" gutterBottom>
+            {name}
+          </Typography>
+          <IconButton
+            onClick={handleFavoriteClick}
+            aria-label="add to favorites"
+            size="small"
+          >
+            {isFavorite ? (
+              <Favorite color="primary" />
+            ) : (
+              <FavoriteBorder />
+            )}
+          </IconButton>
+        </Box>
+
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {description}
         </Typography>
-        
+
         <RecipeInfo>
-          {cookTime && (
-            <InfoItem>
-              <AccessTime fontSize="small" />
-              <Typography variant="body2">{cookTime}</Typography>
-            </InfoItem>
-          )}
-          {servings && (
-            <InfoItem>
-              <Restaurant fontSize="small" />
-              <Typography variant="body2">{servings} servings</Typography>
-            </InfoItem>
-          )}
+          <Tooltip title="Spice Level">
+            <SpiceLevelChip
+              icon={<LocalFireDepartment />}
+              label={spiceLevel}
+              level={spiceLevel}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title="Indian Influence">
+            <Chip
+              icon={<RestaurantMenu />}
+              label="Indian Fusion"
+              size="small"
+              variant="outlined"
+            />
+          </Tooltip>
         </RecipeInfo>
 
-        {tags.length > 0 && (
-          <TagsContainer>
-            {tags.slice(0, 3).map((tag, index) => (
-              <Chip
-                key={index}
-                label={tag}
-                size="small"
-                color="secondary"
-                variant="outlined"
-              />
-            ))}
-            {tags.length > 3 && (
-              <Chip
-                label={`+${tags.length - 3}`}
-                size="small"
-                variant="outlined"
-              />
-            )}
-          </TagsContainer>
-        )}
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="body2" color="text.secondary">
+            {nutritionNotes}
+          </Typography>
+          <ExpandMore
+            expanded={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </Box>
+
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Serving Suggestions:
+            </Typography>
+            <TagsContainer>
+              {servingSuggestions.map((suggestion, index) => (
+                <Chip
+                  key={index}
+                  label={suggestion}
+                  size="small"
+                  variant="outlined"
+                  color="secondary"
+                />
+              ))}
+            </TagsContainer>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {indianInfluence}
+            </Typography>
+          </Box>
+        </Collapse>
       </CardContent>
     </StyledCard>
   );
