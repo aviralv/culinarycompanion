@@ -124,7 +124,7 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
                 disabled={disabled || !ingredients.trim()}
                 size="large"
               >
-                Create Recipes
+                Discover Meals
               </Button>
             </Box>
           </CardContent>
