@@ -27,24 +27,29 @@ function ResultsPage({ recipes, onBack, isLoading }) {
         display: 'flex', 
         alignItems: 'center', 
         mb: 4,
-        position: 'relative'
+        position: 'relative',
+        minHeight: 60  // Match icon height to maintain spacing
       }}>
         <Button
           startIcon={<ArrowBackIcon />}
           onClick={onBack}
           variant="outlined"
-          sx={{ position: 'absolute', left: 0 }}
+          sx={{ position: 'absolute', left: 0, zIndex: 1 }}
         >
           New Recipe
         </Button>
         <Box sx={{ 
-          width: '100%',
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          width: 'auto'
         }}>
           <CookingPanIcon 
             size={60} 
             color={theme.palette.primary.main}
+            data-testid="cooking-pan-icon"
           />
         </Box>
       </Box>
