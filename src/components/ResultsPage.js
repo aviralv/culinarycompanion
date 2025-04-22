@@ -17,6 +17,7 @@ import CookingPanIcon from './CookingPanIcon';
 import Button from './Button';
 import { cardStyles, staggeredListTransition } from './animations';
 import { motion } from 'framer-motion';
+import LoadingCard from './LoadingCard';
 
 function ResultsPage({ recipes, onBack, isLoading }) {
   const theme = useTheme();
