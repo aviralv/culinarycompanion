@@ -7,8 +7,7 @@ import {
   Card,
   CardContent,
   InputAdornment,
-  useTheme,
-  alpha
+  useTheme
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
@@ -18,7 +17,6 @@ import { motion } from 'framer-motion';
 
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
   const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
 
   return (
     <Container maxWidth="md" sx={{ 

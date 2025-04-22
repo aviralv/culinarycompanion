@@ -9,8 +9,7 @@ import {
   ListItem,
   ListItemText,
   Grid,
-  useTheme,
-  alpha
+  useTheme
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CookingPanIcon from './CookingPanIcon';
@@ -21,7 +20,6 @@ import LoadingCard from './LoadingCard';
 
 function ResultsPage({ recipes, onBack, isLoading }) {
   const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
