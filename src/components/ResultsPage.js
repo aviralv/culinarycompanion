@@ -8,13 +8,20 @@ import {
   List,
   ListItem,
   ListItemText,
-  Button,
-  Grid
+  Grid,
+  useTheme,
+  alpha
 } from '@mui/material';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CookingPanIcon from './CookingPanIcon';
+import Button from './Button';
+import { cardStyles, staggeredListTransition } from './animations';
+import { motion } from 'framer-motion';
 
-function ResultsPage({ recipes, onBack }) {
+function ResultsPage({ recipes, onBack, isLoading }) {
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ 
@@ -27,68 +34,117 @@ function ResultsPage({ recipes, onBack }) {
           startIcon={<ArrowBackIcon />}
           onClick={onBack}
           variant="outlined"
-          sx={{ color: '#10B981', borderColor: '#10B981' }}
         >
           New Recipe
         </Button>
         <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-          <RestaurantIcon sx={{ fontSize: 40, color: '#10B981' }} />
+          <CookingPanIcon 
+            size={60} 
+            color={theme.palette.primary.main}
+          />
         </Box>
       </Box>
 
-      {recipes && (
-        <>
-          <Typography variant="subtitle1" sx={{ mb: 4, textAlign: 'center' }}>
+      {isLoading ? (
+        <Grid container spacing={4}>
+          {[1, 2].map((index) => (
+            <Grid item xs={12} md={6} key={index}>
+              <LoadingCard />
+            </Grid>
+          ))}
+        </Grid>
+      ) : recipes && (
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={{
+            animate: {
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+        >
+          <Typography variant="subtitle1" sx={{ 
+            mb: 4, 
+            textAlign: 'center',
+            color: theme.palette.text.secondary
+          }}>
             {recipes.greeting}
           </Typography>
 
           <Grid container spacing={4}>
             {recipes.recipes.map((recipe, index) => (
               <Grid item xs={12} md={6} key={index}>
-                <Card sx={{ 
-                  height: '100%', 
-                  borderRadius: 2,
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)'
-                  }
-                }}>
-                  <CardContent>
-                    <Typography variant="h5" component="h2" gutterBottom>
-                      {recipe.name}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary" paragraph>
-                      {recipe.description}
-                    </Typography>
+                <motion.div
+                  variants={staggeredListTransition(index)}
+                >
+                  <Card sx={cardStyles(theme)}>
+                    <CardContent>
+                      <Typography variant="h5" component="h2" gutterBottom sx={{ 
+                        color: theme.palette.text.primary,
+                        fontWeight: 500
+                      }}>
+                        {recipe.name}
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary" paragraph>
+                        {recipe.description}
+                      </Typography>
 
-                    {recipe.additional_ingredients.length > 0 && (
-                      <>
-                        <Typography variant="h6" gutterBottom>
-                          Additional Ingredients Needed:
-                        </Typography>
-                        <List dense>
-                          {recipe.additional_ingredients.map((ingredient, i) => (
-                            <ListItem key={i}>
-                              <ListItemText primary={ingredient} />
+                      {recipe.additional_ingredients.length > 0 && (
+                        <>
+                          <Typography variant="h6" gutterBottom sx={{ 
+                            color: theme.palette.text.primary,
+                            fontWeight: 500
+                          }}>
+                            Additional Ingredients Needed:
+                          </Typography>
+                          <List dense>
+                            {recipe.additional_ingredients.map((ingredient, i) => (
+                              <motion.div
+                                key={i}
+                                variants={staggeredListTransition(i)}
+                              >
+                                <ListItem>
+                                  <ListItemText 
+                                    primary={ingredient}
+                                    primaryTypographyProps={{
+                                      color: 'text.secondary'
+                                    }}
+                                  />
+                                </ListItem>
+                              </motion.div>
+                            ))}
+                          </List>
+                        </>
+                      )}
+
+                      <Typography variant="h6" gutterBottom sx={{ 
+                        color: theme.palette.text.primary,
+                        fontWeight: 500
+                      }}>
+                        Instructions:
+                      </Typography>
+                      <List>
+                        {recipe.instructions.map((instruction, i) => (
+                          <motion.div
+                            key={i}
+                            variants={staggeredListTransition(i)}
+                          >
+                            <ListItem>
+                              <ListItemText 
+                                primary={`${i + 1}. ${instruction}`}
+                                primaryTypographyProps={{
+                                  color: 'text.secondary'
+                                }}
+                              />
                             </ListItem>
-                          ))}
-                        </List>
-                      </>
-                    )}
-
-                    <Typography variant="h6" gutterBottom>
-                      Instructions:
-                    </Typography>
-                    <List>
-                      {recipe.instructions.map((instruction, i) => (
-                        <ListItem key={i}>
-                          <ListItemText primary={`${i + 1}. ${instruction}`} />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </CardContent>
-                </Card>
+                          </motion.div>
+                        ))}
+                      </List>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </Grid>
             ))}
           </Grid>
@@ -96,11 +152,12 @@ function ResultsPage({ recipes, onBack }) {
           <Typography variant="subtitle1" sx={{ 
             mt: 4, 
             textAlign: 'center',
-            fontStyle: 'italic' 
+            fontStyle: 'italic',
+            color: theme.palette.text.secondary
           }}>
             {recipes.sign_off}
           </Typography>
-        </>
+        </motion.div>
       )}
     </Container>
   );

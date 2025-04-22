@@ -3,7 +3,6 @@ import {
   Container, 
   Typography, 
   TextField, 
-  Button, 
   Box,
   Card,
   CardContent,
@@ -13,6 +12,9 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
+import Button from './Button';
+import { cardStyles, fadeInUp } from './animations';
+import { motion } from 'framer-motion';
 
 function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
   const theme = useTheme();
@@ -26,123 +28,108 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
       flexDirection: 'column',
       justifyContent: 'flex-start'
     }}>
-      <Box sx={{ textAlign: 'center', mb: 8 }}>
-        <CookingPanIcon 
-          size={80} 
-          color={theme.palette.primary.main}
-        />
-        <Typography variant="h3" component="h1" gutterBottom sx={{ 
-          fontWeight: 500,
-          color: theme.palette.text.primary,
-          fontSize: '2.5rem',
-          mt: 3
-        }}>
-          Culinary Companion
-        </Typography>
-        <Typography variant="subtitle1" sx={{ 
-          mb: 4,
-          fontSize: '1.125rem',
-          color: theme.palette.text.secondary
-        }}>
-          Turn your ingredients into creative meals. Just type what you've got at home!
-        </Typography>
-      </Box>
-
-      <Card sx={{ 
-        maxWidth: '800px',
-        mx: 'auto',
-        width: '100%',
-        borderRadius: '16px',
-        boxShadow: theme.shadows[3],
-        bgcolor: theme.palette.background.paper,
-        border: isLight ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.1)}`
-      }}>
-        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+      <motion.div
+        initial="initial"
+        animate="animate"
+        variants={fadeInUp}
+      >
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Box sx={{ 
-            display: 'flex', 
-            gap: 2,
-            alignItems: 'center'
+            display: 'inline-block',
+            mb: 3,
+            filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1))'
           }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="e.g., chicken, rice, onions, garlic"
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-              disabled={disabled}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && ingredients.trim()) {
-                  onSubmit();
-                }
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ mr: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <SearchIcon sx={{ color: theme.palette.text.secondary }} />
-                      <Typography sx={{ 
-                        color: theme.palette.text.primary,
-                        fontWeight: 500,
-                        fontSize: '1rem'
-                      }}>
-                        Ingredients:
-                      </Typography>
-                    </Box>
-                  </InputAdornment>
-                )
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  backgroundColor: theme.palette.action.hover,
-                  '& fieldset': {
-                    borderColor: 'transparent'
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'transparent'
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main
-                  }
-                },
-                '& .MuiInputBase-input': {
-                  pl: 1,
-                  '&::placeholder': {
-                    color: theme.palette.text.secondary,
-                    opacity: 0.7
-                  }
-                }
-              }}
+            <CookingPanIcon 
+              size={120} 
+              color={theme.palette.primary.main}
             />
-            <Button
-              variant="contained"
-              onClick={onSubmit}
-              disabled={disabled || !ingredients.trim()}
-              sx={{
-                bgcolor: theme.palette.primary.main,
-                '&:hover': {
-                  bgcolor: theme.palette.primary.dark
-                },
-                borderRadius: '8px',
-                px: 3,
-                py: 1.5,
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 500,
-                whiteSpace: 'nowrap',
-                minWidth: '140px',
-                boxShadow: 'none',
-                '&:disabled': {
-                  bgcolor: theme.palette.action.disabledBackground,
-                  color: theme.palette.action.disabled
-                }
-              }}
-            >
-              Create Recipes
-            </Button>
           </Box>
-        </CardContent>
-      </Card>
+          <Typography variant="h3" component="h1" gutterBottom sx={{ 
+            fontWeight: 500,
+            color: theme.palette.text.primary,
+            fontSize: '2.5rem',
+            mt: 3
+          }}>
+            Culinary Companion
+          </Typography>
+          <Typography variant="subtitle1" sx={{ 
+            mb: 4,
+            fontSize: '1.125rem',
+            color: theme.palette.text.secondary
+          }}>
+            Turn your ingredients into creative meals. Just type what you've got at home!
+          </Typography>
+        </Box>
+
+        <Card sx={cardStyles(theme)}>
+          <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2,
+              alignItems: 'center'
+            }}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="e.g., chicken, rice, onions, garlic"
+                value={ingredients}
+                onChange={(e) => setIngredients(e.target.value)}
+                disabled={disabled}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && ingredients.trim()) {
+                    onSubmit();
+                  }
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <SearchIcon sx={{ color: theme.palette.text.secondary }} />
+                        <Typography sx={{ 
+                          color: theme.palette.text.primary,
+                          fontWeight: 500,
+                          fontSize: '1rem'
+                        }}>
+                          Ingredients:
+                        </Typography>
+                      </Box>
+                    </InputAdornment>
+                  )
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                    backgroundColor: theme.palette.action.hover,
+                    '& fieldset': {
+                      borderColor: 'transparent'
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'transparent'
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: theme.palette.primary.main
+                    }
+                  },
+                  '& .MuiInputBase-input': {
+                    pl: 1,
+                    '&::placeholder': {
+                      color: theme.palette.text.secondary,
+                      opacity: 0.7
+                    }
+                  }
+                }}
+              />
+              <Button
+                onClick={onSubmit}
+                disabled={disabled || !ingredients.trim()}
+                size="large"
+              >
+                Create Recipes
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </motion.div>
     </Container>
   );
 }

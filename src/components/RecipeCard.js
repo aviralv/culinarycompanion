@@ -7,7 +7,8 @@ import {
   Chip, 
   IconButton,
   Tooltip,
-  Collapse
+  Collapse,
+  useTheme
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { 
@@ -17,17 +18,7 @@ import {
   RestaurantMenu,
   ExpandMore as ExpandMoreIcon
 } from '@mui/icons-material';
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'transform 0.2s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    cursor: 'pointer'
-  }
-}));
+import { cardStyles, hoverScale } from './animations';
 
 const RecipeInfo = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,12 +35,12 @@ const TagsContainer = styled(Box)(({ theme }) => ({
 }));
 
 const SpiceLevelChip = styled(Chip)(({ level, theme }) => ({
-  backgroundColor: level === 'Hot' ? '#ff4d4d' : 
-                  level === 'Medium' ? '#ffa726' : 
-                  '#4caf50',
-  color: '#ffffff',
+  backgroundColor: level === 'Hot' ? theme.palette.error.main : 
+                  level === 'Medium' ? theme.palette.warning.main : 
+                  theme.palette.success.main,
+  color: theme.palette.common.white,
   '& .MuiChip-icon': {
-    color: '#ffffff'
+    color: theme.palette.common.white
   }
 }));
 
@@ -67,6 +58,7 @@ const RecipeCard = ({
   expanded = false,
   onExpandClick 
 }) => {
+  const theme = useTheme();
   const { 
     name,
     description,
@@ -88,16 +80,23 @@ const RecipeCard = ({
   };
 
   return (
-    <StyledCard onClick={() => onClick(recipe)}>
+    <Card 
+      onClick={() => onClick(recipe)}
+      sx={cardStyles(theme)}
+    >
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Typography variant="h6" component="h2" gutterBottom>
+          <Typography variant="h6" component="h2" gutterBottom sx={{ 
+            color: theme.palette.text.primary,
+            fontWeight: 500
+          }}>
             {name}
           </Typography>
           <IconButton
             onClick={handleFavoriteClick}
             aria-label="add to favorites"
             size="small"
+            sx={hoverScale}
           >
             {isFavorite ? (
               <Favorite color="primary" />
@@ -146,7 +145,10 @@ const RecipeCard = ({
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{ 
+              color: theme.palette.text.primary,
+              fontWeight: 500
+            }}>
               Serving Suggestions:
             </Typography>
             <TagsContainer>
@@ -166,7 +168,7 @@ const RecipeCard = ({
           </Box>
         </Collapse>
       </CardContent>
-    </StyledCard>
+    </Card>
   );
 };
 

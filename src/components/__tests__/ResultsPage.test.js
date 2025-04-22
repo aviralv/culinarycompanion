@@ -27,8 +27,7 @@ describe('ResultsPage', () => {
   const mockProps = {
     recipes: mockRecipes,
     onBack: jest.fn(),
-    onToggleTheme: jest.fn(),
-    mode: 'light'
+    isLoading: false
   };
 
   const renderWithTheme = (component) => {
@@ -89,5 +88,26 @@ describe('ResultsPage', () => {
     
     const gridContainer = container.querySelector('.MuiGrid-container');
     expect(gridContainer).toBeInTheDocument();
+  });
+
+  it('shows loading state when isLoading is true', () => {
+    renderWithTheme(<ResultsPage {...mockProps} isLoading={true} />);
+    
+    const loadingCards = screen.getAllByTestId('loading-line');
+    expect(loadingCards.length).toBeGreaterThan(0);
+  });
+
+  it('does not show recipes when loading', () => {
+    renderWithTheme(<ResultsPage {...mockProps} isLoading={true} />);
+    
+    expect(screen.queryByText('Chicken Rice')).not.toBeInTheDocument();
+    expect(screen.queryByText('Stir Fry')).not.toBeInTheDocument();
+  });
+
+  it('shows cooking pan icon', () => {
+    renderWithTheme(<ResultsPage {...mockProps} />);
+    
+    const icon = screen.getByTestId('cooking-pan-icon');
+    expect(icon).toBeInTheDocument();
   });
 }); 
