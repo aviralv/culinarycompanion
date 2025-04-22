@@ -63,7 +63,12 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
         </Box>
 
         <Card sx={cardStyles(theme)}>
-          <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+          <CardContent sx={{ 
+            p: { xs: 3, md: 4 },
+            '&:last-child': {
+              pb: { xs: 3, md: 4 }  // Override MUI's default last-child padding
+            }
+          }}>
             <Box sx={{ 
               display: 'flex', 
               gap: 2,
