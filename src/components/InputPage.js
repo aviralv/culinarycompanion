@@ -36,7 +36,7 @@ function InputPage({
 
   return (
     <Container maxWidth="md" sx={{ 
-      py: 8,
+      py: { xs: 4, sm: 6, md: 8 },
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
@@ -48,29 +48,31 @@ function InputPage({
         animate="animate"
         variants={fadeInUp}
       >
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
+        <Box sx={{ textAlign: 'center', mb: { xs: 4, sm: 6, md: 8 } }}>
           <Box sx={{ 
             display: 'inline-block',
-            mb: 3,
+            mb: { xs: 2, sm: 3 },
             filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1))'
           }}>
             <CookingPanIcon 
-              size={120} 
+              size={90} 
               color={theme.palette.primary.main}
             />
           </Box>
           <Typography variant="h3" component="h1" gutterBottom sx={{ 
             fontWeight: 500,
             color: theme.palette.text.primary,
-            fontSize: '2.5rem',
-            mt: 3
+            fontSize: { xs: '2rem', sm: '2.25rem', md: '2.5rem' },
+            mt: { xs: 2, sm: 3 }
           }}>
             Culinary Companion
           </Typography>
           <Typography variant="subtitle1" sx={{ 
-            mb: 4,
-            fontSize: '1.125rem',
-            color: theme.palette.text.secondary
+            mb: { xs: 3, sm: 4 },
+            fontSize: { xs: '1rem', sm: '1.125rem' },
+            color: theme.palette.text.secondary,
+            px: { xs: 2, sm: 4 },
+            lineHeight: 1.6
           }}>
             Find the perfect recipe using ingredients you have on hand.
             <br />
@@ -80,20 +82,18 @@ function InputPage({
 
         <Card sx={cardStyles(theme)}>
           <CardContent sx={{ 
-            padding: '24px !important',
-            '@media (min-width: 900px)': {
-              padding: '32px !important'
-            }
+            padding: { xs: '20px', sm: '24px', md: '32px' }
           }}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column',
-              gap: 2
+              gap: { xs: 2, sm: 3 }
             }}>
               <Box sx={{ 
                 display: 'flex', 
-                gap: 2,
-                alignItems: 'center',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 2, sm: 2 },
+                alignItems: { xs: 'stretch', sm: 'center' },
                 maxWidth: '800px',
                 margin: '0 auto',
                 width: '100%'
@@ -114,7 +114,10 @@ function InputPage({
                   }}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start" sx={{ mr: 1 }}>
+                      <InputAdornment position="start" sx={{ 
+                        mr: 1,
+                        display: { xs: 'none', sm: 'flex' }
+                      }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <SearchIcon sx={{ color: theme.palette.text.secondary }} />
                           <Typography sx={{ 
@@ -143,7 +146,8 @@ function InputPage({
                       }
                     },
                     '& .MuiInputBase-input': {
-                      pl: 1,
+                      pl: { xs: 2, sm: 1 },
+                      py: { xs: 1.5, sm: 2 },
                       '&::placeholder': {
                         color: theme.palette.text.secondary,
                         opacity: 0.7
@@ -155,7 +159,11 @@ function InputPage({
                   onClick={onSubmit}
                   disabled={disabled || !ingredients.trim()}
                   size="large"
-                  sx={{ whiteSpace: 'nowrap' }}
+                  sx={{ 
+                    whiteSpace: 'nowrap',
+                    py: { xs: 1.5, sm: 2 },
+                    width: { xs: '100%', sm: 'auto' }
+                  }}
                 >
                   Discover Meals
                 </Button>
@@ -167,17 +175,30 @@ function InputPage({
                   margin: '0 auto',
                   width: '100%'
                 }}>
-                  <Divider sx={{ my: 2 }} />
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                    <HistoryIcon sx={{ color: theme.palette.text.secondary }} />
-                    <Typography variant="subtitle2" color="text.secondary">
+                  <Divider sx={{ my: { xs: 2, sm: 3 } }} />
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1, 
+                    mb: { xs: 1.5, sm: 2 }
+                  }}>
+                    <HistoryIcon sx={{ 
+                      color: theme.palette.text.secondary,
+                      fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                    }} />
+                    <Typography 
+                      variant="subtitle2" 
+                      color="text.secondary"
+                      sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                    >
                       Recent Ingredients
                     </Typography>
                   </Box>
                   <Box sx={{ 
                     display: 'flex', 
-                    gap: 1,
-                    flexWrap: 'wrap'
+                    gap: { xs: 0.75, sm: 1 },
+                    flexWrap: 'wrap',
+                    mx: { xs: -1, sm: 0 }  // Negative margin compensation on mobile
                   }}>
                     {history.map((item, index) => (
                       <Chip
@@ -186,6 +207,8 @@ function InputPage({
                         onClick={() => onHistoryItemClick(item)}
                         sx={{
                           backgroundColor: theme.palette.action.hover,
+                          fontSize: { xs: '0.875rem', sm: '1rem' },
+                          height: { xs: '28px', sm: '32px' },
                           '&:hover': {
                             backgroundColor: theme.palette.action.selected
                           }
