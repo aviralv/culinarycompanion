@@ -7,15 +7,31 @@ import {
   Card,
   CardContent,
   InputAdornment,
-  useTheme
+  useTheme,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Chip,
+  Divider
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CookingPanIcon from './CookingPanIcon';
 import Button from './Button';
 import { cardStyles, fadeInUp } from './animations';
 import { motion } from 'framer-motion';
+import HistoryIcon from '@mui/icons-material/History';
 
-function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
+function InputPage({ 
+  ingredients, 
+  setIngredients, 
+  onSubmit, 
+  disabled,
+  error,
+  history = [],
+  onHistoryItemClick,
+  mode 
+}) {
   const theme = useTheme();
 
   return (
@@ -64,78 +80,121 @@ function InputPage({ ingredients, setIngredients, onSubmit, disabled }) {
 
         <Card sx={cardStyles(theme)}>
           <CardContent sx={{ 
-            padding: '24px !important',  // Override all padding including last-child
+            padding: '24px !important',
             '@media (min-width: 900px)': {
               padding: '32px !important'
             }
           }}>
             <Box sx={{ 
               display: 'flex', 
-              gap: 2,
-              alignItems: 'center',
-              maxWidth: '800px',
-              margin: '0 auto',
-              width: '100%'
+              flexDirection: 'column',
+              gap: 2
             }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="e.g., chicken, rice, onions, garlic"
-                value={ingredients}
-                onChange={(e) => setIngredients(e.target.value)}
-                disabled={disabled}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && ingredients.trim()) {
-                    onSubmit();
-                  }
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ mr: 1 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <SearchIcon sx={{ color: theme.palette.text.secondary }} />
-                        <Typography sx={{ 
-                          color: theme.palette.text.primary,
-                          fontWeight: 500,
-                          fontSize: '1rem'
-                        }}>
-                          Ingredients:
-                        </Typography>
-                      </Box>
-                    </InputAdornment>
-                  )
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: theme.palette.action.hover,
-                    '& fieldset': {
-                      borderColor: 'transparent'
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'transparent'
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.palette.primary.main
+              <Box sx={{ 
+                display: 'flex', 
+                gap: 2,
+                alignItems: 'center',
+                maxWidth: '800px',
+                margin: '0 auto',
+                width: '100%'
+              }}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="e.g., chicken, rice, onions, garlic"
+                  value={ingredients}
+                  onChange={(e) => setIngredients(e.target.value)}
+                  disabled={disabled}
+                  error={!!error}
+                  helperText={error}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && ingredients.trim()) {
+                      onSubmit();
                     }
-                  },
-                  '& .MuiInputBase-input': {
-                    pl: 1,
-                    '&::placeholder': {
-                      color: theme.palette.text.secondary,
-                      opacity: 0.7
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start" sx={{ mr: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <SearchIcon sx={{ color: theme.palette.text.secondary }} />
+                          <Typography sx={{ 
+                            color: theme.palette.text.primary,
+                            fontWeight: 500,
+                            fontSize: '1rem'
+                          }}>
+                            Ingredients:
+                          </Typography>
+                        </Box>
+                      </InputAdornment>
+                    )
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      backgroundColor: theme.palette.action.hover,
+                      '& fieldset': {
+                        borderColor: 'transparent'
+                      },
+                      '&:hover fieldset': {
+                        borderColor: 'transparent'
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: theme.palette.primary.main
+                      }
+                    },
+                    '& .MuiInputBase-input': {
+                      pl: 1,
+                      '&::placeholder': {
+                        color: theme.palette.text.secondary,
+                        opacity: 0.7
+                      }
                     }
-                  }
-                }}
-              />
-              <Button
-                onClick={onSubmit}
-                disabled={disabled || !ingredients.trim()}
-                size="large"
-                sx={{ whiteSpace: 'nowrap' }}
-              >
-                Discover Meals
-              </Button>
+                  }}
+                />
+                <Button
+                  onClick={onSubmit}
+                  disabled={disabled || !ingredients.trim()}
+                  size="large"
+                  sx={{ whiteSpace: 'nowrap' }}
+                >
+                  Discover Meals
+                </Button>
+              </Box>
+
+              {history.length > 0 && (
+                <Box sx={{ 
+                  maxWidth: '800px', 
+                  margin: '0 auto',
+                  width: '100%'
+                }}>
+                  <Divider sx={{ my: 2 }} />
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                    <HistoryIcon sx={{ color: theme.palette.text.secondary }} />
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Recent Ingredients
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 1,
+                    flexWrap: 'wrap'
+                  }}>
+                    {history.map((item, index) => (
+                      <Chip
+                        key={index}
+                        label={item}
+                        onClick={() => onHistoryItemClick(item)}
+                        sx={{
+                          backgroundColor: theme.palette.action.hover,
+                          '&:hover': {
+                            backgroundColor: theme.palette.action.selected
+                          }
+                        }}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              )}
             </Box>
           </CardContent>
         </Card>

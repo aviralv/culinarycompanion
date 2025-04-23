@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import InputPage from './components/InputPage';
@@ -6,14 +6,44 @@ import ResultsPage from './components/ResultsPage';
 import LoadingTransition from './components/LoadingTransition';
 import getTheme from './theme';
 
+const MAX_HISTORY_ITEMS = 5;
+const STORAGE_KEY = 'ingredientHistory';
+
 function App() {
   const [ingredients, setIngredients] = useState('');
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState(null);
   const [error, setError] = useState(null);
   const [mode, setMode] = useState('light');
+  const [ingredientHistory, setIngredientHistory] = useState([]);
 
   const theme = useMemo(() => getTheme(mode), [mode]);
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem(STORAGE_KEY);
+    if (savedHistory) {
+      setIngredientHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  // Update localStorage when history changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ingredientHistory));
+  }, [ingredientHistory]);
+
+  const addToHistory = (ingredients) => {
+    const trimmedIngredients = ingredients.trim();
+    if (!trimmedIngredients) return;
+
+    setIngredientHistory(prevHistory => {
+      const newHistory = [
+        trimmedIngredients,
+        ...prevHistory.filter(item => item !== trimmedIngredients)
+      ].slice(0, MAX_HISTORY_ITEMS);
+      return newHistory;
+    });
+  };
 
   const generateRecipes = async () => {
     if (!ingredients.trim()) {
@@ -35,6 +65,7 @@ function App() {
           ? JSON.parse(response.data.recipe_output) 
           : response.data.recipe_output;
         setRecipes(recipeData);
+        addToHistory(ingredients); // Add to history after successful generation
       } else {
         setError('Unexpected response format from the server.');
       }
@@ -71,6 +102,8 @@ function App() {
           onSubmit={generateRecipes}
           disabled={loading}
           error={error}
+          history={ingredientHistory}
+          onHistoryItemClick={setIngredients}
           onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')}
           mode={mode}
         />
