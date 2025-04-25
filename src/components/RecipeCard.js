@@ -27,7 +27,7 @@ const RecipeCard = ({ recipe, mobile = false }) => {
         }}>
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant="body1" color="text.secondary" gutterBottom>
           {description}
         </Typography>
         {additional_ingredients.length > 0 && (
@@ -38,7 +38,7 @@ const RecipeCard = ({ recipe, mobile = false }) => {
             <List dense>
               {additional_ingredients.map((ingredient, i) => (
                 <ListItem key={i} sx={{ py: 0 }}>
-                  <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary' }} />
+                  <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1' }} />
                 </ListItem>
               ))}
             </List>
@@ -51,7 +51,7 @@ const RecipeCard = ({ recipe, mobile = false }) => {
           <List>
             {instructions.map((instruction, i) => (
               <ListItem key={i} sx={{ py: 0 }}>
-                <ListItemText primary={`${i + 1}. ${instruction}`} primaryTypographyProps={{ color: 'text.secondary' }} />
+                <ListItemText primary={`${i + 1}. ${instruction}`} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1' }} />
               </ListItem>
             ))}
           </List>
