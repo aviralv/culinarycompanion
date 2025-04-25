@@ -12,22 +12,17 @@ cd culinarycompanion
 
 2. Install dependencies
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
-3. Set up environment variables
-- Copy `.env.example` to `.env`
-```bash
-cp .env.example .env
-```
-- Edit `.env` and add your Google Gemini API key
-  - Get your API key from: https://makersuite.google.com/app/apikey
-  - Replace `your_api_key_here` with your actual API key
+3. Set up environment variables (if needed for frontend)
 
 4. Run the application
 ```bash
-streamlit run streamlit_app.py
+npm start
 ```
+
+The backend is managed via n8n with a Google Gemini integration (see project documentation for backend setup).
 
 ## Features
 
