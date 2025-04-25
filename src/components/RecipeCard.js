@@ -56,7 +56,8 @@ const RecipeCard = ({
   onFavoriteToggle, 
   onClick,
   expanded = false,
-  onExpandClick 
+  onExpandClick,
+  mobile = false,
 }) => {
   const theme = useTheme();
   const { 
@@ -82,7 +83,17 @@ const RecipeCard = ({
   return (
     <Card 
       onClick={() => onClick(recipe)}
-      sx={cardStyles(theme)}
+      sx={{
+        ...cardStyles(theme),
+        width: mobile ? '100%' : undefined,
+        minHeight: mobile ? 340 : undefined,
+        boxShadow: mobile ? theme.shadows[3] : theme.shadows[1],
+        borderRadius: mobile ? 3 : 2,
+        p: mobile ? 2 : 0,
+        mb: mobile ? 2 : 0,
+        transition: 'box-shadow 0.2s',
+        touchAction: mobile ? 'pan-y' : undefined,
+      }}
     >
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -172,4 +183,8 @@ const RecipeCard = ({
   );
 };
 
-export default RecipeCard; 
+RecipeCard.defaultProps = {
+  mobile: false,
+};
+
+export default RecipeCard;

@@ -14,7 +14,7 @@ describe('App', () => {
   it('renders input page initially', () => {
     render(<App />);
     expect(screen.getByText('Culinary Companion')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('e.g. chicken, rice, onions')).toBeInTheDocument();
   });
 
   it('shows loading state when generating recipes', async () => {
@@ -24,7 +24,7 @@ describe('App', () => {
 
     render(<App />);
     
-    const input = screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic');
+    const input = screen.getByPlaceholderText('e.g. chicken, rice, onions');
     fireEvent.change(input, { target: { value: 'chicken' } });
     
     const button = screen.getByText('Create Recipes');
@@ -38,10 +38,10 @@ describe('App', () => {
 
     render(<App />);
     
-    const input = screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic');
+    const input = screen.getByPlaceholderText('e.g. chicken, rice, onions');
     fireEvent.change(input, { target: { value: 'chicken' } });
     
-    const button = screen.getByText('Create Recipes');
+    const button = screen.getByText('Discover Meals');
     fireEvent.click(button);
     
     await waitFor(() => {
@@ -71,10 +71,10 @@ describe('App', () => {
 
     render(<App />);
     
-    const input = screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic');
+    const input = screen.getByPlaceholderText('e.g. chicken, rice, onions');
     fireEvent.change(input, { target: { value: 'chicken' } });
     
-    const button = screen.getByText('Create Recipes');
+    const button = screen.getByText('Discover Meals');
     fireEvent.click(button);
     
     await waitFor(() => {
@@ -100,9 +100,9 @@ describe('App', () => {
     render(<App />);
     
     // Generate recipe
-    const input = screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic');
+    const input = screen.getByPlaceholderText('e.g. chicken, rice, onions');
     fireEvent.change(input, { target: { value: 'chicken' } });
-    fireEvent.click(screen.getByText('Create Recipes'));
+    fireEvent.click(screen.getByText('Discover Meals'));
     
     // Wait for results and click back
     await waitFor(() => {
@@ -111,6 +111,6 @@ describe('App', () => {
     
     // Check if we're back to input page
     expect(screen.getByText('Culinary Companion')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('e.g., chicken, rice, onions, garlic')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('e.g. chicken, rice, onions')).toBeInTheDocument();
   });
 }); 
