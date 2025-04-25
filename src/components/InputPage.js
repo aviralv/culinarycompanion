@@ -35,13 +35,14 @@ function InputPage({
   const theme = useTheme();
 
   return (
-    <Container maxWidth="md" sx={{ 
-      py: { xs: 4, sm: 6, md: 8 },
+    <Container maxWidth="sm" sx={{
+      py: { xs: 2, sm: 4, md: 8 },
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      px: { xs: 2, sm: 3, md: 4 }
+      px: { xs: 1, sm: 3, md: 4 },
+      alignItems: 'center',
     }}>
       <motion.div
         initial="initial"
@@ -59,49 +60,57 @@ function InputPage({
               color={theme.palette.primary.main}
             />
           </Box>
-          <Typography variant="h3" component="h1" gutterBottom sx={{ 
-            fontWeight: 500,
+          <Typography variant="h4" component="h1" gutterBottom sx={{
+            fontWeight: 600,
             color: theme.palette.text.primary,
-            fontSize: { xs: '2rem', sm: '2.25rem', md: '2.5rem' },
-            mt: { xs: 2, sm: 3 }
+            fontSize: { xs: '1.4rem', sm: '2rem', md: '2.5rem' },
+            mt: { xs: 1, sm: 3 },
           }}>
             Culinary Companion
           </Typography>
-          <Typography variant="subtitle1" sx={{ 
-            mb: { xs: 3, sm: 4 },
-            fontSize: { xs: '1rem', sm: '1.125rem' },
+          <Typography variant="subtitle1" sx={{
+            mb: { xs: 2, sm: 4 },
+            fontSize: { xs: '0.95rem', sm: '1.125rem' },
             color: theme.palette.text.secondary,
-            px: { xs: 2, sm: 4 },
-            lineHeight: 1.6
+            px: { xs: 1, sm: 4 },
+            lineHeight: 1.5,
+            textAlign: 'center',
           }}>
-            Find the perfect recipe using ingredients you have on hand.
-            <br />
+            Find the perfect recipe using ingredients you have on hand.<br />
             Pantry puzzles solved: Turn what you have into what you want
           </Typography>
         </Box>
 
-        <Card sx={cardStyles(theme)}>
-          <CardContent sx={{ 
-            padding: { xs: '20px', sm: '24px', md: '32px' }
+        <Card sx={{ ...cardStyles(theme), width: '100%', maxWidth: 480, mx: 'auto', mt: { xs: 2, sm: 4 } }}>
+          <CardContent sx={{
+            padding: { xs: '14px', sm: '24px', md: '32px' }
           }}>
-            <Box sx={{ 
-              display: 'flex', 
+            <Box sx={{
+              display: 'flex',
               flexDirection: 'column',
-              gap: { xs: 2, sm: 3 }
+              gap: { xs: 1.5, sm: 3 },
             }}>
-              <Box sx={{ 
-                display: 'flex', 
-                flexDirection: { xs: 'column', sm: 'row' },
-                gap: { xs: 2, sm: 2 },
-                alignItems: { xs: 'stretch', sm: 'center' },
-                maxWidth: '800px',
-                margin: '0 auto',
-                width: '100%'
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1.5,
+                alignItems: 'stretch',
+                width: '100%',
               }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                  <SearchIcon sx={{ color: theme.palette.text.secondary, mr: 1, fontSize: 22 }} />
+                  <Typography sx={{
+                    color: theme.palette.text.primary,
+                    fontWeight: 500,
+                    fontSize: { xs: '1rem', sm: '1.1rem' },
+                  }}>
+                    Ingredients
+                  </Typography>
+                </Box>
                 <TextField
                   fullWidth
                   variant="outlined"
-                  placeholder="e.g., chicken, rice, onions, garlic"
+                  placeholder="e.g. chicken, rice, onions"
                   value={ingredients}
                   onChange={(e) => setIngredients(e.target.value)}
                   disabled={disabled}
@@ -112,57 +121,40 @@ function InputPage({
                       onSubmit();
                     }
                   }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ 
-                        mr: 1,
-                        display: { xs: 'none', sm: 'flex' }
-                      }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <SearchIcon sx={{ color: theme.palette.text.secondary }} />
-                          <Typography sx={{ 
-                            color: theme.palette.text.primary,
-                            fontWeight: 500,
-                            fontSize: '1rem'
-                          }}>
-                            Ingredients:
-                          </Typography>
-                        </Box>
-                      </InputAdornment>
-                    )
-                  }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px',
                       backgroundColor: theme.palette.action.hover,
                       '& fieldset': {
-                        borderColor: 'transparent'
+                        borderColor: 'transparent',
                       },
                       '&:hover fieldset': {
-                        borderColor: 'transparent'
+                        borderColor: 'transparent',
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: theme.palette.primary.main
-                      }
+                        borderColor: theme.palette.primary.main,
+                      },
                     },
                     '& .MuiInputBase-input': {
-                      pl: { xs: 2, sm: 1 },
+                      pl: 2,
                       py: { xs: 1.5, sm: 2 },
+                      fontSize: { xs: '1rem', sm: '1.1rem' },
                       '&::placeholder': {
                         color: theme.palette.text.secondary,
-                        opacity: 0.7
-                      }
-                    }
+                        opacity: 0.7,
+                      },
+                    },
                   }}
                 />
                 <Button
                   onClick={onSubmit}
                   disabled={disabled || !ingredients.trim()}
                   size="large"
-                  sx={{ 
-                    whiteSpace: 'nowrap',
-                    py: { xs: 1.5, sm: 2 },
-                    width: { xs: '100%', sm: 'auto' }
+                  sx={{
+                    mt: 1,
+                    width: '100%',
+                    py: 1.4,
+                    fontSize: { xs: '1rem', sm: '1.1rem' },
                   }}
                 >
                   Discover Meals
