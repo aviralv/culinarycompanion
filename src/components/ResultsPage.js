@@ -90,9 +90,10 @@ function ResultsPage({ recipes, onBack, isLoading }) {
               onExpandClick={handleExpandClick}
             />
           ) : (
-            <Grid container spacing={4}>
-              {recipes.recipes.map((recipe, index) => (
-                <Grid item xs={12} sm={6} md={4} key={recipe.id || index}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <Grid container spacing={4} justifyContent="center" alignItems="flex-start" sx={{ maxWidth: 1200, mx: 'auto' }}>
+                {recipes.recipes.map((recipe, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={recipe.id || index}>
                   <motion.div
                     variants={staggeredListTransition(index)}
                   >
@@ -163,8 +164,9 @@ function ResultsPage({ recipes, onBack, isLoading }) {
                     </Card>
                   </motion.div>
                 </Grid>
-              ))}
-            </Grid>
+                ))}
+              </Grid>
+            </Box>
           )}
           {recipes.sign_off && (
             <Typography variant="subtitle1" sx={{

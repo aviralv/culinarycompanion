@@ -32,7 +32,7 @@ const RecipeSwiper = ({ recipes, onRecipeClick, onFavoriteToggle, expandedRecipe
     >
       {recipes.map((recipe, idx) => (
         <SwiperSlide key={recipe.id || idx}>
-          <Box sx={{ px: { xs: 1, sm: 4 }, py: 2, maxWidth: 480, mx: 'auto' }}>
+          <Box sx={{ px: { xs: 1.5, sm: 4 }, py: 2, maxWidth: 420, mx: 'auto', width: '100%' }}>
             <RecipeCard
               recipe={recipe}
               onClick={onRecipeClick}
