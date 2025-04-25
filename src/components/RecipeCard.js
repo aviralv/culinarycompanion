@@ -2,37 +2,6 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, List, ListItem, ListItemText, useTheme } from '@mui/material';
 import { cardStyles } from './animations';
 
-const RecipeInfo = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  marginTop: theme.spacing(2)
-}));
-
-const TagsContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  gap: theme.spacing(1),
-  flexWrap: 'wrap',
-  marginTop: theme.spacing(2)
-}));
-
-const SpiceLevelChip = styled(Chip)(({ level, theme }) => ({
-  backgroundColor: level === 'Hot' ? theme.palette.error.main : 
-                  level === 'Medium' ? theme.palette.warning.main : 
-                  theme.palette.success.main,
-  color: theme.palette.common.white,
-  '& .MuiChip-icon': {
-    color: theme.palette.common.white
-  }
-}));
-
-const ExpandMore = styled(IconButton)(({ theme, expanded }) => ({
-  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
 const RecipeCard = ({ recipe, mobile = false }) => {
   const theme = useTheme();
   const { name, description, additional_ingredients = [], instructions = [] } = recipe;

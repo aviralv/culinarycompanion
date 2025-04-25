@@ -3,11 +3,6 @@ import {
   Container, 
   Typography, 
   Box,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemText,
   Grid,
   useTheme,
   useMediaQuery
@@ -15,10 +10,11 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CookingPanIcon from './CookingPanIcon';
 import Button from './Button';
-import { cardStyles, staggeredListTransition } from './animations';
+import { staggeredListTransition } from './animations';
 import { motion } from 'framer-motion';
 import LoadingCard from './LoadingCard';
 import RecipeSwiper from './RecipeSwiper';
+import RecipeCard from './RecipeCard';
 
 function ResultsPage({ recipes, onBack, isLoading }) {
   const theme = useTheme();
