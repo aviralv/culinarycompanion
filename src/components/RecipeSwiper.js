@@ -35,10 +35,6 @@ const RecipeSwiper = ({ recipes, onRecipeClick, onFavoriteToggle, expandedRecipe
           <Box sx={{ px: { xs: 1.5, sm: 4 }, py: 2, maxWidth: 420, mx: 'auto', width: '100%' }}>
             <RecipeCard
               recipe={recipe}
-              onClick={onRecipeClick}
-              onFavoriteToggle={onFavoriteToggle}
-              expanded={expandedRecipeId === recipe.id}
-              onExpandClick={onExpandClick}
               mobile
             />
           </Box>

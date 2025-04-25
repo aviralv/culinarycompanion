@@ -1,24 +1,6 @@
 import React from 'react';
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Box, 
-  Chip, 
-  IconButton,
-  Tooltip,
-  Collapse,
-  useTheme
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { 
-  Favorite, 
-  FavoriteBorder,
-  LocalFireDepartment,
-  RestaurantMenu,
-  ExpandMore as ExpandMoreIcon
-} from '@mui/icons-material';
-import { cardStyles, hoverScale } from './animations';
+import { Card, CardContent, Typography, Box, List, ListItem, ListItemText, useTheme } from '@mui/material';
+import { cardStyles } from './animations';
 
 const RecipeInfo = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -51,38 +33,12 @@ const ExpandMore = styled(IconButton)(({ theme, expanded }) => ({
   }),
 }));
 
-const RecipeCard = ({ 
-  recipe, 
-  onFavoriteToggle, 
-  onClick,
-  expanded = false,
-  onExpandClick,
-  mobile = false,
-}) => {
+const RecipeCard = ({ recipe, mobile = false }) => {
   const theme = useTheme();
-  const { 
-    name,
-    description,
-    spiceLevel,
-    indianInfluence,
-    nutritionNotes,
-    servingSuggestions = [],
-    isFavorite = false
-  } = recipe;
-
-  const handleFavoriteClick = (e) => {
-    e.stopPropagation();
-    onFavoriteToggle(recipe);
-  };
-
-  const handleExpandClick = (e) => {
-    e.stopPropagation();
-    onExpandClick(recipe);
-  };
+  const { name, description, additional_ingredients = [], instructions = [] } = recipe;
 
   return (
-    <Card 
-      onClick={() => onClick(recipe)}
+    <Card
       sx={{
         ...cardStyles(theme),
         width: mobile ? '100%' : undefined,
@@ -96,88 +52,41 @@ const RecipeCard = ({
       }}
     >
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Typography variant="h6" component="h2" gutterBottom sx={{ 
-            color: theme.palette.text.primary,
-            fontWeight: 500
-          }}>
-            {name}
-          </Typography>
-          <IconButton
-            onClick={handleFavoriteClick}
-            aria-label="add to favorites"
-            size="small"
-            sx={hoverScale}
-          >
-            {isFavorite ? (
-              <Favorite color="primary" />
-            ) : (
-              <FavoriteBorder />
-            )}
-          </IconButton>
-        </Box>
-
+        <Typography variant="h6" component="h2" gutterBottom sx={{
+          color: theme.palette.text.primary,
+          fontWeight: 500
+        }}>
+          {name}
+        </Typography>
         <Typography variant="body2" color="text.secondary" gutterBottom>
           {description}
         </Typography>
-
-        <RecipeInfo>
-          <Tooltip title="Spice Level">
-            <SpiceLevelChip
-              icon={<LocalFireDepartment />}
-              label={spiceLevel}
-              level={spiceLevel}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title="Indian Influence">
-            <Chip
-              icon={<RestaurantMenu />}
-              label="Indian Fusion"
-              size="small"
-              variant="outlined"
-            />
-          </Tooltip>
-        </RecipeInfo>
-
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            {nutritionNotes}
-          </Typography>
-          <ExpandMore
-            expanded={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </Box>
-
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {additional_ingredients.length > 0 && (
           <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2" gutterBottom sx={{ 
-              color: theme.palette.text.primary,
-              fontWeight: 500
-            }}>
-              Serving Suggestions:
+            <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 500 }}>
+              Additional Ingredients Needed:
             </Typography>
-            <TagsContainer>
-              {servingSuggestions.map((suggestion, index) => (
-                <Chip
-                  key={index}
-                  label={suggestion}
-                  size="small"
-                  variant="outlined"
-                  color="secondary"
-                />
+            <List dense>
+              {additional_ingredients.map((ingredient, i) => (
+                <ListItem key={i} sx={{ py: 0 }}>
+                  <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary' }} />
+                </ListItem>
               ))}
-            </TagsContainer>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              {indianInfluence}
-            </Typography>
+            </List>
           </Box>
-        </Collapse>
+        )}
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 500 }}>
+            Instructions:
+          </Typography>
+          <List>
+            {instructions.map((instruction, i) => (
+              <ListItem key={i} sx={{ py: 0 }}>
+                <ListItemText primary={`${i + 1}. ${instruction}`} primaryTypographyProps={{ color: 'text.secondary' }} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
       </CardContent>
     </Card>
   );
