@@ -27,7 +27,7 @@ describe('App', () => {
     const input = screen.getByPlaceholderText('e.g. chicken, rice, onions');
     fireEvent.change(input, { target: { value: 'chicken' } });
     
-    const button = screen.getByText('Create Recipes');
+    const button = screen.getByText('Discover Meals');
     fireEvent.click(button);
     
     expect(screen.getByText('Creating your recipes...')).toBeInTheDocument();

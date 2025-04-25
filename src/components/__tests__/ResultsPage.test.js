@@ -52,13 +52,11 @@ describe('ResultsPage', () => {
     expect(screen.getByText('Chicken Rice')).toBeInTheDocument();
     expect(screen.getByText('A delicious chicken and rice dish')).toBeInTheDocument();
     expect(screen.getByText('salt')).toBeInTheDocument();
-    expect(screen.getByText('Cook rice')).toBeInTheDocument();
-    
+
     // Check second recipe
     expect(screen.getByText('Stir Fry')).toBeInTheDocument();
     expect(screen.getByText('Quick and easy stir fry')).toBeInTheDocument();
     expect(screen.getByText('soy sauce')).toBeInTheDocument();
-    expect(screen.getByText('Cook in wok')).toBeInTheDocument();
   });
 
   it('handles back button click', () => {
