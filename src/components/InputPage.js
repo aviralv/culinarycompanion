@@ -6,12 +6,7 @@ import {
   Box,
   Card,
   CardContent,
-  InputAdornment,
   useTheme,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Chip,
   Divider
 } from '@mui/material';
