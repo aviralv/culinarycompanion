@@ -26,7 +26,8 @@ function ResultsPage({ recipes, onBack, isLoading }) {
   };
 
   return (
-    <Container maxWidth={isMobile ? 'sm' : 'lg'} sx={{ py: { xs: 1, sm: 4 } }}>
+    <Container maxWidth={false} sx={{ py: { xs: 1, sm: 4 }, px: 2 }}>
+      <Box sx={{ maxWidth: 700, mx: 'auto' }}>
       {/* Sticky back button for mobile */}
       <Box sx={{
         position: isMobile ? 'sticky' : 'static',
@@ -78,25 +79,17 @@ function ResultsPage({ recipes, onBack, isLoading }) {
           )}
 
           {isMobile ? (
-            <RecipeSwiper
-              recipes={recipes.recipes}
-              onRecipeClick={() => {}}
-              onFavoriteToggle={() => {}}
-              expandedRecipeId={expandedRecipeId}
-              onExpandClick={handleExpandClick}
-            />
+            <RecipeSwiper recipes={recipes.recipes} />
           ) : (
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Grid container spacing={4} justifyContent="center" alignItems="flex-start" sx={{ maxWidth: 1200, mx: 'auto' }}>
-                {recipes.recipes.map((recipe, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={recipe.id || index}>
+            <Grid container spacing={4} justifyContent="center" sx={{ maxWidth: 700, mx: 'auto' }}>
+              {recipes.recipes.map((recipe, index) => (
+                <Grid item xs={12} key={recipe.id || index}>
                   <motion.div variants={staggeredListTransition(index)}>
                     <RecipeCard recipe={recipe} />
                   </motion.div>
                 </Grid>
-                ))}
-              </Grid>
-            </Box>
+              ))}
+            </Grid>
           )}
           {recipes.sign_off && (
             <Typography variant="subtitle1" sx={{
@@ -111,6 +104,7 @@ function ResultsPage({ recipes, onBack, isLoading }) {
           )}
         </Box>
       )}
+      </Box>
     </Container>
   );
 }

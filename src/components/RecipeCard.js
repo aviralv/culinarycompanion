@@ -34,6 +34,7 @@ const RecipeCard = ({ recipe, mobile = false }) => {
           variant="h5"
           component="h2"
           gutterBottom
+          align="left"
           sx={{
             color: theme.palette.text.primary,
             fontWeight: 700,
@@ -47,32 +48,33 @@ const RecipeCard = ({ recipe, mobile = false }) => {
           variant="body1" 
           color="text.secondary" 
           gutterBottom 
+          align="left"
           sx={{ mb: 2 }}
         >
           {description}
         </Typography>
         {additional_ingredients.length > 0 && (
           <Box sx={{ mt: 2, mb: 2 }}>
-            <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
+            <Typography variant="subtitle2" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
               Additional Ingredients Needed:
             </Typography>
-            <List dense sx={{ pl: 1 }}>
+            <List dense>
               {additional_ingredients.map((ingredient, i) => (
                 <ListItem key={i} sx={{ py: 0.75 }}>
-                  <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1' }} />
+                  <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1', align: 'left' }} />
                 </ListItem>
               ))}
             </List>
           </Box>
         )}
         <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
+          <Typography variant="subtitle2" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
             Instructions:
           </Typography>
-          <List sx={{ pl: 1 }}>
+          <List>
             {instructions.map((instruction, i) => (
               <ListItem key={i} sx={{ py: 0.75 }}>
-                <ListItemText primary={`${i + 1}. ${instruction}`} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1' }} />
+                <ListItemText primary={`${i + 1}. ${instruction}`} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1', align: 'left' }} />
               </ListItem>
             ))}
           </List>
