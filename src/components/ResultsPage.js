@@ -25,7 +25,7 @@ function ResultsPage({ recipes, onBack, isLoading }) {
     <Container maxWidth={false} disableGutters sx={{ py: { xs: 1, sm: 4 } }}>
       <Box sx={{ maxWidth: 900, mx: 'auto' }}>
         {/* Sticky back button for mobile */}
-        <Box sx={{
+        <Grid container alignItems="center" sx={{
           width: '100%',
           position: isMobile ? 'sticky' : 'static',
           top: 0,
@@ -33,26 +33,26 @@ function ResultsPage({ recipes, onBack, isLoading }) {
           bgcolor: theme.palette.background.default,
           pb: 1,
           mb: { xs: 2, sm: 4 },
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
         }}>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={onBack}
-            variant="outlined"
-            sx={{ fontSize: { xs: '1rem', sm: '1.1rem' }, py: { xs: 1, sm: 2 } }}
-          >
-            New Recipe
-          </Button>
-          <CookingPanIcon
-            size={isMobile ? 40 : 60}
-            color={theme.palette.primary.main}
-            data-testid="cooking-pan-icon"
-          />
-          <Box sx={{ width: 40 }} /> {/* Spacer */}
-        </Box>
-      ) : recipes && (
+          <Grid item xs={4}>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={onBack}
+              variant="outlined"
+              sx={{ fontSize: { xs: '1rem', sm: '1.1rem' }, py: { xs: 1, sm: 2 } }}
+            >
+              New Recipe
+            </Button>
+          </Grid>
+          <Grid item xs={4} display="flex" justifyContent="center">
+            <CookingPanIcon
+              size={isMobile ? 40 : 60}
+              color={theme.palette.primary.main}
+              data-testid="cooking-pan-icon"
+            />
+          </Grid>
+          <Grid item xs={4} />
+        </Grid>
         <Box>
           {recipes.greeting && (
             <Typography variant="subtitle1" sx={{
@@ -65,19 +65,29 @@ function ResultsPage({ recipes, onBack, isLoading }) {
             </Typography>
           )}
 
-          {isMobile ? (
-            <RecipeSwiper recipes={recipes.recipes} />
-          ) : (
-            <Grid container spacing={4} justifyContent="center" sx={{ maxWidth: 700, mx: 'auto' }}>
-              {recipes.recipes.map((recipe, index) => (
-                <Grid item xs={12} key={recipe.id || index} sx={{ width: '100%' }}>
-                  <motion.div variants={staggeredListTransition(index)}>
-                    <RecipeCard recipe={recipe} fullWidth />
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          <Box sx={{ mt: 4 }}>
+            {isLoading ? (
+              <Grid container spacing={4} justifyContent="center">
+                {[...Array(2)].map((_, idx) => (
+                  <Grid item xs={12} key={idx} sx={{ width: '100%' }}>
+                    <Box data-testid="loading-line" sx={{ height: 180, bgcolor: 'grey.100', borderRadius: 2, mb: 2 }} />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : isMobile ? (
+              <RecipeSwiper recipes={recipes.recipes} />
+            ) : (
+              <Grid container spacing={4} justifyContent="center">
+                {recipes.recipes.map((recipe, index) => (
+                  <Grid item xs={12} key={recipe.id || index} sx={{ width: '100%' }}>
+                    <motion.div variants={staggeredListTransition(index)}>
+                      <RecipeCard recipe={recipe} fullWidth />
+                    </motion.div>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </Box>
           {recipes.sign_off && (
             <Typography variant="subtitle1" sx={{
               mt: 3,
@@ -90,7 +100,6 @@ function ResultsPage({ recipes, onBack, isLoading }) {
             </Typography>
           )}
         </Box>
-      )}
       </Box>
     </Container>
   );

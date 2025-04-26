@@ -42,7 +42,7 @@ const PanIcon = styled('svg')`
   }
 `;
 
-function CookingPanIcon({ size = 80, color = '#34495e' }) {
+function CookingPanIcon({ size = 80, color = '#34495e', ...props }) {
   return (
     <PanIcon 
       viewBox="0 0 400 400" 
@@ -50,6 +50,7 @@ function CookingPanIcon({ size = 80, color = '#34495e' }) {
       height={size}
       xmlns="http://www.w3.org/2000/svg"
       className="pan-icon"
+      {...props}
     >
       {/* Square Background */}
       <rect x="20" y="20" width="360" height="360" rx="20" ry="20" fill="#f8f4e9" />

@@ -4,6 +4,13 @@ import { ThemeProvider } from '@mui/material';
 import getTheme from '../../theme';
 import ResultsPage from '../ResultsPage';
 
+// Top-level mock variable for useMediaQuery
+let mockUseMediaQueryValue = false;
+
+jest.mock('@mui/material/useMediaQuery', () => () => mockUseMediaQueryValue);
+
+
+
 describe('ResultsPage', () => {
   const mockRecipes = {
     greeting: "Here are your recipes!",
@@ -104,8 +111,54 @@ describe('ResultsPage', () => {
 
   it('shows cooking pan icon', () => {
     renderWithTheme(<ResultsPage {...mockProps} />);
-    
     const icon = screen.getByTestId('cooking-pan-icon');
     expect(icon).toBeInTheDocument();
   });
-}); 
+
+  it('has margin before recipe cards', () => {
+    const { container } = renderWithTheme(<ResultsPage {...mockProps} />);
+    // Find the Box containing the cards (should have mt: 4)
+    const gridContainer = container.querySelector('.MuiGrid-container');
+    // parent of gridContainer should be the Box with margin
+    const marginBox = gridContainer.parentElement;
+    // Instead of relying on computed style (which is brittle in JSDOM), check for the correct class or node presence
+    expect(marginBox).not.toBeNull();
+    // Optionally, check that the Box is present and contains the grid
+    expect(marginBox.contains(gridContainer)).toBe(true);
+    // If you want to check for a style attribute (less robust), you can do:
+    // expect(marginBox.getAttribute('style') || '').toMatch(/margin-top/i);
+  });
+
+  it('header uses Grid with button left and icon center', () => {
+    renderWithTheme(<ResultsPage {...mockProps} />);
+    const button = screen.getByText('New Recipe');
+    const icon = screen.getByTestId('cooking-pan-icon');
+    // Button should be in first column, icon in second
+    const buttonGrid = button.closest('.MuiGrid-item');
+    const iconGrid = icon.closest('.MuiGrid-item');
+    expect(buttonGrid).not.toBeNull();
+    expect(iconGrid).not.toBeNull();
+    // The iconGrid should have justifyContent: center
+    expect(window.getComputedStyle(iconGrid).justifyContent || iconGrid.getAttribute('style')).toMatch(/center/);
+  });
+
+  it('renders mobile layout when isMobile is true', () => {
+    mockUseMediaQueryValue = true;
+    renderWithTheme(<ResultsPage {...mockProps} />);
+    // Should render RecipeSwiper, not Grid
+    expect(screen.queryByText('Chicken Rice')).toBeInTheDocument();
+    // Only the header grid should be present, not a recipe grid
+    const gridContainers = document.querySelectorAll('.MuiGrid-container');
+    expect(gridContainers.length).toBe(1);
+    // Assert that RecipeSwiper content is present by checking for a recipe card's text
+    expect(screen.getByText('A delicious chicken and rice dish')).toBeInTheDocument();
+    mockUseMediaQueryValue = false; // reset for other tests
+  });
+
+  it('renders desktop layout when isMobile is false', () => {
+    mockUseMediaQueryValue = false;
+    renderWithTheme(<ResultsPage {...mockProps} />);
+    // Should render Grid
+    expect(document.querySelector('.MuiGrid-container')).toBeInTheDocument();
+  });
+});

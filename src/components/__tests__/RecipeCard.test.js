@@ -51,7 +51,7 @@ describe('RecipeCard', () => {
     const { getByLabelText } = render(
       <RecipeCard recipe={mockRecipe} expanded={false} onExpandClick={onExpandClick} />
     );
-    fireEvent.click(getByLabelText(/show more/i));
+    fireEvent.click(getByRole('button', { name: /show more/i }));
     expect(onExpandClick).toHaveBeenCalled();
   });
 
