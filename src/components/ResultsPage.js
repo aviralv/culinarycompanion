@@ -26,16 +26,15 @@ function ResultsPage({ recipes, onBack, isLoading }) {
 
       {/* Sticky back button for mobile */}
       <Box sx={{
+        width: '100%',
         position: isMobile ? 'sticky' : 'static',
         top: 0,
         zIndex: 10,
         bgcolor: theme.palette.background.default,
         pb: 1,
-        mb: { xs: 2, sm: 4 },
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-
       }}>
         <Button
           startIcon={<ArrowBackIcon />}
