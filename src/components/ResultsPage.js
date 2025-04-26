@@ -22,8 +22,8 @@ function ResultsPage({ recipes, onBack, isLoading }) {
 
 
   return (
-    <Container maxWidth={false} sx={{ py: { xs: 1, sm: 4 }, px: 2 }}>
-      <Box sx={{ maxWidth: 700, mx: 'auto' }}>
+    <Container maxWidth={false} sx={{ py: { xs: 1, sm: 4 }, px: { xs: 0.5, sm: 2 } }}>
+
       {/* Sticky back button for mobile */}
       <Box sx={{
         position: isMobile ? 'sticky' : 'static',
@@ -100,7 +100,6 @@ function ResultsPage({ recipes, onBack, isLoading }) {
           )}
         </Box>
       )}
-      </Box>
     </Container>
   );
 }
