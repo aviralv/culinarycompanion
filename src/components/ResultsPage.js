@@ -22,7 +22,7 @@ function ResultsPage({ recipes, onBack, isLoading }) {
 
 
   return (
-    <Container maxWidth={false} sx={{ py: { xs: 1, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+    <Container maxWidth="md" sx={{ py: { xs: 1, sm: 4 }, mx: 'auto' }}>
 
       {/* Sticky back button for mobile */}
       <Box sx={{
@@ -35,7 +35,7 @@ function ResultsPage({ recipes, onBack, isLoading }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        px: { xs: 2, sm: 4 },
+
       }}>
         <Button
           startIcon={<ArrowBackIcon />}
