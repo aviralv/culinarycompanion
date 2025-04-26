@@ -55,12 +55,12 @@ const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
         </Typography>
         {additional_ingredients.length > 0 && (
           <Box sx={{ mt: 2, mb: 2 }}>
-            <Typography variant="subtitle2" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
+            <Typography variant="body1" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 700, mb: 1 }}>
               Additional Ingredients Needed:
             </Typography>
             <List dense disablePadding sx={{ pl: 0 }}>
               {additional_ingredients.map((ingredient, i) => (
-                <ListItem key={i} disableGutters sx={{ py: 0.75, pl: 0 }}>
+                <ListItem key={i} disableGutters sx={{ py: 0.25, pl: 0 }}>
                   <ListItemText primary={ingredient} primaryTypographyProps={{ color: 'text.secondary', variant: 'body1', align: 'left' }} />
                 </ListItem>
               ))}
@@ -68,7 +68,7 @@ const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
           </Box>
         )}
         <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle2" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 600, mb: 1 }}>
+          <Typography variant="body1" gutterBottom align="left" sx={{ color: theme.palette.text.primary, fontWeight: 700, mb: 1 }}>
             Instructions:
           </Typography>
           <List disablePadding sx={{ pl: 0 }}>
