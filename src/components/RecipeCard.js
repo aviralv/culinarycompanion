@@ -29,7 +29,7 @@ const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
         },
       }}
     >
-      <CardContent sx={{ px: { xs: 3, sm: 4 } }}>
+      <CardContent sx={{ px: { xs: 7.5, sm: 10 } }}>
         <Typography 
           variant="h5"
           component="h2"
