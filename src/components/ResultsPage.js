@@ -12,7 +12,7 @@ import CookingPanIcon from './CookingPanIcon';
 import Button from './Button';
 import { staggeredListTransition } from './animations';
 import { motion } from 'framer-motion';
-import LoadingCard from './LoadingCard';
+
 import RecipeSwiper from './RecipeSwiper';
 import RecipeCard from './RecipeCard';
 
