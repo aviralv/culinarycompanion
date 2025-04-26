@@ -79,9 +79,9 @@ function ResultsPage({ recipes, onBack, isLoading }) {
           ) : (
             <Grid container spacing={4} justifyContent="center" sx={{ maxWidth: 700, mx: 'auto' }}>
               {recipes.recipes.map((recipe, index) => (
-                <Grid item xs={12} key={recipe.id || index}>
+                <Grid item xs={12} key={recipe.id || index} sx={{ width: '100%' }}>
                   <motion.div variants={staggeredListTransition(index)}>
-                    <RecipeCard recipe={recipe} />
+                    <RecipeCard recipe={recipe} fullWidth />
                   </motion.div>
                 </Grid>
               ))}
