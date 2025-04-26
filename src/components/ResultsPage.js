@@ -19,11 +19,7 @@ import RecipeCard from './RecipeCard';
 function ResultsPage({ recipes, onBack, isLoading }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [expandedRecipeId, setExpandedRecipeId] = React.useState(null);
 
-  const handleExpandClick = (recipe) => {
-    setExpandedRecipeId(expandedRecipeId === recipe.id ? null : recipe.id);
-  };
 
   return (
     <Container maxWidth={false} sx={{ py: { xs: 1, sm: 4 }, px: 2 }}>
