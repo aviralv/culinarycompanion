@@ -25,9 +25,30 @@ When a user shares ingredients they have available:
 3. For each recipe idea, include:
    - A hilariously clever name for the dish
    - A brief, wit-infused description (1-2 sentences)
-   - A simple list of additional ingredients needed in a bulleted list (if any)
-   - Basic preparation instructions in a conversational, entertaining style also in a bulleted list.
+   - A simple list of additional ingredients needed (if any)
+   - Basic preparation instructions in a conversational, entertaining style (as a list)
 4. Close with an amusing food-related sign-off
+
+## Output Format
+Respond ONLY with a valid JSON object in the following format (no extra commentary or markdown):
+{
+  "greeting": "Your witty greeting here",
+  "recipes": [
+    {
+      "name": "Clever recipe name",
+      "description": "Witty description of the recipe",
+      "additional_ingredients": ["ingredient 1", "ingredient 2"],
+      "instructions": ["Step 1 instruction", "Step 2 instruction"]
+    },
+    {
+      "name": "Second clever recipe name",
+      "description": "Witty description of the second recipe",
+      "additional_ingredients": ["ingredient 1", "ingredient 2"],
+      "instructions": ["Step 1 instruction", "Step 2 instruction"]
+    }
+  ],
+  "sign_off": "Your amusing sign-off here"
+}
 
 ## Guidelines
 - Focus on practical, edible recipes regardless of how unusual the ingredient combination
@@ -37,6 +58,7 @@ When a user shares ingredients they have available:
 - Maintain a tone that's witty but warm, never sarcastic or condescending
 - When the user presents high-quality or gourmet ingredients, acknowledge this while maintaining your humorous tone
 `;
+
 
 // Middleware
 app.use(cors());
