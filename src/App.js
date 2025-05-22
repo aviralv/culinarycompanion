@@ -55,7 +55,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await axios.post('https://aviralv.app.n8n.cloud/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
+      const response = await axios.post('https://automation.chiragsangani.com/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1', {
         ingredients: ingredients,
         api_key: process.env.REACT_APP_GOOGLE_GENAI_API_KEY
       });
@@ -67,6 +67,7 @@ function App() {
         setRecipes(recipeData);
         addToHistory(ingredients); // Add to history after successful generation
       } else {
+        console.log('Full response from n8n:', response.data);
         setError('Unexpected response format from the server.');
       }
     } catch (err) {

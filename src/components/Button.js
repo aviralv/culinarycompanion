@@ -2,15 +2,15 @@ import React from 'react';
 import { Button as MuiButton, useTheme, alpha } from '@mui/material';
 import { hoverScale } from './animations';
 
-const CustomButton = React.forwardRef(({ 
-  children, 
-  variant = 'contained', 
+const CustomButton = React.forwardRef(({
+  children,
+  variant = 'contained',
   color = 'primary',
   size = 'medium',
   fullWidth = false,
   disabled = false,
-  sx,
-  ...props 
+  sx = {},
+  ...props
 }, ref) => {
   const theme = useTheme();
 

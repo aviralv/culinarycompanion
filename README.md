@@ -22,7 +22,7 @@ npm install
 npm start
 ```
 
-The backend is managed via n8n with a Google Gemini integration (see project documentation for backend setup).
+The backend is managed via n8n with a Google Gemini integration. All API requests are now handled by the production n8n endpoint: https://automation.chiragsangani.com/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1
 
 ## Features
 

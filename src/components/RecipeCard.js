@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, List, ListItem, ListItemText, useTheme } from '@mui/material';
 import { cardStyles } from './animations';
 
-const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
+const RecipeCard = ({ recipe, mobile = false }) => {
   const theme = useTheme();
   const { name, description, additional_ingredients = [], instructions = [] } = recipe;
 
@@ -11,7 +11,7 @@ const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
       tabIndex={0}
       sx={{
         ...cardStyles(theme),
-        width: fullWidth && !mobile ? '100%' : mobile ? '100%' : undefined,
+        width: mobile ? '100%' : undefined,
         minHeight: mobile ? 340 : undefined,
         boxShadow: mobile ? theme.shadows[3] : theme.shadows[1],
         borderRadius: mobile ? 3 : 2,
@@ -84,8 +84,5 @@ const RecipeCard = ({ recipe, mobile = false, fullWidth = false }) => {
   );
 };
 
-RecipeCard.defaultProps = {
-  mobile: false,
-};
 
 export default RecipeCard;

@@ -21,11 +21,10 @@ function InputPage({
   ingredients, 
   setIngredients, 
   onSubmit, 
-  disabled,
-  error,
+  disabled = false,
+  error = '',
   history = [],
-  onHistoryItemClick,
-  mode 
+  onHistoryItemClick = () => {},
 }) {
   const theme = useTheme();
 

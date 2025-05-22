@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import RecipeCard from './RecipeCard';
 
-const RecipeSwiper = ({ recipes, onRecipeClick, onFavoriteToggle, expandedRecipeId, onExpandClick }) => {
+const RecipeSwiper = ({ recipes }) => {
   const swiperRef = useRef(null);
 
   if (!recipes?.length) {

@@ -78,13 +78,21 @@ function ResultsPage({ recipes, onBack, isLoading }) {
               <RecipeSwiper recipes={recipes.recipes} />
             ) : (
               <Grid container spacing={4} justifyContent="center">
-                {recipes.recipes.map((recipe, index) => (
-                  <Grid item xs={12} key={recipe.id || index} sx={{ width: '100%' }}>
-                    <motion.div variants={staggeredListTransition(index)}>
-                      <RecipeCard recipe={recipe} fullWidth />
-                    </motion.div>
+                {(Array.isArray(recipes?.recipes) && recipes.recipes.length > 0) ? (
+                  recipes.recipes.map((recipe, index) => (
+                    <Grid item xs={12} key={recipe.id || index} sx={{ width: '100%' }}>
+                      <motion.div variants={staggeredListTransition(index)}>
+                        <RecipeCard recipe={recipe} />
+                      </motion.div>
+                    </Grid>
+                  ))
+                ) : (
+                  <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                    <Typography variant="body1" color="textSecondary">
+                      No recipes found or invalid data returned.
+                    </Typography>
                   </Grid>
-                ))}
+                )}
               </Grid>
             )}
           </Box>

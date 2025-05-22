@@ -4,7 +4,7 @@
 
 - Ingredient Input: An input text box where users can enter the main ingredients they have available.
 - Generate Ideas Button: A 'Generate Ideas' button that triggers the recipe idea generation.
-- API Communication: Send the input text payload via POST request to the specified URL (https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1) when the 'Generate Ideas' button is pressed.
+- API Communication: Send the input text payload via POST request to the specified URL (https://n8n.chiragsangani.com/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1) when the 'Generate Ideas' button is pressed.
 - Recipe Idea Display: Display the generated recipe ideas (names of dishes) returned from the API. The LLM is used as a tool to generate names of the dishes.
 - Recipe Display: Display the recipe, returned from the API, corresponding to the idea selected by the user. The LLM is used as a tool to provide a complete recipe.
 
@@ -24,5 +24,4 @@ Call the app "Food Idea Generator".
 
 It needs an input text box and a button called "Generate Ideas"
 
-When that button is pressed send the input text payload via POST request to https://aviralv.app.n8n.cloud/webhook-test/4b812275-4ff0-42a6-a897-2c8ad444a1e1
-  
+When that button is pressed send the input text payload via POST request to https://n8n.chiragsangani.com/webhook/4b812275-4ff0-42a6-a897-2c8ad444a1e1
